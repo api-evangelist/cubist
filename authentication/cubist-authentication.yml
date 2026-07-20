@@ -1,0 +1,31 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/cubist-cubesigner-openapi-original.json
+docs: https://cubist.dev/product-suite
+summary:
+  types: [oidc-exchange, session-token]
+  api_key_in: [header]
+  model: >-
+    Two-stage: an OIDC identity token authenticates the user and is exchanged for
+    a CubeSigner signer session token; signing endpoints then require that
+    session token. Both are carried in the Authorization header. Sessions and
+    Role access tokens carry a bounded scope set (see scopes/).
+  mfa: [email-otp, totp, fido/passkey]
+schemes:
+  - name: Oidc
+    type: bearer
+    in: header
+    parameter: Authorization
+    description: >-
+      OIDC tokens authenticate users via a third-party identity provider and are
+      exchanged for signer session tokens.
+    sources: [openapi/cubist-cubesigner-openapi-original.json]
+  - name: SignerAuth
+    type: bearer
+    in: header
+    parameter: Authorization
+    description: >-
+      Signer session tokens authenticate signing endpoints. Created with
+      `cs token create` (or the SDK); scoped and time-bounded.
+    sources: [openapi/cubist-cubesigner-openapi-original.json]
+scopes_reference: scopes/cubist-scopes.yml
