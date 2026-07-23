@@ -1,0 +1,2078 @@
+openapi: 3.0.3
+info:
+  title: CubeSigner Account Sessions API
+  description: The CubeSigner management and signing service.
+  contact:
+    name: Cubist Inc.
+    email: hello@cubist.dev
+  version: v0.1.0
+servers:
+- url: https://gamma.signer.cubist.dev
+  description: Testing and staging environment
+- url: https://prod.signer.cubist.dev
+  description: Production environment
+security:
+- Cognito: []
+tags:
+- name: Sessions
+paths:
+  /v0/org/{org_id}/session:
+    get:
+      tags:
+      - Sessions
+      summary: List sessions
+      description: 'List sessions
+
+
+        If no query parameters are provided, all active sessions for the current user are returned.
+
+
+        If a `role` query parameter is provided, all active sessions for the selected role are returned
+
+        (asserting first that the current user has permissions to read sessions for that role).
+
+
+        If a `role_created_by` query parameter is provided, all active **role** sessions created by that
+
+        user are returned (gated by the same permissions as listing that user''s own sessions: the
+
+        current user must be that user or an org owner). When combined with `role`, the result is
+
+        further restricted to the sessions created by that user for the given role; the permission model
+
+        is unchanged. The `user` selector cannot be combined with `role` or `role_created_by`.
+
+        '
+      operationId: listSessions
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: page.size
+        in: query
+        description: 'Max number of items to return per page.
+
+
+          If the actual number of returned items may be less that this, even if there exist more
+
+          data in the result set. To reliably determine if more data is left in the result set,
+
+          inspect the [UnencryptedLastEvalKey] value in the response object.'
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1000
+          maximum: 10001
+          minimum: 1
+        style: form
+      - name: page.start
+        in: query
+        description: 'The start of the page.  Omit to start from the beginning; otherwise, only specify a
+
+          the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        style: form
+      - name: role
+        in: query
+        description: 'If provided, the name or ID of a role to operate on.
+
+          Cannot be specified together with `user`, but may be combined with `role_created_by`
+
+          to operate on the role sessions created by a given user for this specific role.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: my-role
+      - name: user
+        in: query
+        description: 'If provided, the ID of a user to operate on.
+
+          Cannot be specified together with other selectors.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: role_created_by
+        in: query
+        description: 'If provided, the ID of the user whose created role sessions to operate on.
+
+          Selects all *role* sessions created by that user (user sessions are not affected).
+
+          Cannot be specified together with `user`. When combined with `role`, the selection is
+
+          further restricted to the sessions created by that user for the given role.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/PaginatedSessionsResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:session:list
+    post:
+      tags:
+      - Sessions
+      summary: Create new user session (management and/or signing)
+      description: 'Create new user session (management and/or signing)
+
+
+        Creates a new user session, silently truncating requested session and auth lifetimes to be at
+
+        most requestor''s session and auth lifetime, respectively. To extend the requested lifetimes past
+
+        the requestor''s, set the `extend_lifetimes` flag in the request body (in which case MFA will
+
+        be required).
+
+        '
+      operationId: createSession
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/NewSessionResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:session:create
+    delete:
+      tags:
+      - Sessions
+      summary: Revoke ALL existing user or role session(s)
+      description: 'Revoke ALL existing user or role session(s)
+
+
+        Immediately revokes existing sessions, preventing them from being used or refreshed.
+
+
+        If no query params are provided, **ALL** sessions for the **CURRENT USER** are revoked
+
+        (to revoke just the current user session, use `DELETE /v0/org/<org_id>/session/self`)
+
+
+        If a `role` query parameter is provided, **ALL** session for **THAT ROLE** are revoked
+
+        (if the current user has permissions to revoke sessions for the role).
+
+
+        If a `role_created_by` query parameter is provided, **ROLE** sessions created by **THAT USER**
+
+        are revoked (gated by the same permissions as revoking that user''s own sessions: the current
+
+        user must be that user or an org owner). User sessions are not affected. Unless the current
+
+        user is an org owner, only sessions for roles the current user is **still a member of** are
+
+        revoked (so a user cannot revoke sessions for a role they have since been removed from); org
+
+        owners revoke across all roles.
+
+
+        If **both** a `role` and a `role_created_by` query parameter are provided, the selection above
+
+        is narrowed to only the sessions created by **THAT USER** for **THAT ROLE**. The permission
+
+        model is unchanged from the `role_created_by`-only case (the current user must be that user or
+
+        an org owner, and non-owners are still limited to roles they are a member of); `role` is purely
+
+        an additional filter.
+
+
+        The `user` selector cannot be combined with `role` or `role_created_by`.
+
+        '
+      operationId: revokeSessions
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: role
+        in: query
+        description: 'If provided, the name or ID of a role to operate on.
+
+          Cannot be specified together with `user`, but may be combined with `role_created_by`
+
+          to operate on the role sessions created by a given user for this specific role.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: my-role
+      - name: user
+        in: query
+        description: 'If provided, the ID of a user to operate on.
+
+          Cannot be specified together with other selectors.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: role_created_by
+        in: query
+        description: 'If provided, the ID of the user whose created role sessions to operate on.
+
+          Selects all *role* sessions created by that user (user sessions are not affected).
+
+          Cannot be specified together with `user`. When combined with `role`, the selection is
+
+          further restricted to the sessions created by that user for the given role.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+        example: User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionsResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:session:revoke
+  /v0/org/{org_id}/session/self:
+    delete:
+      tags:
+      - Sessions
+      summary: Revoke current session
+      description: 'Revoke current session
+
+
+        Immediately revokes the current session, preventing it from being used or refreshed'
+      operationId: revokeCurrentSession
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyImpl'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth: []
+  /v0/org/{org_id}/session/{session_id}:
+    get:
+      tags:
+      - Sessions
+      summary: Get session information
+      description: Get session information
+      operationId: getSession
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: session_id
+        in: path
+        description: The ID of the session to get or 'self' for current session
+        required: true
+        schema:
+          type: string
+        example: 1c0d853d-c15f-42dc-a82c-9874e589bc75
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:session:get
+    delete:
+      tags:
+      - Sessions
+      summary: Revoke a session
+      description: 'Revoke a session
+
+
+        Immediately revokes an existing session, preventing it from being used or refreshed'
+      operationId: revokeSession
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: session_id
+        in: path
+        description: The ID of the session to revoke
+        required: true
+        schema:
+          type: string
+        example: 77aad2100c361f497635dd005c4d15781e2e5df4b9f45d8e74f37425cbc30b9e
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:session:revoke
+components:
+  schemas:
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+          nullable: true
+    SourceIp:
+      type: object
+      required:
+      - source_ip
+      properties:
+        source_ip:
+          type: string
+          description: The IP address of the caller.
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    RatchetConfig:
+      type: object
+      properties:
+        auth_lifetime:
+          type: integer
+          format: int64
+          description: 'The lifetime (in seconds) of auth tokens for this session.
+
+            Auth tokens can be refreshed (renewed) using a valid (unexpired)
+
+            refresh token, but not beyond the session lifetime.'
+          default: 300
+          example: 3600
+          minimum: 0
+        grace_lifetime:
+          type: integer
+          format: int64
+          description: 'The amount of time (in seconds) that an auth token for this session remains
+
+            valid after it has been refreshed and a new auth token has been issued. This
+
+            helps to address concurrency hazards, for example, if one thread makes requests
+
+            with auth token while another refreshes it.'
+          default: 30
+          example: 30
+          minimum: 0
+        refresh_lifetime:
+          type: integer
+          format: int64
+          description: 'The lifetime (in seconds) of refresh tokens for this session.
+
+            If this value is shorter than the session lifetime, inactive sessions
+
+            will become invalid once the auth and refresh tokens have both expired.'
+          default: 86400
+          example: 43200
+          minimum: 0
+        session_lifetime:
+          type: integer
+          format: int64
+          description: 'The lifetime (in seconds) of the session.
+
+            The session cannot be extended beyond its original lifetime.'
+          default: 31536000
+          example: 86400
+          minimum: 0
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    CreateSessionRequest:
+      allOf:
+      - $ref: '#/components/schemas/RatchetConfig'
+      - $ref: '#/components/schemas/ClientSessionMetadata'
+      - type: object
+        required:
+        - purpose
+        - scopes
+        properties:
+          extend_lifetimes:
+            type: boolean
+            description: 'By default, the requested session and auth lifetimes are truncated to be at most requestor''s
+
+              session and auth lifetime, respectively. To extend the requested lifetimes past the
+
+              requestor''s, set this property to `true` (in which case MFA will be required).'
+          purpose:
+            type: string
+            description: A human readable description of the session's purpose
+            example: Manage keys on server foo.bar
+          scopes:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: Controls what capabilities this session will have.
+            example:
+            - manage:key:*
+            minItems: 1
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    HttpRequestCmp:
+      oneOf:
+      - type: string
+        description: The requests must match exactly. Any given MFA receipt can be used at most once.
+        enum:
+        - Eq
+      - type: object
+        required:
+        - EvmTx
+        properties:
+          EvmTx:
+            $ref: '#/components/schemas/EvmTxCmp'
+      - type: object
+        required:
+        - SolanaTx
+        properties:
+          SolanaTx:
+            $ref: '#/components/schemas/SolanaTxCmp'
+      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
+    BadGatewayErrorCode:
+      type: string
+      enum:
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    InternalErrorCode:
+      type: string
+      enum:
+      - NoMaterialId
+      - InvalidAuditLogEntry
+      - UnexpectedCheckerRule
+      - UnresolvedPolicyReference
+      - UnexpectedAclAction
+      - FidoKeyAssociatedWithMultipleUsers
+      - ClaimsParseError
+      - InvalidThrottleId
+      - InvalidEmailAddress
+      - EmailTemplateRender
+      - OidcIdentityHeaderMissing
+      - OidcIdentityParseError
+      - SystemTimeError
+      - PasswordHashParseError
+      - SendMailError
+      - ReqwestError
+      - EmailConstructionError
+      - TsWriteError
+      - TsQueryError
+      - DbQueryError
+      - DbGetError
+      - DbDeleteError
+      - DbPutError
+      - DbUpdateError
+      - SerdeError
+      - TestAndSetError
+      - DbGetItemsError
+      - DbWriteError
+      - CubistSignerError
+      - CwListMetricsError
+      - CwPutMetricDataError
+      - GetAwsSecretError
+      - SecretNotFound
+      - KmsGenerateRandomError
+      - MalformedTotpBytes
+      - KmsGenerateRandomNoResponseError
+      - CreateKeyError
+      - ParseDerivationPathError
+      - SplitSignerError
+      - CreateImportKeyError
+      - CreateEotsNoncesError
+      - EotsSignError
+      - BabylonCovSignError
+      - CognitoDeleteUserError
+      - CognitoListUsersError
+      - CognitoGetUserError
+      - MissingUserEmail
+      - CognitoResendUserInvitation
+      - CognitoSetUserPasswordError
+      - GenericInternalError
+      - AssumeRoleWithoutEvidence
+      - OidcAuthWithoutOrg
+      - MissingKeyMetadata
+      - KmsEnableKeyError
+      - KmsDisableKeyError
+      - LambdaInvokeError
+      - LambdaNoResponseError
+      - LambdaFailure
+      - LambdaUnparsableResponse
+      - SerializeEncryptedExportKeyError
+      - DeserializeEncryptedExportKeyError
+      - ReEncryptUserExport
+      - S3UploadError
+      - S3DownloadError
+      - S3CopyError
+      - S3ListObjectsError
+      - S3DeleteObjectsError
+      - S3BuildError
+      - S3PresignedUrlError
+      - ManagedStateMissing
+      - InternalHeaderMissing
+      - InvalidInternalHeaderValue
+      - RequestLocalStateAlreadySet
+      - OidcOrgMismatch
+      - OidcIssuerInvalidJwk
+      - InvalidPkForMaterialId
+      - SegwitTweakFailed
+      - UncheckedOrg
+      - SessionOrgIdMissing
+      - AvaSignCredsMissing
+      - AvaSignSignatureMissing
+      - ExpectedRoleSession
+      - InvalidThirdPartyIdentity
+      - CognitoGetUser
+      - SnsSubscribeError
+      - SnsUnsubscribeError
+      - SnsGetSubscriptionAttributesError
+      - SnsSubscriptionAttributesMissing
+      - SnsSetSubscriptionAttributesError
+      - SnsPublishBatchError
+      - InconsistentMultiValueTestAndSet
+      - MaterialIdError
+      - InvalidBtcAddress
+      - HistoricalTxBodyMissing
+      - InvalidOperation
+      - ParentOrgNotFound
+      - OrgParentLoop
+      - ResolvedParentOrgWithNoScopeCeiling
+      - InvalidUploadObjectId
+      - PolicyEngineNotFound
+      - PolicyEngineError
+      - PolicySecretsEncryptionError
+      - CreatePolicyImportKeyError
+      - InvalidAlias
+      - EmptyUpdateModifiedObject
+      - EmptyUpdateModifiedActions
+      - DbContactAddressesInvalid
+      - InvalidEvmSigedRlp
+      - InvalidErc20Data
+      - InvalidRpcUrl
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    EvmTxCmp:
+      type: object
+      properties:
+        grace:
+          type: integer
+          format: int64
+          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
+
+
+            In this case, however, because EVM transactions already have a replay prevention mechanism
+
+            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
+
+            indicate how long an MFA receipt should remain valid after its first use.
+
+
+            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
+
+            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
+
+            ensure that any subsequent requests that claim the same receipt must sign for the same
+
+            nonce as the request we signed originally with that receipt.
+
+
+            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
+
+            original expiration date.
+
+
+            The grace period must not be greater than 30 days.'
+          nullable: true
+          minimum: 0
+        ignore_gas:
+          type: boolean
+          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
+        ignore_nonce:
+          type: boolean
+          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+          nullable: true
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        request_id:
+          type: string
+          description: Optional request identifier
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    ExplicitScope:
+      type: string
+      title: ExplicitScope
+      description: Explicitly named scopes for accessing CubeSigner APIs
+      enum:
+      - sign:*
+      - sign:ava
+      - sign:binance:*
+      - sign:binance:subToMaster
+      - sign:binance:subToSub
+      - sign:binance:universalTransfer
+      - sign:binance:subAccountAssets
+      - sign:binance:accountInfo
+      - sign:binance:subAccountTransferHistory
+      - sign:binance:universalTransferHistory
+      - sign:binance:withdraw
+      - sign:binance:withdrawHistory
+      - sign:binance:deposit
+      - sign:binance:depositHistory
+      - sign:binance:listSubAccounts
+      - sign:binance:coinInfo
+      - sign:bybit:*
+      - sign:bybit:queryUser
+      - sign:bybit:querySubMembers
+      - sign:bybit:queryCoinsBalance
+      - sign:bybit:queryDepositAddress
+      - sign:bybit:universalTransfer
+      - sign:bybit:withdraw
+      - sign:bybit:withdrawals
+      - sign:coinbase:*
+      - sign:coinbase:accounts:list
+      - sign:coinbase:portfolios:list
+      - sign:coinbase:funds:move
+      - sign:blob
+      - sign:diffieHellman
+      - sign:btc:*
+      - sign:btc:segwit
+      - sign:btc:taproot
+      - sign:btc:psbt:*
+      - sign:btc:psbt:doge
+      - sign:btc:psbt:legacy
+      - sign:btc:psbt:segwit
+      - sign:btc:psbt:taproot
+      - sign:btc:psbt:ltcSegwit
+      - sign:btc:message:*
+      - sign:btc:message:segwit
+      - sign:btc:message:legacy
+      - sign:babylon:*
+      - sign:babylon:eots:*
+      - sign:babylon:eots:nonces
+      - sign:babylon:eots:sign
+      - sign:babylon:staking:*
+      - sign:babylon:staking:deposit
+      - sign:babylon:staking:unbond
+      - sign:babylon:staking:withdraw
+      - sign:babylon:staking:slash
+      - sign:babylon:registration
+      - sign:babylon:covenant
+      - sign:evm:*
+      - sign:evm:tx
+      - sign:evm:eip191
+      - sign:evm:eip712
+      - sign:evm:eip7702
+      - sign:eth2:*
+      - sign:eth2:validate
+      - sign:eth2:stake
+      - sign:eth2:unstake
+      - sign:solana
+      - sign:sui
+      - sign:tendermint
+      - sign:mmi
+      - manage:*
+      - manage:readonly
+      - manage:email:*
+      - manage:email:get
+      - manage:email:update
+      - manage:email:delete
+      - manage:mfa:*
+      - manage:mfa:readonly
+      - manage:mfa:list
+      - manage:mfa:vote:*
+      - manage:mfa:vote:cs
+      - manage:mfa:vote:email
+      - manage:mfa:vote:fido
+      - manage:mfa:vote:totp
+      - manage:mfa:register:*
+      - manage:mfa:register:fido
+      - manage:mfa:register:totp
+      - manage:mfa:register:email
+      - manage:mfa:unregister:*
+      - manage:mfa:unregister:fido
+      - manage:mfa:unregister:totp
+      - manage:mfa:verify:*
+      - manage:mfa:verify:totp
+      - manage:key:*
+      - manage:key:readonly
+      - manage:key:get
+      - manage:key:attest
+      - manage:key:listRoles
+      - manage:key:list
+      - manage:key:history:tx:list
+      - manage:key:create
+      - manage:key:import
+      - manage:key:update:*
+      - manage:key:update:owner
+      - manage:key:update:policy
+      - manage:key:update:enabled
+      - manage:key:update:region
+      - manage:key:update:metadata
+      - manage:key:update:properties
+      - manage:key:update:editPolicy
+      - manage:key:delete
+      - manage:policy:*
+      - manage:policy:readonly
+      - manage:policy:create
+      - manage:policy:get
+      - manage:policy:list
+      - manage:policy:delete
+      - manage:policy:update:*
+      - manage:policy:update:owner
+      - manage:policy:update:name
+      - manage:policy:update:acl
+      - manage:policy:update:editPolicy
+      - manage:policy:update:metadata
+      - manage:policy:update:rule
+      - manage:policy:invoke
+      - manage:policy:wasm:*
+      - manage:policy:wasm:upload
+      - manage:policy:secrets:*
+      - manage:policy:secrets:get
+      - manage:policy:secrets:update:*
+      - manage:policy:secrets:update:values
+      - manage:policy:secrets:update:acl
+      - manage:policy:secrets:update:editPolicy
+      - manage:policy:buckets:*
+      - manage:policy:buckets:get
+      - manage:policy:buckets:list
+      - manage:policy:buckets:update:*
+      - manage:policy:buckets:update:owner
+      - manage:policy:buckets:update:acl
+      - manage:policy:buckets:update:metadata
+      - manage:contact:*
+      - manage:contact:readonly
+      - manage:contact:create
+      - manage:contact:get
+      - manage:contact:list
+      - manage:contact:delete
+      - manage:contact:update:*
+      - manage:contact:update:name
+      - manage:contact:update:addresses
+      - manage:contact:update:owner
+      - manage:contact:update:labels
+      - manage:contact:update:metadata
+      - manage:contact:update:editPolicy
+      - manage:contact:lookup:*
+      - manage:contact:lookup:address
+      - manage:policy:createImportKey
+      - manage:role:*
+      - manage:role:readonly
+      - manage:role:create
+      - manage:role:delete
+      - manage:role:get:*
+      - manage:role:attest
+      - manage:role:get:keys
+      - manage:role:get:keys:list
+      - manage:role:get:keys:get
+      - manage:role:get:users
+      - manage:role:list
+      - manage:role:update:*
+      - manage:role:update:enabled
+      - manage:role:update:policy
+      - manage:role:update:editPolicy
+      - manage:role:update:actions
+      - manage:role:update:key:*
+      - manage:role:update:key:add
+      - manage:role:update:key:remove
+      - manage:role:update:user:*
+      - manage:role:update:user:add
+      - manage:role:update:user:remove
+      - manage:role:history:tx:list
+      - manage:identity:*
+      - manage:identity:readonly
+      - manage:identity:verify
+      - manage:identity:add
+      - manage:identity:remove
+      - manage:identity:list
+      - manage:org:*
+      - manage:org:create
+      - manage:org:metrics:query
+      - manage:org:audit:query
+      - manage:org:readonly
+      - manage:org:addUser
+      - manage:org:inviteUser
+      - manage:org:inviteAlien
+      - manage:org:invitation:list
+      - manage:org:invitation:cancel
+      - manage:org:updateMembership:*
+      - manage:org:updateMembership:owner
+      - manage:org:updateMembership:member
+      - manage:org:updateMembership:alien
+      - manage:org:listUsers
+      - manage:org:user:get
+      - manage:org:deleteUser:*
+      - manage:org:deleteUser:owner
+      - manage:org:deleteUser:member
+      - manage:org:deleteUser:alien
+      - manage:org:get
+      - manage:org:update:*
+      - manage:org:update:enabled
+      - manage:org:update:policy
+      - manage:org:update:signPolicy
+      - manage:org:update:export
+      - manage:org:update:totpFailureLimit
+      - manage:org:update:notificationEndpoints
+      - manage:org:update:defaultInviteKind
+      - manage:org:update:idpConfiguration
+      - manage:org:update:passkeyConfiguration
+      - manage:org:update:emailPreferences
+      - manage:org:update:historicalData
+      - manage:org:update:requireScopeCeiling
+      - manage:org:update:alienLoginRequirement
+      - manage:org:update:memberLoginRequirement
+      - manage:org:update:keyExportRequirement
+      - manage:org:update:allowedMfaTypes
+      - manage:org:update:policyEngineConf
+      - manage:org:update:customChains
+      - manage:org:update:extProps
+      - manage:org:update:editPolicy
+      - manage:org:user:resetMfa
+      - manage:session:*
+      - manage:session:readonly
+      - manage:session:get
+      - manage:session:list
+      - manage:session:create
+      - manage:session:extend
+      - manage:session:revoke
+      - manage:export:*
+      - manage:export:readonly
+      - manage:export:org:*
+      - manage:export:org:get
+      - manage:export:user:*
+      - manage:export:user:delete
+      - manage:export:user:list
+      - manage:authMigration:*
+      - manage:authMigration:identity:add
+      - manage:authMigration:identity:remove
+      - manage:authMigration:user:update
+      - manage:mmi:*
+      - manage:mmi:readonly
+      - manage:mmi:get
+      - manage:mmi:list
+      - manage:mmi:reject
+      - manage:mmi:delete
+      - export:*
+      - export:user:*
+      - export:user:init
+      - export:user:complete
+      - mmi:*
+      - orgAccess:*
+      - orgAccess:child:*
+      - rpc:*
+      - rpc:createTransaction:*
+      - rpc:createTransaction:evm
+      - rpc:retryTransaction
+      - rpc:cancelTransaction
+      - rpc:getTransaction
+      - rpc:listTransactions
+      - rpc:btcListUtxos
+      - rpc:binance
+      - rpc:bybit
+      - rpc:coinbase
+    PolicyErrorOwnCodes:
+      type: string
+      enum:
+      - Inapplicable
+      - SuiTxReceiversDisallowedTransactionKind
+      - SuiTxReceiversDisallowedTransferAddress
+      - SuiTxReceiversDisallowedCommand
+      - BtcTxDisallowedOutputs
+      - BtcSignatureExceededValue
+      - BtcValueOverflow
+      - BtcSighashTypeDisallowed
+      - Eip7702AddressMismatch
+      - EvmTxReceiverMismatch
+      - EvmTxChainIdMismatch
+      - EvmTxSenderMismatch
+      - EvmTxExceededValue
+      - EvmTxExceededGasCost
+      - EvmTxGasCostUndefined
+      - EvmDataDisallowed
+      - Erc20DataInvalid
+      - EvmContractAddressUndefined
+      - EvmContractChainIdUndefined
+      - EvmDataNotDefined
+      - EvmDataInvalid
+      - EvmContractNotInAllowlist
+      - Erc20ExceededTransferLimit
+      - Erc20ReceiverMismatch
+      - Erc20ExceededApproveLimit
+      - Erc20SpenderMismatch
+      - EvmFunctionNotInAllowlist
+      - EvmFunctionCallInvalid
+      - EvmFunctionCallDisallowedArg
+      - PolicyDisjunctionError
+      - PolicyNegationError
+      - Eth2ExceededMaxUnstake
+      - Eth2ConcurrentUnstaking
+      - NotInIpv4Allowlist
+      - NotInOriginAllowlist
+      - NotInOperationAllowlist
+      - InvalidSourceIp
+      - RawSigningNotAllowed
+      - DiffieHellmanExchangeNotAllowed
+      - Eip712SigningNotAllowed
+      - OidcSourceNotAllowed
+      - NoOidcAuthSourcesDefined
+      - AddKeyToRoleDisallowed
+      - KeysAlreadyInRole
+      - KeyInMultipleRoles
+      - KeyAccessError
+      - RequireRoleSessionKeyAccessError
+      - BtcMessageSigningNotAllowed
+      - Eip191SigningNotAllowed
+      - Eip7702SigningNotAllowed
+      - TaprootSigningDisallowed
+      - SegwitSigningDisallowed
+      - PsbtSigningDisallowed
+      - BabylonStakingDisallowed
+      - TimeLocked
+      - CelPolicyDenied
+      - BabylonStakingNetwork
+      - BabylonStakingParamsVersion
+      - BabylonStakingExplicitParams
+      - BabylonStakingStakerPk
+      - BabylonStakingFinalityProviderPk
+      - BabylonStakingLockTime
+      - BabylonStakingValue
+      - BabylonStakingChangeAddress
+      - BabylonStakingFee
+      - BabylonStakingWithdrawalAddress
+      - BabylonStakingBbnAddress
+      - SolanaInstructionCountLow
+      - SolanaInstructionCountHigh
+      - SolanaNotInInstructionAllowlist
+      - SolanaInstructionMismatch
+      - WasmPoliciesDisabled
+      - WasmPolicyDenied
+      - WasmPolicyFailed
+      - WebhookPoliciesDisabled
+      - DeniedByWebhook
+      - ExplicitlyDenied
+    ClientSessionInfo:
+      type: object
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
+      required:
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
+      properties:
+        auth_token:
+          type: string
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
+          type: string
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    AcceptedValueCode:
+      type: string
+      enum:
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    BinanceDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Binance API method that would have been used
+        url:
+          type: string
+          description: The Binance API url method that would have been called
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    CoinbaseDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Coinbase API method that would have been used
+        url:
+          type: string
+          description: The Coinbase API url method that would have been called
+    SignDryRunArgs:
+      type: object
+      required:
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+          nullable: true
+    SessionInfo:
+      allOf:
+      - $ref: '#/components/schemas/SessionMetadata'
+      - type: object
+        required:
+        - session_id
+        - purpose
+        - exp
+        - created_at
+        properties:
+          created_at:
+            type: integer
+            format: int64
+            description: Creation date (in seconds since unix epoch)
+            minimum: 0
+          exp:
+            type: integer
+            format: int64
+            description: Expiration date (in seconds since unix epoch)
+            minimum: 0
+          last_used:
+            allOf:
+            - $ref: '#/components/schemas/WhereAndWhen'
+            nullable: true
+          lifetimes:
+            $ref: '#/components/schemas/RatchetConfig'
+          purpose:
+            type: string
+            description: A human-readable description for the session
+            example: OIDC login session
+          scopes:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: Lists user permission and access for the session
+            example:
+            - sign:*
+            - manage:mfa:vote:cs
+          session_id:
+            type: string
+            description: Session ID. Uniquely identifies the session, but cannot be used for auth.
+            example: 77aad2100c361f497635dd005c4d15781e2e5df4b9f45d8e74f37425cbc30b9e
+    Id:
+      type: string
+    WhereAndWhen:
+      allOf:
+      - $ref: '#/components/schemas/SourceIp'
+      - type: object
+        required:
+        - time
+        properties:
+          time:
+            $ref: '#/components/schemas/EpochDateTime'
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+          nullable: true
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
+    BadRequestErrorCode:
+      type: string
+      enum:
+      - GenericBadRequest
+      - DisallowedAllowRuleReference
+      - InvalidPaginationToken
+      - InvalidEmail
+      - InvalidEmailTemplate
+      - QueryMetricsError
+      - InvalidTelegramData
+      - ValidationError
+      - WebhookPolicyTimeoutOutOfBounds
+      - WebhookPolicyDisallowedUrlScheme
+      - WebhookPolicyDisallowedUrlHost
+      - WebhookPolicyDisallowedHeaders
+      - ReservedName
+      - UserEmailNotConfigured
+      - EmailPasswordNotFound
+      - PasswordAuthNotAllowedByInvitation
+      - OneTimeCodeExpired
+      - InvalidBody
+      - InvalidJwt
+      - InvitationNoLongerValid
+      - TokenRequestError
+      - InvalidMfaReceipt
+      - InvalidMfaPolicyCount
+      - InvalidMfaPolicyNumAuthFactors
+      - InvalidMfaPolicyNumAllowedApprovers
+      - InvalidMfaPolicyGracePeriodTooLong
+      - InvalidBabylonStakingPolicyParams
+      - InvalidSuiTxReceiversEmptyAllowlist
+      - InvalidBtcTxReceiversEmptyAllowlist
+      - InvalidRequireRoleSessionAllowlist
+      - InvalidCreateKeyCount
+      - InvalidDiffieHellmanCount
+      - OrgInviteExistingUser
+      - OrgUserAlreadyExists
+      - OrgNameTaken
+      - KwkNotFoundInRegion
+      - OrgIsNotOrgExport
+      - RoleNameTaken
+      - PolicyNameTaken
+      - NameTaken
+      - ContactNameInvalid
+      - ContactAddressesInvalid
+      - ContactLabelInvalid
+      - ContactModified
+      - PolicyNotFound
+      - PolicyVersionNotFound
+      - PolicyRuleDisallowedByType
+      - PolicyTypeDisallowed
+      - PolicyDuplicateError
+      - PolicyStillAttached
+      - PolicyModified
+      - PolicyNotAttached
+      - AddKeyToRoleCountTooHigh
+      - InvalidKeyId
+      - InvalidTimeLockAlreadyInThePast
+      - InvalidRestrictedScopes
+      - InvalidUpdate
+      - InvalidMetadataLength
+      - InvalidLength
+      - InvalidKeyMaterialId
+      - KeyNotFound
+      - SiweChallengeNotFound
+      - SiweInvalidRequest
+      - SiwsChallengeNotFound
+      - SiwsInvalidRequest
+      - UserExportDerivedKey
+      - UserExportPublicKeyInvalid
+      - NistP256PublicKeyInvalid
+      - UnableToAccessSmtpRelay
+      - UserExportInProgress
+      - RoleNotFound
+      - InvalidRoleNameOrId
+      - InvalidMfaReceiptOrgIdMissing
+      - InvalidMfaReceiptInvalidOrgId
+      - MfaRequestNotFound
+      - InvalidKeyType
+      - InvalidPropertiesForKeyType
+      - MismatchedKeyPropertiesPatch
+      - MissingBinanceApiKey
+      - MissingBybitApiKey
+      - MissingCoinbaseApiKey
+      - BinanceKeyMasterMismatch
+      - BybitAccountMismatch
+      - InvalidKeyMaterial
+      - InvalidHexValue
+      - InvalidBase32Value
+      - InvalidBase58Value
+      - InvalidBase64Value
+      - InvalidSs58Value
+      - InvalidForkVersionLength
+      - InvalidEthAddress
+      - InvalidStellarAddress
+      - InvalidOrgNameOrId
+      - InvalidUpdateOrgRequestDisallowedMfaType
+      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
+      - EmailOtpDelayTooShortForRegisterMfa
+      - InvalidStakeDeposit
+      - InvalidBlobSignRequest
+      - InvalidDiffieHellmanRequest
+      - InvalidSolanaSignRequest
+      - InvalidEip712SignRequest
+      - InvalidEip7702SignRequest
+      - OnlySpecifyOne
+      - IncompatibleParams
+      - NoOidcDataInProof
+      - InvalidEvmSignRequest
+      - InvalidEth2SignRequest
+      - InvalidDeriveKeyRequest
+      - InvalidStakingAmount
+      - CustomStakingAmountNotAllowedForWrapperContract
+      - InvalidUnstakeRequest
+      - InvalidCreateUserRequest
+      - UserAlreadyExists
+      - IdpUserAlreadyExists
+      - CognitoUserAlreadyOrgMember
+      - UserNotFound
+      - UserWithEmailNotFound
+      - PolicyKeyMismatch
+      - EmptyScopes
+      - InvalidScopesForRoleSession
+      - InvalidLifetime
+      - NoSingleKeyForUser
+      - InvalidOrgPolicyRule
+      - SourceIpAllowlistEmpty
+      - LimitWindowTooLong
+      - Erc20ContractDisallowed
+      - EmptyRuleError
+      - PolicyFieldValidationError
+      - OptionalListEmpty
+      - MultipleExclusiveFieldsProvided
+      - DuplicateFieldEntry
+      - InvalidRange
+      - InvalidOrgPolicyRepeatedRule
+      - InvalidSuiTransaction
+      - SuiSenderMismatch
+      - AvaSignHashError
+      - AvaSignError
+      - BtcSegwitHashError
+      - BtcTaprootHashError
+      - BtcSignError
+      - TaprootSignError
+      - Eip712SignError
+      - InvalidMemberRoleInUserAdd
+      - InvalidMemberRoleInRecipientAdd
+      - ThirdPartyUserAlreadyExists
+      - OidcIdentityAlreadyExists
+      - UserAlreadyHasIdentity
+      - ThirdPartyUserNotFound
+      - DeleteOidcUserError
+      - DeleteUserError
+      - SessionRoleMismatch
+      - InvalidOidcToken
+      - InvalidOidcIdentity
+      - OidcIssuerUnsupported
+      - OidcIssuerNotAllowed
+      - OidcIssuerNoApplicableJwk
+      - FidoKeyAlreadyRegistered
+      - FidoKeySignCountTooLow
+      - FidoVerificationFailed
+      - FidoChallengeMfaMismatch
+      - UnsupportedLegacyCognitoSession
+      - InvalidIdentityProof
+      - PaginationDataExpired
+      - ExistingKeysViolateExclusiveKeyAccess
+      - ExportDelayTooShort
+      - ExportWindowTooLong
+      - InvalidTotpFailureLimit
+      - InvalidEip191SignRequest
+      - CannotResendUserInvitation
+      - InvalidNotificationEndpointCount
+      - CannotDeletePendingSubscription
+      - InvalidNotificationUrlProtocol
+      - EmptyOneOfOrgEventFilter
+      - EmptyAllExceptOrgEventFilter
+      - InvalidTapNodeHash
+      - InvalidOneTimeCode
+      - MessageNotFound
+      - MessageAlreadySigned
+      - MessageRejected
+      - MessageReplaced
+      - InvalidMessageType
+      - EmptyAddress
+      - InvalidEth2SigningPolicySlotRange
+      - InvalidEth2SigningPolicyEpochRange
+      - InvalidEth2SigningPolicyTimestampRange
+      - InvalidEth2SigningPolicyOverlappingRule
+      - RpcUrlMissing
+      - MmiChainIdMissing
+      - EthersInvalidRpcUrl
+      - EthersGetTransactionCountError
+      - InvalidPassword
+      - BabylonStakingFeePlusDustOverflow
+      - BabylonStaking
+      - BabylonStakingIncorrectKey
+      - BabylonStakingSegwitNonDeposit
+      - BabylonStakingRegistrationRequiresTaproot
+      - PsbtSigning
+      - TooManyResets
+      - TooManyRequests
+      - TooManyFailedLogins
+      - BadBtcMessageSignP2shFlag
+      - InvalidTendermintRequest
+      - PolicyVersionMaxReached
+      - PolicyVersionInvalid
+      - PolicySecretLimitReached
+      - PolicySecretTooLarge
+      - InvalidImportKey
+      - AlienOwnerInvalid
+      - EmptyUpdateRequest
+      - InvalidPolicyReference
+      - PolicyEngineDisabled
+      - InvalidWasmPolicy
+      - CelProgramTooLarge
+      - InvalidPolicy
+      - RedundantDerivationPath
+      - ImportKeyMissing
+      - InvalidAbiMethods
+      - BabylonCovSign
+      - InvalidPolicyLogsRequest
+      - UserProfileMigrationMultipleEntries
+      - UserProfileMigrationTooManyItems
+      - InputTooShort
+      - InvalidTweakLength
+      - InvalidCustomChains
+      - InvalidRpcRequest
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    Scope:
+      oneOf:
+      - $ref: '#/components/schemas/ExplicitScope'
+      - type: string
+        title: OtherScopes
+        description: Scopes including wildcard fragments for accessing CubeSigner APIs
+        pattern: ^(orgAccess:child)(:[^:]+)?$
+      description: All scopes for accessing CubeSigner APIs
+    ClientProfile:
+      type: object
+      description: Client information representing the nature of front-end in [`ClientSessionMetadata`] and reflected in [`SessionMetadata`].
+      properties:
+        agent:
+          type: string
+          description: Agent/Product name
+          example: Mozilla Firefox
+          nullable: true
+        engine:
+          type: string
+          description: Name of the engine
+          example: Gecko
+          nullable: true
+        version:
+          type: string
+          description: Agent/product version
+          example: '41.2'
+          nullable: true
+    ClientSessionMetadata:
+      type: object
+      description: Attributes that are expected to be provided by the client
+      properties:
+        client:
+          $ref: '#/components/schemas/ClientProfile'
+        os_info:
+          $ref: '#/components/schemas/OsInfo'
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    NewSessionResponse:
+      type: object
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      required:
+      - org_id
+      - token
+      - refresh_token
+      - session_info
+      properties:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
+          type: string
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
+          type: string
+          description: 'New token to be used for authentication. Requests to signing endpoints
+
+            should include this value in the `Authorization` header.'
+    SessionMetadata:
+      type: object
+      description: 'Collection of attributes related to a Session.
+
+        This is the backend variant of [`ClientSessionMetadata`] and works in tandem with its frontend counterpart.'
+      properties:
+        client:
+          $ref: '#/components/schemas/ClientProfile'
+        created_by:
+          type: string
+          description: The id of the user who created the session.
+          example: User#ef4136dd-d22f-45bc-a65c-12b4baa729d4
+        os:
+          type: string
+          description: OS String for backwards compatibility, see os_info instead.
+          nullable: true
+        os_info:
+          $ref: '#/components/schemas/OsInfo'
+        source_ip:
+          $ref: '#/components/schemas/SourceIp'
+        user_agent:
+          type: string
+          description: User agent that created the session.
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0
+          nullable: true
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type: object
+          description: HTTP request body
+          nullable: true
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    ForbiddenErrorCode:
+      type: string
+      enum:
+      - AlienKeyCreate
+      - CannotAssumeIdentity
+      - SentryDisallowed
+      - PasskeyLoginDisabled
+      - PasskeyNotRegistered
+      - CannotCreateOrg
+      - WrongMfaEmailOtpJwt
+      - OrgFlagNotSet
+      - FidoRequiredToRemoveTotp
+      - OidcIdentityLimitReached
+      - OidcScopeCeilingMissing
+      - OidcIssuerNotAllowedForMemberRole
+      - OidcNoMemberRolesAllowed
+      - EmailOtpNotConfigured
+      - MfaChallengeExpired
+      - ChainIdNotAllowed
+      - InvalidOrg
+      - OrgIdMismatch
+      - SessionForWrongOrg
+      - SelfDelete
+      - SelfDisable
+      - SelfMfaReset
+      - InvalidOrgMembershipRoleChange
+      - UserDisabled
+      - OrgDisabled
+      - OrgNotFound
+      - OrgWithoutOwner
+      - OrphanedUser
+      - OidcUserNotFound
+      - UserNotInOrg
+      - UserNotOrgOwner
+      - UserNotKeyOwner
+      - InvalidRole
+      - DisabledRole
+      - KeyDisabled
+      - KeyNotInRole
+      - ContactNotInOrg
+      - UserExportRequestNotInOrg
+      - UserExportRequestInvalid
+      - UserExportDisabled
+      - UserNotOriginalKeyOwner
+      - UserNotInRole
+      - MustBeFullMember
+      - SessionExpired
+      - SessionChanged
+      - SessionRevoked
+      - ExpectedUserSession
+      - SessionRoleChanged
+      - ScopedNameNotFound
+      - SessionInvalidEpochToken
+      - SessionInvalidRefreshToken
+      - SessionRefreshTokenExpired
+      - InvalidAuthHeader
+      - SessionNotFound
+      - InvalidArn
+      - SessionInvalidAuthToken
+      - SessionAuthTokenExpired
+      - SessionPossiblyStolenToken
+      - MfaDisallowedIdentity
+      - MfaDisallowedApprover
+      - MfaTypeNotAllowed
+      - MfaNotApprovedYet
+      - MfaConfirmationCodeMismatch
+      - MfaHttpRequestMismatch
+      - MfaRemoveBelowMin
+      - MfaOrgRequirementNotMet
+      - MfaRegistrationDisallowed
+      - TotpAlreadyConfigured
+      - TotpConfigurationChanged
+      - MfaTotpBadConfiguration
+      - MfaTotpBadCode
+      - MfaTotpRateLimit
+      - ImproperSessionScope
+      - FullSessionRequired
+      - SessionWithoutAnyScopeUnder
+      - UserRoleUnprivileged
+      - MemberRoleForbidden
+      - MfaNotConfigured
+      - RemoveLastOidcIdentity
+      - OperationNotAllowed
+      - OrgExportRetrievalDisabled
+      - ChangingKeyExportRequirementIsDisabled
+      - AutoAddBlsKeyToProtectedRole
+      - UserNotPolicyOwner
+      - UserNotContactOwner
+      - UserNotBucketOwner
+      - LegacySessionCannotHaveScopeCeiling
+      - RoleInParentOrgNotAllowed
+      - RemoveKeyFromRoleUserNotAllowed
+      - SiweChallengeExpired
+      - SiweMessageNotValid
+      - SiweMessageInvalidSignature
+      - SiwsChallengeExpired
+      - SiwsDomain
+      - SiwsMessageInvalid
+      - Acl
+    OsInfo:
+      type: object
+      description: OS information set in [`ClientSessionMetadata`] and reflected in [`SessionMetadata`]
+      properties:
+        architecture:
+          type: string
+          example: arm64
+          nullable: true
+        name:
+          type: string
+          example: Mac OS
+          nullable: true
+        version:
+          type: string
+          example: 14.5.0
+          nullable: true
+        word_size:
+          type: string
+          example: 64-bit
+          nullable: true
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+          nullable: true
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
+  responses:
+    NewSessionResponse:
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+            required:
+            - org_id
+            - token
+            - refresh_token
+            - session_info
+            properties:
+              expiration:
+                type: integer
+                format: int64
+                description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+                example: 1701879640
+                minimum: 0
+              org_id:
+                $ref: '#/components/schemas/Id'
+              refresh_token:
+                type: string
+                description: Token that can be used to refresh this session.
+              session_info:
+                $ref: '#/components/schemas/ClientSessionInfo'
+              token:
+                type: string
+                description: 'New token to be used for authentication. Requests to signing endpoints
+
+                  should include this value in the `Authorization` header.'
+    PaginatedSessionsResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              description: The response from any operation operating on multiple sessions
+              required:
+              - sessions
+              properties:
+                sessions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SessionInfo'
+                  description: The list of sessions
+            - type: object
+              properties:
+                last_evaluated_key:
+                  type: string
+                  description: 'If set, the content of `response` does not contain the entire result set.
+
+                    To fetch the next page of the result set, call the same endpoint
+
+                    but specify this value as the ''page.start'' query parameter.'
+                  nullable: true
+            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+
+              value (which can the user pass back to use as a url query parameter to continue pagination).'
+    EmptyImpl:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+    SessionsResponse:
+      description: The response from any operation operating on multiple sessions
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response from any operation operating on multiple sessions
+            required:
+            - sessions
+            properties:
+              sessions:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionInfo'
+                description: The list of sessions
+    SessionInfo:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/SessionMetadata'
+            - type: object
+              required:
+              - session_id
+              - purpose
+              - exp
+              - created_at
+              properties:
+                created_at:
+                  type: integer
+                  format: int64
+                  description: Creation date (in seconds since unix epoch)
+                  minimum: 0
+                exp:
+                  type: integer
+                  format: int64
+                  description: Expiration date (in seconds since unix epoch)
+                  minimum: 0
+                last_used:
+                  allOf:
+                  - $ref: '#/components/schemas/WhereAndWhen'
+                  nullable: true
+                lifetimes:
+                  $ref: '#/components/schemas/RatchetConfig'
+                purpose:
+                  type: string
+                  description: A human-readable description for the session
+                  example: OIDC login session
+                scopes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Scope'
+                  description: Lists user permission and access for the session
+                  example:
+                  - sign:*
+                  - manage:mfa:vote:cs
+                session_id:
+                  type: string
+                  description: Session ID. Uniquely identifies the session, but cannot be used for auth.
+                  example: 77aad2100c361f497635dd005c4d15781e2e5df4b9f45d8e74f37425cbc30b9e
+  securitySchemes:
+    Oidc:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: OIDC tokens allow users to authenticate using a third-party service. These are exchanged for signer session tokens.
+    SignerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Signing API end-points use session tokens for auth. Specifically, with each request you need to use the \`token\` from your signer session (which you create with `cs token create`).

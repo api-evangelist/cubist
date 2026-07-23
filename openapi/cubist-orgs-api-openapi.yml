@@ -1,0 +1,2750 @@
+openapi: 3.0.3
+info:
+  title: CubeSigner Account Orgs API
+  description: The CubeSigner management and signing service.
+  contact:
+    name: Cubist Inc.
+    email: hello@cubist.dev
+  version: v0.1.0
+servers:
+- url: https://gamma.signer.cubist.dev
+  description: Testing and staging environment
+- url: https://prod.signer.cubist.dev
+  description: Production environment
+security:
+- Cognito: []
+tags:
+- name: Orgs
+paths:
+  /v0/email/orgs:
+    get:
+      tags:
+      - Orgs
+      summary: List accessible organizations.
+      description: 'List accessible organizations.
+
+
+        Unauthenticated endpoint for retrieving all organizations accessible to a user.
+
+        This information is emailed to the provided email address.
+
+        '
+      operationId: email_my_orgs
+      parameters:
+      - name: email
+        in: query
+        description: The email of the user
+        required: true
+        schema:
+          type: string
+        style: form
+        example: alice@example.com
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyImpl'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - {}
+  /v0/org/{org_id}:
+    get:
+      tags:
+      - Orgs
+      summary: Get Org
+      description: 'Get Org
+
+
+        Retrieves information about an organization.'
+      operationId: getOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/OrgInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:org:get
+    patch:
+      tags:
+      - Orgs
+      summary: Update Org
+      description: 'Update Org
+
+
+        Update organization attributes (enabled flag, name, and policies).'
+      operationId: updateOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrgRequest'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateOrgResponse'
+        '202':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:org:update:*
+  /v0/org/{org_id}/info:
+    get:
+      tags:
+      - Orgs
+      summary: Public Org Info
+      description: 'Public Org Info
+
+
+        Unauthenticated endpoint that returns publicly-available information about an organization.
+
+        '
+      operationId: public_org_info
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/PublicOrgInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - {}
+  /v0/org/{org_id}/orgs:
+    post:
+      tags:
+      - Orgs
+      summary: Create Org
+      description: 'Create Org
+
+
+        Creates a new organization. The new org is a child of the
+
+        current org and inherits its key-export policy. The new org
+
+        is created with one owner, the caller of this API.'
+      operationId: createOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrgRequest'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/OrgInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:org:create
+components:
+  schemas:
+    NotificationEndpointConfiguration:
+      type: object
+      description: The configuration for an org event endpoint
+      required:
+      - url
+      properties:
+        filter:
+          $ref: '#/components/schemas/OrgEventFilter'
+        url:
+          type: string
+          description: URL of the endpoint
+    ScopeSet:
+      oneOf:
+      - type: string
+        description: All scopes
+        enum:
+        - All
+      - type: object
+        required:
+        - AllExcept
+        properties:
+          AllExcept:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: All scopes except these (including those transitively implied).
+      - type: object
+        required:
+        - AllOf
+        properties:
+          AllOf:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: All of these scopes (including those transitively implied).
+      description: A set of scopes.
+    EvmCustomChain:
+      type: object
+      description: A custom EVM chain.
+      required:
+      - chain_id
+      - rpc_url
+      - name
+      - native_currency
+      properties:
+        chain_id:
+          type: string
+          description: The chain id. Enforced to be unique among all custom EVM chains in the organization. It must be a hex string (starting with "0x") with even length.
+          example: '0x01'
+        name:
+          type: string
+          description: The name of the chain.
+          example: Ethereum Mainnet
+        native_currency:
+          $ref: '#/components/schemas/EvmCurrencyInfo'
+        rpc_url:
+          type: string
+          description: The URL of the RPC provider for this chain.
+          example: https://ethereum-rpc.publicnode.com
+    CommonFields:
+      allOf:
+      - type: object
+        description: 'Versioning fields (e.g., version number, creation time, and last modified times)
+
+          that are common to different types of resources.'
+        properties:
+          created:
+            allOf:
+            - $ref: '#/components/schemas/EpochDateTime'
+            nullable: true
+          last_modified:
+            allOf:
+            - $ref: '#/components/schemas/EpochDateTime'
+            nullable: true
+          version:
+            type: integer
+            format: int64
+            description: Version of this object
+            minimum: 0
+      - type: object
+        properties:
+          edit_policy:
+            $ref: '#/components/schemas/EditPolicy'
+          metadata:
+            description: 'User-defined metadata. When rendering (e.g., in the browser) you should treat
+
+              it as untrusted user data (and avoid injecting metadata into HTML directly) if
+
+              untrusted users can create/update keys (or their metadata).'
+      description: 'Fields that are common to different types of resources such as keys, roles, etc.
+
+        Includes versioning fields plus metadata, edit policy, etc.'
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    HttpRequestCmp:
+      oneOf:
+      - type: string
+        description: The requests must match exactly. Any given MFA receipt can be used at most once.
+        enum:
+        - Eq
+      - type: object
+        required:
+        - EvmTx
+        properties:
+          EvmTx:
+            $ref: '#/components/schemas/EvmTxCmp'
+      - type: object
+        required:
+        - SolanaTx
+        properties:
+          SolanaTx:
+            $ref: '#/components/schemas/SolanaTxCmp'
+      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
+    BadGatewayErrorCode:
+      type: string
+      enum:
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    OrgEventDiscriminants:
+      type: string
+      description: Auto-generated discriminant enum variants
+      enum:
+      - Billing
+      - Response
+      - OidcAuth
+      - Signed
+      - BabylonEotsConcurrentSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2ConcurrentBlockSigning
+      - Eth2InvalidBlockProposerSlotTooLow
+      - Eth2InvalidAttestationSourceEpochTooLow
+      - Eth2InvalidAttestationTargetEpochTooLow
+      - Eth2Unstake
+      - Eth2ExceededMaxUnstake
+      - KeyCreated
+      - MfaApproved
+      - MfaRejected
+      - PolicyChanged
+      - TendermintConcurrentSigning
+      - InvitationCreated
+      - InvitationCanceled
+      - UserExportInit
+      - UserExportComplete
+      - WasmPolicyExecuted
+    EditPolicy:
+      type: object
+      description: 'A policy which governs when and who is allowed to update the entity this policy is
+
+        attached to (e.g., a role or a key).
+
+
+        When attached to a role, by default, this policy applies to role deletion and all
+
+        role updates (including adding/removing keys and users); in terms of scopes,
+
+        it applies to `manage:role:update:*` and `manage:role:delete`.
+
+
+        When attached to a key, by default, this policy applies to key deletion, all
+
+        key updates, and adding/removing that key to/from a role; in terms of scopes,
+
+        it applies to `manage:key:update:*`, `manage:key:delete`, `manage:role:update:key:*`.
+
+
+        This default can be changed by setting the `applies_to_scopes` property.'
+      properties:
+        applies_to_scopes:
+          $ref: '#/components/schemas/ScopeSet'
+        mfa:
+          allOf:
+          - $ref: '#/components/schemas/MfaPolicy'
+          nullable: true
+        time_lock_until:
+          allOf:
+          - $ref: '#/components/schemas/EpochDateTime'
+          nullable: true
+    ClientSessionInfo:
+      type: object
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
+      required:
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
+      properties:
+        auth_token:
+          type: string
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
+          type: string
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    BinanceDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Binance API method that would have been used
+        url:
+          type: string
+          description: The Binance API url method that would have been called
+    OrgEventFilter:
+      oneOf:
+      - type: string
+        description: Do not filter any org events
+        enum:
+        - All
+      - type: object
+        required:
+        - AllExcept
+        properties:
+          AllExcept:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrgEventDiscriminants'
+            description: Accepts all org events other than the ones listed
+      - type: object
+        required:
+        - OneOf
+        properties:
+          OneOf:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrgEventDiscriminants'
+            description: Only accepts org events that are one of the listed events
+      description: Filter for org events
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    MfaPolicy:
+      type: object
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. If empty at creation time, default to the current user.
+        allowed_mfa_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+          nullable: true
+        count:
+          type: integer
+          format: int32
+          description: How many users to require to approve (defaults to 1).
+          minimum: 0
+        lifetime:
+          $ref: '#/components/schemas/Seconds'
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user (defaults to 1).
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+        restricted_operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationKind'
+          description: 'CubeSigner operations to which this policy should apply.
+
+            When omitted, applies to all operations.'
+          nullable: true
+        time_delay:
+          $ref: '#/components/schemas/Seconds'
+      example:
+        allowed_approvers:
+        - User#fabc3f88-04e0-471b-9657-0ae12a3cd73e
+        - User#d796c369-9974-473b-ab9e-e4a2418d2d07
+        count: 2
+        lifetime: 900
+    AlertKind:
+      type: string
+      enum:
+      - PolicyChanges
+      - Eth2ConcurrentBlockSigning
+      - BabylonEotsConcurrentSigning
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+          nullable: true
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    NotificationEndpoint:
+      allOf:
+      - $ref: '#/components/schemas/NotificationEndpointSubscription'
+      - type: object
+        required:
+        - status
+        properties:
+          status:
+            $ref: '#/components/schemas/SubscriptionStatus'
+      description: The configuration and status of a notification endpoint
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+          nullable: true
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    InternalErrorCode:
+      type: string
+      enum:
+      - NoMaterialId
+      - InvalidAuditLogEntry
+      - UnexpectedCheckerRule
+      - UnresolvedPolicyReference
+      - UnexpectedAclAction
+      - FidoKeyAssociatedWithMultipleUsers
+      - ClaimsParseError
+      - InvalidThrottleId
+      - InvalidEmailAddress
+      - EmailTemplateRender
+      - OidcIdentityHeaderMissing
+      - OidcIdentityParseError
+      - SystemTimeError
+      - PasswordHashParseError
+      - SendMailError
+      - ReqwestError
+      - EmailConstructionError
+      - TsWriteError
+      - TsQueryError
+      - DbQueryError
+      - DbGetError
+      - DbDeleteError
+      - DbPutError
+      - DbUpdateError
+      - SerdeError
+      - TestAndSetError
+      - DbGetItemsError
+      - DbWriteError
+      - CubistSignerError
+      - CwListMetricsError
+      - CwPutMetricDataError
+      - GetAwsSecretError
+      - SecretNotFound
+      - KmsGenerateRandomError
+      - MalformedTotpBytes
+      - KmsGenerateRandomNoResponseError
+      - CreateKeyError
+      - ParseDerivationPathError
+      - SplitSignerError
+      - CreateImportKeyError
+      - CreateEotsNoncesError
+      - EotsSignError
+      - BabylonCovSignError
+      - CognitoDeleteUserError
+      - CognitoListUsersError
+      - CognitoGetUserError
+      - MissingUserEmail
+      - CognitoResendUserInvitation
+      - CognitoSetUserPasswordError
+      - GenericInternalError
+      - AssumeRoleWithoutEvidence
+      - OidcAuthWithoutOrg
+      - MissingKeyMetadata
+      - KmsEnableKeyError
+      - KmsDisableKeyError
+      - LambdaInvokeError
+      - LambdaNoResponseError
+      - LambdaFailure
+      - LambdaUnparsableResponse
+      - SerializeEncryptedExportKeyError
+      - DeserializeEncryptedExportKeyError
+      - ReEncryptUserExport
+      - S3UploadError
+      - S3DownloadError
+      - S3CopyError
+      - S3ListObjectsError
+      - S3DeleteObjectsError
+      - S3BuildError
+      - S3PresignedUrlError
+      - ManagedStateMissing
+      - InternalHeaderMissing
+      - InvalidInternalHeaderValue
+      - RequestLocalStateAlreadySet
+      - OidcOrgMismatch
+      - OidcIssuerInvalidJwk
+      - InvalidPkForMaterialId
+      - SegwitTweakFailed
+      - UncheckedOrg
+      - SessionOrgIdMissing
+      - AvaSignCredsMissing
+      - AvaSignSignatureMissing
+      - ExpectedRoleSession
+      - InvalidThirdPartyIdentity
+      - CognitoGetUser
+      - SnsSubscribeError
+      - SnsUnsubscribeError
+      - SnsGetSubscriptionAttributesError
+      - SnsSubscriptionAttributesMissing
+      - SnsSetSubscriptionAttributesError
+      - SnsPublishBatchError
+      - InconsistentMultiValueTestAndSet
+      - MaterialIdError
+      - InvalidBtcAddress
+      - HistoricalTxBodyMissing
+      - InvalidOperation
+      - ParentOrgNotFound
+      - OrgParentLoop
+      - ResolvedParentOrgWithNoScopeCeiling
+      - InvalidUploadObjectId
+      - PolicyEngineNotFound
+      - PolicyEngineError
+      - PolicySecretsEncryptionError
+      - CreatePolicyImportKeyError
+      - InvalidAlias
+      - EmptyUpdateModifiedObject
+      - EmptyUpdateModifiedActions
+      - DbContactAddressesInvalid
+      - InvalidEvmSigedRlp
+      - InvalidErc20Data
+      - InvalidRpcUrl
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    PasskeyConfig:
+      type: object
+      description: Org-level passkey configuration
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberRole'
+          description: Enable passkey login for certain user roles (disabled for everyone by default)
+          uniqueItems: true
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+          nullable: true
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        request_id:
+          type: string
+          description: Optional request identifier
+    MfaRequirements:
+      type: object
+      description: Org-wide MFA requirements.
+      properties:
+        alien_login_requirement:
+          $ref: '#/components/schemas/SecondFactorRequirement'
+        allowed_mfa_types:
+          $ref: '#/components/schemas/AllowedMfaMap'
+        key_export_requirement:
+          $ref: '#/components/schemas/SecondFactorRequirement'
+        member_login_requirement:
+          $ref: '#/components/schemas/SecondFactorRequirement'
+    ThrottleConfig:
+      type: object
+      description: Configuration object for a throttle which limits the number of entities within a given time window
+      required:
+      - threshold
+      - window
+      properties:
+        threshold:
+          type: integer
+          format: int32
+          description: The number of entities allowed within the window
+          minimum: 0
+        window:
+          $ref: '#/components/schemas/Seconds'
+    AcceptedValueCode:
+      type: string
+      enum:
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    NotificationEndpointSubscription:
+      type: object
+      description: A notification endpoint subscription
+      required:
+      - arn
+      - config
+      properties:
+        arn:
+          type: string
+          description: The ARN of the subscription
+        config:
+          $ref: '#/components/schemas/NotificationEndpointConfiguration'
+    SignDryRunArgs:
+      type: object
+      required:
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+          nullable: true
+    CustomChainsData:
+      type: object
+      description: Information about an org's custom chains.
+      required:
+      - evm
+      properties:
+        evm:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvmCustomChain'
+          description: Custom EVM chains.
+          uniqueItems: true
+    Seconds:
+      type: integer
+      format: int64
+      description: 'Duration measured in seconds
+
+        A wrapper type for serialization that encodes a `Duration` as a `u64` representing the number of seconds.'
+      minimum: 0
+    OrgAlertsPrefs:
+      type: object
+      properties:
+        alert_recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+          description: Recipient users for org-level alerts
+          nullable: true
+        subscribed_alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertKind'
+          description: Org-level alerts to send emails for
+          nullable: true
+    SecondFactorRequirement:
+      type: string
+      description: 'Represents the number of MFA approvals required for a given operation
+
+        (e.g. login). Can be used to produce a concrete policy for a given user'
+      enum:
+      - none
+      - if_registered
+      - required
+    AcceptedResponse:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      - type: object
+    UpdateOrgPolicyEngineConfigs:
+      type: object
+      description: Policy Engine configurations.
+      required:
+      - allowed_http_authorities
+      properties:
+        allowed_http_authorities:
+          type: array
+          items:
+            type: string
+          description: Allowed domains for HTTP requests
+          example:
+          - cubist.dev:443
+    MemberRole:
+      type: string
+      description: Describes whether a user in an org is an Owner or just a regular member
+      enum:
+      - Alien
+      - Member
+      - Owner
+    EvmTxCmp:
+      type: object
+      properties:
+        grace:
+          type: integer
+          format: int64
+          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
+
+
+            In this case, however, because EVM transactions already have a replay prevention mechanism
+
+            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
+
+            indicate how long an MFA receipt should remain valid after its first use.
+
+
+            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
+
+            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
+
+            ensure that any subsequent requests that claim the same receipt must sign for the same
+
+            nonce as the request we signed originally with that receipt.
+
+
+            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
+
+            original expiration date.
+
+
+            The grace period must not be greater than 30 days.'
+          nullable: true
+          minimum: 0
+        ignore_gas:
+          type: boolean
+          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
+        ignore_nonce:
+          type: boolean
+          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
+    IdpConfig:
+      type: object
+      description: IDP configuration
+      properties:
+        throttle:
+          allOf:
+          - $ref: '#/components/schemas/ThrottleConfig'
+          nullable: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberRole'
+          description: Enable for certain user roles
+          uniqueItems: true
+          nullable: true
+    ExplicitScope:
+      type: string
+      title: ExplicitScope
+      description: Explicitly named scopes for accessing CubeSigner APIs
+      enum:
+      - sign:*
+      - sign:ava
+      - sign:binance:*
+      - sign:binance:subToMaster
+      - sign:binance:subToSub
+      - sign:binance:universalTransfer
+      - sign:binance:subAccountAssets
+      - sign:binance:accountInfo
+      - sign:binance:subAccountTransferHistory
+      - sign:binance:universalTransferHistory
+      - sign:binance:withdraw
+      - sign:binance:withdrawHistory
+      - sign:binance:deposit
+      - sign:binance:depositHistory
+      - sign:binance:listSubAccounts
+      - sign:binance:coinInfo
+      - sign:bybit:*
+      - sign:bybit:queryUser
+      - sign:bybit:querySubMembers
+      - sign:bybit:queryCoinsBalance
+      - sign:bybit:queryDepositAddress
+      - sign:bybit:universalTransfer
+      - sign:bybit:withdraw
+      - sign:bybit:withdrawals
+      - sign:coinbase:*
+      - sign:coinbase:accounts:list
+      - sign:coinbase:portfolios:list
+      - sign:coinbase:funds:move
+      - sign:blob
+      - sign:diffieHellman
+      - sign:btc:*
+      - sign:btc:segwit
+      - sign:btc:taproot
+      - sign:btc:psbt:*
+      - sign:btc:psbt:doge
+      - sign:btc:psbt:legacy
+      - sign:btc:psbt:segwit
+      - sign:btc:psbt:taproot
+      - sign:btc:psbt:ltcSegwit
+      - sign:btc:message:*
+      - sign:btc:message:segwit
+      - sign:btc:message:legacy
+      - sign:babylon:*
+      - sign:babylon:eots:*
+      - sign:babylon:eots:nonces
+      - sign:babylon:eots:sign
+      - sign:babylon:staking:*
+      - sign:babylon:staking:deposit
+      - sign:babylon:staking:unbond
+      - sign:babylon:staking:withdraw
+      - sign:babylon:staking:slash
+      - sign:babylon:registration
+      - sign:babylon:covenant
+      - sign:evm:*
+      - sign:evm:tx
+      - sign:evm:eip191
+      - sign:evm:eip712
+      - sign:evm:eip7702
+      - sign:eth2:*
+      - sign:eth2:validate
+      - sign:eth2:stake
+      - sign:eth2:unstake
+      - sign:solana
+      - sign:sui
+      - sign:tendermint
+      - sign:mmi
+      - manage:*
+      - manage:readonly
+      - manage:email:*
+      - manage:email:get
+      - manage:email:update
+      - manage:email:delete
+      - manage:mfa:*
+      - manage:mfa:readonly
+      - manage:mfa:list
+      - manage:mfa:vote:*
+      - manage:mfa:vote:cs
+      - manage:mfa:vote:email
+      - manage:mfa:vote:fido
+      - manage:mfa:vote:totp
+      - manage:mfa:register:*
+      - manage:mfa:register:fido
+      - manage:mfa:register:totp
+      - manage:mfa:register:email
+      - manage:mfa:unregister:*
+      - manage:mfa:unregister:fido
+      - manage:mfa:unregister:totp
+      - manage:mfa:verify:*
+      - manage:mfa:verify:totp
+      - manage:key:*
+      - manage:key:readonly
+      - manage:key:get
+      - manage:key:attest
+      - manage:key:listRoles
+      - manage:key:list
+      - manage:key:history:tx:list
+      - manage:key:create
+      - manage:key:import
+      - manage:key:update:*
+      - manage:key:update:owner
+      - manage:key:update:policy
+      - manage:key:update:enabled
+      - manage:key:update:region
+      - manage:key:update:metadata
+      - manage:key:update:properties
+      - manage:key:update:editPolicy
+      - manage:key:delete
+      - manage:policy:*
+      - manage:policy:readonly
+      - manage:policy:create
+      - manage:policy:get
+      - manage:policy:list
+      - manage:policy:delete
+      - manage:policy:update:*
+      - manage:policy:update:owner
+      - manage:policy:update:name
+      - manage:policy:update:acl
+      - manage:policy:update:editPolicy
+      - manage:policy:update:metadata
+      - manage:policy:update:rule
+      - manage:policy:invoke
+      - manage:policy:wasm:*
+      - manage:policy:wasm:upload
+      - manage:policy:secrets:*
+      - manage:policy:secrets:get
+      - manage:policy:secrets:update:*
+      - manage:policy:secrets:update:values
+      - manage:policy:secrets:update:acl
+      - manage:policy:secrets:update:editPolicy
+      - manage:policy:buckets:*
+      - manage:policy:buckets:get
+      - manage:policy:buckets:list
+      - manage:policy:buckets:update:*
+      - manage:policy:buckets:update:owner
+      - manage:policy:buckets:update:acl
+      - manage:policy:buckets:update:metadata
+      - manage:contact:*
+      - manage:contact:readonly
+      - manage:contact:create
+      - manage:contact:get
+      - manage:contact:list
+      - manage:contact:delete
+      - manage:contact:update:*
+      - manage:contact:update:name
+      - manage:contact:update:addresses
+      - manage:contact:update:owner
+      - manage:contact:update:labels
+      - manage:contact:update:metadata
+      - manage:contact:update:editPolicy
+      - manage:contact:lookup:*
+      - manage:contact:lookup:address
+      - manage:policy:createImportKey
+      - manage:role:*
+      - manage:role:readonly
+      - manage:role:create
+      - manage:role:delete
+      - manage:role:get:*
+      - manage:role:attest
+      - manage:role:get:keys
+      - manage:role:get:keys:list
+      - manage:role:get:keys:get
+      - manage:role:get:users
+      - manage:role:list
+      - manage:role:update:*
+      - manage:role:update:enabled
+      - manage:role:update:policy
+      - manage:role:update:editPolicy
+      - manage:role:update:actions
+      - manage:role:update:key:*
+      - manage:role:update:key:add
+      - manage:role:update:key:remove
+      - manage:role:update:user:*
+      - manage:role:update:user:add
+      - manage:role:update:user:remove
+      - manage:role:history:tx:list
+      - manage:identity:*
+      - manage:identity:readonly
+      - manage:identity:verify
+      - manage:identity:add
+      - manage:identity:remove
+      - manage:identity:list
+      - manage:org:*
+      - manage:org:create
+      - manage:org:metrics:query
+      - manage:org:audit:query
+      - manage:org:readonly
+      - manage:org:addUser
+      - manage:org:inviteUser
+      - manage:org:inviteAlien
+      - manage:org:invitation:list
+      - manage:org:invitation:cancel
+      - manage:org:updateMembership:*
+      - manage:org:updateMembership:owner
+      - manage:org:updateMembership:member
+      - manage:org:updateMembership:alien
+      - manage:org:listUsers
+      - manage:org:user:get
+      - manage:org:deleteUser:*
+      - manage:org:deleteUser:owner
+      - manage:org:deleteUser:member
+      - manage:org:deleteUser:alien
+      - manage:org:get
+      - manage:org:update:*
+      - manage:org:update:enabled
+      - manage:org:update:policy
+      - manage:org:update:signPolicy
+      - manage:org:update:export
+      - manage:org:update:totpFailureLimit
+      - manage:org:update:notificationEndpoints
+      - manage:org:update:defaultInviteKind
+      - manage:org:update:idpConfiguration
+      - manage:org:update:passkeyConfiguration
+      - manage:org:update:emailPreferences
+      - manage:org:update:historicalData
+      - manage:org:update:requireScopeCeiling
+      - manage:org:update:alienLoginRequirement
+      - manage:org:update:memberLoginRequirement
+      - manage:org:update:keyExportRequirement
+      - manage:org:update:allowedMfaTypes
+      - manage:org:update:policyEngineConf
+      - manage:org:update:customChains
+      - manage:org:update:extProps
+      - manage:org:update:editPolicy
+      - manage:org:user:resetMfa
+      - manage:session:*
+      - manage:session:readonly
+      - manage:session:get
+      - manage:session:list
+      - manage:session:create
+      - manage:session:extend
+      - manage:session:revoke
+      - manage:export:*
+      - manage:export:readonly
+      - manage:export:org:*
+      - manage:export:org:get
+      - manage:export:user:*
+      - manage:export:user:delete
+      - manage:export:user:list
+      - manage:authMigration:*
+      - manage:authMigration:identity:add
+      - manage:authMigration:identity:remove
+      - manage:authMigration:user:update
+      - manage:mmi:*
+      - manage:mmi:readonly
+      - manage:mmi:get
+      - manage:mmi:list
+      - manage:mmi:reject
+      - manage:mmi:delete
+      - export:*
+      - export:user:*
+      - export:user:init
+      - export:user:complete
+      - mmi:*
+      - orgAccess:*
+      - orgAccess:child:*
+      - rpc:*
+      - rpc:createTransaction:*
+      - rpc:createTransaction:evm
+      - rpc:retryTransaction
+      - rpc:cancelTransaction
+      - rpc:getTransaction
+      - rpc:listTransactions
+      - rpc:btcListUtxos
+      - rpc:binance
+      - rpc:bybit
+      - rpc:coinbase
+    PolicyErrorOwnCodes:
+      type: string
+      enum:
+      - Inapplicable
+      - SuiTxReceiversDisallowedTransactionKind
+      - SuiTxReceiversDisallowedTransferAddress
+      - SuiTxReceiversDisallowedCommand
+      - BtcTxDisallowedOutputs
+      - BtcSignatureExceededValue
+      - BtcValueOverflow
+      - BtcSighashTypeDisallowed
+      - Eip7702AddressMismatch
+      - EvmTxReceiverMismatch
+      - EvmTxChainIdMismatch
+      - EvmTxSenderMismatch
+      - EvmTxExceededValue
+      - EvmTxExceededGasCost
+      - EvmTxGasCostUndefined
+      - EvmDataDisallowed
+      - Erc20DataInvalid
+      - EvmContractAddressUndefined
+      - EvmContractChainIdUndefined
+      - EvmDataNotDefined
+      - EvmDataInvalid
+      - EvmContractNotInAllowlist
+      - Erc20ExceededTransferLimit
+      - Erc20ReceiverMismatch
+      - Erc20ExceededApproveLimit
+      - Erc20SpenderMismatch
+      - EvmFunctionNotInAllowlist
+      - EvmFunctionCallInvalid
+      - EvmFunctionCallDisallowedArg
+      - PolicyDisjunctionError
+      - PolicyNegationError
+      - Eth2ExceededMaxUnstake
+      - Eth2ConcurrentUnstaking
+      - NotInIpv4Allowlist
+      - NotInOriginAllowlist
+      - NotInOperationAllowlist
+      - InvalidSourceIp
+      - RawSigningNotAllowed
+      - DiffieHellmanExchangeNotAllowed
+      - Eip712SigningNotAllowed
+      - OidcSourceNotAllowed
+      - NoOidcAuthSourcesDefined
+      - AddKeyToRoleDisallowed
+      - KeysAlreadyInRole
+      - KeyInMultipleRoles
+      - KeyAccessError
+      - RequireRoleSessionKeyAccessError
+      - BtcMessageSigningNotAllowed
+      - Eip191SigningNotAllowed
+      - Eip7702SigningNotAllowed
+      - TaprootSigningDisallowed
+      - SegwitSigningDisallowed
+      - PsbtSigningDisallowed
+      - BabylonStakingDisallowed
+      - TimeLocked
+      - CelPolicyDenied
+      - BabylonStakingNetwork
+      - BabylonStakingParamsVersion
+      - BabylonStakingExplicitParams
+      - BabylonStakingStakerPk
+      - BabylonStakingFinalityProviderPk
+      - BabylonStakingLockTime
+      - BabylonStakingValue
+      - BabylonStakingChangeAddress
+      - BabylonStakingFee
+      - BabylonStakingWithdrawalAddress
+      - BabylonStakingBbnAddress
+      - SolanaInstructionCountLow
+      - SolanaInstructionCountHigh
+      - SolanaNotInInstructionAllowlist
+      - SolanaInstructionMismatch
+      - WasmPoliciesDisabled
+      - WasmPolicyDenied
+      - WasmPolicyFailed
+      - WebhookPoliciesDisabled
+      - DeniedByWebhook
+      - ExplicitlyDenied
+    InviteKind:
+      type: string
+      description: Indicates the auth sources allowed to an invited user
+      enum:
+      - Cognito
+      - IdpAndSso
+      - Sso
+    AllowedMfaMap:
+      type: object
+      description: 'MFA types that are allowed to be used for individual implicitly security-sensitive
+
+        operations (like logging in, adding an MFA factor, exporting keys, etc; see `MfaProtectedAction`).'
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/MfaType'
+        uniqueItems: true
+    CoinbaseDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Coinbase API method that would have been used
+        url:
+          type: string
+          description: The Coinbase API url method that would have been called
+    Id:
+      type: string
+    BadRequestErrorCode:
+      type: string
+      enum:
+      - GenericBadRequest
+      - DisallowedAllowRuleReference
+      - InvalidPaginationToken
+      - InvalidEmail
+      - InvalidEmailTemplate
+      - QueryMetricsError
+      - InvalidTelegramData
+      - ValidationError
+      - WebhookPolicyTimeoutOutOfBounds
+      - WebhookPolicyDisallowedUrlScheme
+      - WebhookPolicyDisallowedUrlHost
+      - WebhookPolicyDisallowedHeaders
+      - ReservedName
+      - UserEmailNotConfigured
+      - EmailPasswordNotFound
+      - PasswordAuthNotAllowedByInvitation
+      - OneTimeCodeExpired
+      - InvalidBody
+      - InvalidJwt
+      - InvitationNoLongerValid
+      - TokenRequestError
+      - InvalidMfaReceipt
+      - InvalidMfaPolicyCount
+      - InvalidMfaPolicyNumAuthFactors
+      - InvalidMfaPolicyNumAllowedApprovers
+      - InvalidMfaPolicyGracePeriodTooLong
+      - InvalidBabylonStakingPolicyParams
+      - InvalidSuiTxReceiversEmptyAllowlist
+      - InvalidBtcTxReceiversEmptyAllowlist
+      - InvalidRequireRoleSessionAllowlist
+      - InvalidCreateKeyCount
+      - InvalidDiffieHellmanCount
+      - OrgInviteExistingUser
+      - OrgUserAlreadyExists
+      - OrgNameTaken
+      - KwkNotFoundInRegion
+      - OrgIsNotOrgExport
+      - RoleNameTaken
+      - PolicyNameTaken
+      - NameTaken
+      - ContactNameInvalid
+      - ContactAddressesInvalid
+      - ContactLabelInvalid
+      - ContactModified
+      - PolicyNotFound
+      - PolicyVersionNotFound
+      - PolicyRuleDisallowedByType
+      - PolicyTypeDisallowed
+      - PolicyDuplicateError
+      - PolicyStillAttached
+      - PolicyModified
+      - PolicyNotAttached
+      - AddKeyToRoleCountTooHigh
+      - InvalidKeyId
+      - InvalidTimeLockAlreadyInThePast
+      - InvalidRestrictedScopes
+      - InvalidUpdate
+      - InvalidMetadataLength
+      - InvalidLength
+      - InvalidKeyMaterialId
+      - KeyNotFound
+      - SiweChallengeNotFound
+      - SiweInvalidRequest
+      - SiwsChallengeNotFound
+      - SiwsInvalidRequest
+      - UserExportDerivedKey
+      - UserExportPublicKeyInvalid
+      - NistP256PublicKeyInvalid
+      - UnableToAccessSmtpRelay
+      - UserExportInProgress
+      - RoleNotFound
+      - InvalidRoleNameOrId
+      - InvalidMfaReceiptOrgIdMissing
+      - InvalidMfaReceiptInvalidOrgId
+      - MfaRequestNotFound
+      - InvalidKeyType
+      - InvalidPropertiesForKeyType
+      - MismatchedKeyPropertiesPatch
+      - MissingBinanceApiKey
+      - MissingBybitApiKey
+      - MissingCoinbaseApiKey
+      - BinanceKeyMasterMismatch
+      - BybitAccountMismatch
+      - InvalidKeyMaterial
+      - InvalidHexValue
+      - InvalidBase32Value
+      - InvalidBase58Value
+      - InvalidBase64Value
+      - InvalidSs58Value
+      - InvalidForkVersionLength
+      - InvalidEthAddress
+      - InvalidStellarAddress
+      - InvalidOrgNameOrId
+      - InvalidUpdateOrgRequestDisallowedMfaType
+      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
+      - EmailOtpDelayTooShortForRegisterMfa
+      - InvalidStakeDeposit
+      - InvalidBlobSignRequest
+      - InvalidDiffieHellmanRequest
+      - InvalidSolanaSignRequest
+      - InvalidEip712SignRequest
+      - InvalidEip7702SignRequest
+      - OnlySpecifyOne
+      - IncompatibleParams
+      - NoOidcDataInProof
+      - InvalidEvmSignRequest
+      - InvalidEth2SignRequest
+      - InvalidDeriveKeyRequest
+      - InvalidStakingAmount
+      - CustomStakingAmountNotAllowedForWrapperContract
+      - InvalidUnstakeRequest
+      - InvalidCreateUserRequest
+      - UserAlreadyExists
+      - IdpUserAlreadyExists
+      - CognitoUserAlreadyOrgMember
+      - UserNotFound
+      - UserWithEmailNotFound
+      - PolicyKeyMismatch
+      - EmptyScopes
+      - InvalidScopesForRoleSession
+      - InvalidLifetime
+      - NoSingleKeyForUser
+      - InvalidOrgPolicyRule
+      - SourceIpAllowlistEmpty
+      - LimitWindowTooLong
+      - Erc20ContractDisallowed
+      - EmptyRuleError
+      - PolicyFieldValidationError
+      - OptionalListEmpty
+      - MultipleExclusiveFieldsProvided
+      - DuplicateFieldEntry
+      - InvalidRange
+      - InvalidOrgPolicyRepeatedRule
+      - InvalidSuiTransaction
+      - SuiSenderMismatch
+      - AvaSignHashError
+      - AvaSignError
+      - BtcSegwitHashError
+      - BtcTaprootHashError
+      - BtcSignError
+      - TaprootSignError
+      - Eip712SignError
+      - InvalidMemberRoleInUserAdd
+      - InvalidMemberRoleInRecipientAdd
+      - ThirdPartyUserAlreadyExists
+      - OidcIdentityAlreadyExists
+      - UserAlreadyHasIdentity
+      - ThirdPartyUserNotFound
+      - DeleteOidcUserError
+      - DeleteUserError
+      - SessionRoleMismatch
+      - InvalidOidcToken
+      - InvalidOidcIdentity
+      - OidcIssuerUnsupported
+      - OidcIssuerNotAllowed
+      - OidcIssuerNoApplicableJwk
+      - FidoKeyAlreadyRegistered
+      - FidoKeySignCountTooLow
+      - FidoVerificationFailed
+      - FidoChallengeMfaMismatch
+      - UnsupportedLegacyCognitoSession
+      - InvalidIdentityProof
+      - PaginationDataExpired
+      - ExistingKeysViolateExclusiveKeyAccess
+      - ExportDelayTooShort
+      - ExportWindowTooLong
+      - InvalidTotpFailureLimit
+      - InvalidEip191SignRequest
+      - CannotResendUserInvitation
+      - InvalidNotificationEndpointCount
+      - CannotDeletePendingSubscription
+      - InvalidNotificationUrlProtocol
+      - EmptyOneOfOrgEventFilter
+      - EmptyAllExceptOrgEventFilter
+      - InvalidTapNodeHash
+      - InvalidOneTimeCode
+      - MessageNotFound
+      - MessageAlreadySigned
+      - MessageRejected
+      - MessageReplaced
+      - InvalidMessageType
+      - EmptyAddress
+      - InvalidEth2SigningPolicySlotRange
+      - InvalidEth2SigningPolicyEpochRange
+      - InvalidEth2SigningPolicyTimestampRange
+      - InvalidEth2SigningPolicyOverlappingRule
+      - RpcUrlMissing
+      - MmiChainIdMissing
+      - EthersInvalidRpcUrl
+      - EthersGetTransactionCountError
+      - InvalidPassword
+      - BabylonStakingFeePlusDustOverflow
+      - BabylonStaking
+      - BabylonStakingIncorrectKey
+      - BabylonStakingSegwitNonDeposit
+      - BabylonStakingRegistrationRequiresTaproot
+      - PsbtSigning
+      - TooManyResets
+      - TooManyRequests
+      - TooManyFailedLogins
+      - BadBtcMessageSignP2shFlag
+      - InvalidTendermintRequest
+      - PolicyVersionMaxReached
+      - PolicyVersionInvalid
+      - PolicySecretLimitReached
+      - PolicySecretTooLarge
+      - InvalidImportKey
+      - AlienOwnerInvalid
+      - EmptyUpdateRequest
+      - InvalidPolicyReference
+      - PolicyEngineDisabled
+      - InvalidWasmPolicy
+      - CelProgramTooLarge
+      - InvalidPolicy
+      - RedundantDerivationPath
+      - ImportKeyMissing
+      - InvalidAbiMethods
+      - BabylonCovSign
+      - InvalidPolicyLogsRequest
+      - UserProfileMigrationMultipleEntries
+      - UserProfileMigrationTooManyItems
+      - InputTooShort
+      - InvalidTweakLength
+      - InvalidCustomChains
+      - InvalidRpcRequest
+    EvmCurrencyInfo:
+      type: object
+      description: Information about a currency used on an EVM chain.
+      required:
+      - name
+      - symbol
+      - decimals
+      properties:
+        decimals:
+          type: integer
+          format: int32
+          description: The number of decimals this currency uses.
+          example: '18'
+          minimum: 0
+        name:
+          type: string
+          description: The full name of the currency.
+          example: Ether
+        symbol:
+          type: string
+          description: The symbol for the currency, typically a three letter string.
+          example: ETH
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type: object
+          description: HTTP request body
+          nullable: true
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    ForbiddenErrorCode:
+      type: string
+      enum:
+      - AlienKeyCreate
+      - CannotAssumeIdentity
+      - SentryDisallowed
+      - PasskeyLoginDisabled
+      - PasskeyNotRegistered
+      - CannotCreateOrg
+      - WrongMfaEmailOtpJwt
+      - OrgFlagNotSet
+      - FidoRequiredToRemoveTotp
+      - OidcIdentityLimitReached
+      - OidcScopeCeilingMissing
+      - OidcIssuerNotAllowedForMemberRole
+      - OidcNoMemberRolesAllowed
+      - EmailOtpNotConfigured
+      - MfaChallengeExpired
+      - ChainIdNotAllowed
+      - InvalidOrg
+      - OrgIdMismatch
+      - SessionForWrongOrg
+      - SelfDelete
+      - SelfDisable
+      - SelfMfaReset
+      - InvalidOrgMembershipRoleChange
+      - UserDisabled
+      - OrgDisabled
+      - OrgNotFound
+      - OrgWithoutOwner
+      - OrphanedUser
+      - OidcUserNotFound
+      - UserNotInOrg
+      - UserNotOrgOwner
+      - UserNotKeyOwner
+      - InvalidRole
+      - DisabledRole
+      - KeyDisabled
+      - KeyNotInRole
+      - ContactNotInOrg
+      - UserExportRequestNotInOrg
+      - UserExportRequestInvalid
+      - UserExportDisabled
+      - UserNotOriginalKeyOwner
+      - UserNotInRole
+      - MustBeFullMember
+      - SessionExpired
+      - SessionChanged
+      - SessionRevoked
+      - ExpectedUserSession
+      - SessionRoleChanged
+      - ScopedNameNotFound
+      - SessionInvalidEpochToken
+      - SessionInvalidRefreshToken
+      - SessionRefreshTokenExpired
+      - InvalidAuthHeader
+      - SessionNotFound
+      - InvalidArn
+      - SessionInvalidAuthToken
+      - SessionAuthTokenExpired
+      - SessionPossiblyStolenToken
+      - MfaDisallowedIdentity
+      - MfaDisallowedApprover
+      - MfaTypeNotAllowed
+      - MfaNotApprovedYet
+      - MfaConfirmationCodeMismatch
+      - MfaHttpRequestMismatch
+      - MfaRemoveBelowMin
+      - MfaOrgRequirementNotMet
+      - MfaRegistrationDisallowed
+      - TotpAlreadyConfigured
+      - TotpConfigurationChanged
+      - MfaTotpBadConfiguration
+      - MfaTotpBadCode
+      - MfaTotpRateLimit
+      - ImproperSessionScope
+      - FullSessionRequired
+      - SessionWithoutAnyScopeUnder
+      - UserRoleUnprivileged
+      - MemberRoleForbidden
+      - MfaNotConfigured
+      - RemoveLastOidcIdentity
+      - OperationNotAllowed
+      - OrgExportRetrievalDisabled
+      - ChangingKeyExportRequirementIsDisabled
+      - AutoAddBlsKeyToProtectedRole
+      - UserNotPolicyOwner
+      - UserNotContactOwner
+      - UserNotBucketOwner
+      - LegacySessionCannotHaveScopeCeiling
+      - RoleInParentOrgNotAllowed
+      - RemoveKeyFromRoleUserNotAllowed
+      - SiweChallengeExpired
+      - SiweMessageNotValid
+      - SiweMessageInvalidSignature
+      - SiwsChallengeExpired
+      - SiwsDomain
+      - SiwsMessageInvalid
+      - Acl
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    PolicyEngineConfiguration:
+      type: object
+      description: A struct containing Org-level configurations for the workings of the Policy Engine.
+      required:
+      - allowed_http_authorities
+      properties:
+        allowed_http_authorities:
+          type: array
+          items:
+            type: string
+          description: Allowed domains for HTTP requests
+          example:
+          - cubist.dev:443
+        org_secrets_limit:
+          type: integer
+          description: The maximum number of policy secrets for the Org.
+          nullable: true
+          minimum: 0
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    SubscriptionStatus:
+      type: string
+      description: The status of a subscription
+      enum:
+      - Confirmed
+      - Pending
+    OperationKind:
+      type: string
+      description: All different kinds of sensitive operations
+      enum:
+      - AvaSign
+      - AvaChainTxSign
+      - BabylonCovSign
+      - BabylonRegistration
+      - BabylonStaking
+      - BinanceSubToMaster
+      - BinanceSubToSub
+      - BinanceUniversalTransfer
+      - BinanceSubAccountAssets
+      - BinanceAccountInfo
+      - BinanceSubAccountTransferHistory
+      - BinanceUniversalTransferHistory
+      - BinanceWithdraw
+      - BinanceWithdrawHistory
+      - BinanceDeposit
+      - BinanceDepositHistory
+      - BinanceListSubAccounts
+      - BinanceCoinInfo
+      - BlobSign
+      - BtcMessageSign
+      - BtcSign
+      - BybitQueryUser
+      - BybitQuerySubMembers
+      - BybitQueryCoinsBalance
+      - BybitQueryDepositAddress
+      - BybitUniversalTransfer
+      - BybitWithdraw
+      - BybitWithdrawals
+      - CoinbaseListAccounts
+      - CoinbaseListPortfolios
+      - CoinbaseMoveFunds
+      - DiffieHellman
+      - PsbtSign
+      - TaprootSign
+      - Eip191Sign
+      - Eip712Sign
+      - Eip7702Sign
+      - EotsNonces
+      - EotsSign
+      - Eth1Sign
+      - Eth2Sign
+      - Eth2Stake
+      - Eth2Unstake
+      - SolanaSign
+      - SuiSign
+      - TendermintSign
+      - RoleUpdate
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    HistoricalDataConfiguration:
+      type: object
+      description: Configuration governing whether and how to save historical data.
+      required:
+      - tx
+      properties:
+        tx:
+          $ref: '#/components/schemas/HistoricalTxConfiguration'
+    UpdateOrgRequest:
+      type: object
+      properties:
+        alien_login_requirement:
+          allOf:
+          - $ref: '#/components/schemas/SecondFactorRequirement'
+          nullable: true
+        allowed_mfa_types:
+          type: object
+          description: 'MFA types that are allowed to be used for implicitly security-sensitive
+
+            operations (like logging in, adding an MFA factor, exporting keys, etc.).'
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/MfaType'
+            uniqueItems: true
+          example:
+            Default:
+            - Fido
+            - Totp
+            - EmailOtp
+            KeyExport:
+            - Fido
+          nullable: true
+        custom_chains:
+          allOf:
+          - $ref: '#/components/schemas/CustomChainsData'
+          nullable: true
+        default_invite_kind:
+          allOf:
+          - $ref: '#/components/schemas/InviteKind'
+          nullable: true
+        edit_policy:
+          allOf:
+          - $ref: '#/components/schemas/EditPolicy'
+          nullable: true
+        email_preferences:
+          allOf:
+          - $ref: '#/components/schemas/EmailPreferences'
+          nullable: true
+        enabled:
+          type: boolean
+          description: If set, update this org's `enabled` field to this value.
+          nullable: true
+        ext_props:
+          allOf:
+          - allOf:
+            - type: object
+              description: Extended org properties, which are rarely used and thus not stored within the [Org] record.
+              properties:
+                alien_key_count_threshold:
+                  type: integer
+                  format: int32
+                  description: 'Per alien user key count threshold, which, once exceeded, disallows further key creation by alien users.
+
+
+                    This setting is checked only when an alien user requests to create or import a new key.
+
+                    In other words, org admins can still assign unlimited number of keys to their alien users.'
+                  nullable: true
+                  minimum: 0
+                aliens_can_update_key_policy:
+                  type: boolean
+                  description: 'Whether alien users are allowed to update their own key policies.
+
+                    Defaults to ''false''.'
+                  nullable: true
+            - type: object
+              properties:
+                version:
+                  type: integer
+                  format: int64
+                  description: If set, updating will succeed if the current version matches this value
+                  nullable: true
+                  minimum: 0
+            description: Request to update org's extended properties
+          nullable: true
+        historical_data_configuration:
+          allOf:
+          - $ref: '#/components/schemas/HistoricalDataConfiguration'
+          nullable: true
+        idp_configuration:
+          allOf:
+          - $ref: '#/components/schemas/IdpConfig'
+          nullable: true
+        key_export_requirement:
+          allOf:
+          - $ref: '#/components/schemas/SecondFactorRequirement'
+          nullable: true
+        member_login_requirement:
+          allOf:
+          - $ref: '#/components/schemas/SecondFactorRequirement'
+          nullable: true
+        notification_endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationEndpointConfiguration'
+          description: 'If set, update this org''s notification endpoints. Notification endpoints are expected to be
+
+            HTTPS URLs, which accept POST requests. The body of the requests sent to these endpoints are
+
+            are formatted in JSON and have the following format:
+
+
+            ```json
+
+            {
+
+            "org": "...",
+
+            "utc_timestamp": "...",
+
+            "org_event": "...",
+
+            ...
+
+            }
+
+            ```
+
+
+            `org` is the org id, `utc_timestamp` is the UTC timestamp of the event in milliseconds, and
+
+            `org_event` is a string identifying the type of event that has occurred. The rest of the
+
+            fields provide additional information related to the type of the event.
+
+
+            Endpoints can optionally include filters to customize the org events that they are notified
+
+            about. Currently, the only supported filter type is `OneOf`, which expects a list of org
+
+            event types to send to the endpoint. If no filter is configured, the system sends all org
+
+            events to the endpoint.'
+          example:
+          - 'url:': https://example.com/endpoint1
+          - filter:
+              OneOf:
+              - Eth2ConcurrentAttestationSigning
+              - Eth2ConcurrentBlockSigning
+            'url:': https://example.com/endpoint2
+          nullable: true
+        passkey_configuration:
+          allOf:
+          - $ref: '#/components/schemas/PasskeyConfig'
+          nullable: true
+        policy:
+          type: array
+          items:
+            type: object
+          description: If set, update this org's policies (old policies will be overwritten!).
+          example:
+          - MaxDailyUnstake: 5
+          - OriginAllowlist:
+            - https://example.com
+          - SourceIpAllowlist:
+            - 10.1.2.3/8
+            - 169.254.17.1/16
+          nullable: true
+        policy_engine_configuration:
+          allOf:
+          - $ref: '#/components/schemas/UpdateOrgPolicyEngineConfigs'
+          nullable: true
+        require_scope_ceiling:
+          type: boolean
+          description: 'If set, all user logins will require the claim `cubesigner_scope_ceiling` to be present in
+
+            the user''s token. This claim is an array of scopes (e.g. `[ "manage:keys:list", "sign:evm:tx" ]`),
+
+            which define a maximum set of scopes the user may request. If the user''s token does not contain
+
+            this claim, the login will be rejected.
+
+
+            Owners of the org are exempt from this requirement.'
+          nullable: true
+        sign_policy:
+          type: array
+          items: {}
+          description: 'If set, update this org''s sign rule (old sign rules will be overwritten!).
+
+            Only "deny"-style rules may be set.'
+          example:
+          - TxReceiver:
+            - '0x0000000000000000000000000000000000000000'
+          nullable: true
+        totp_failure_limit:
+          type: integer
+          format: int32
+          description: 'If set, update this org''s TOTP failure limit. After this many failures,
+
+            the user is rate limited until the next 30-second TOTP window.'
+          nullable: true
+          maximum: 5
+          minimum: 1
+        user_export_delay:
+          type: integer
+          format: int64
+          description: 'If set, update this org''s user-export delay, i.e., the amount of time
+
+            (in seconds) between a user''s initiating an export and the time when
+
+            export is allowed. For security, this delay cannot be set to less than
+
+            172800, i.e., 2 days.'
+          nullable: true
+          minimum: 0
+        user_export_disabled:
+          type: boolean
+          description: If set, turn this org's user export off (by passing `true`) or on (by passing `false`).
+          nullable: true
+        user_export_window:
+          type: integer
+          format: int64
+          description: 'If set, update this org''s user-export window, i.e., the amount of time
+
+            (in seconds) that export is allowed after the user-export delay. After
+
+            this amount of time, the export is canceled and must be re-initiated.
+
+            For security, this window cannot be set to greater than 259200, i.e.,
+
+            3 days.'
+          nullable: true
+          minimum: 0
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+          nullable: true
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
+    Scope:
+      oneOf:
+      - $ref: '#/components/schemas/ExplicitScope'
+      - type: string
+        title: OtherScopes
+        description: Scopes including wildcard fragments for accessing CubeSigner APIs
+        pattern: ^(orgAccess:child)(:[^:]+)?$
+      description: All scopes for accessing CubeSigner APIs
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    EmailPreferences:
+      allOf:
+      - $ref: '#/components/schemas/OrgAlertsPrefs'
+      - type: object
+        properties:
+          login_notifications:
+            type: boolean
+            description: If true, send notifications on every login
+            nullable: true
+          new_device:
+            type: boolean
+            description: 'If true, send notifications when logging in from a new device.
+
+              new_device takes precedence over login_notifications. E.g., email for
+
+              new_device is sent instead of a general login notification email when a
+
+              new device is detected'
+            nullable: true
+          pending_approvals:
+            type: boolean
+            description: If true, send email notifications for mfa approvals
+            nullable: true
+      description: Describes email preferences at an Org level - what emails to send and options associated
+    NewSessionResponse:
+      type: object
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      required:
+      - org_id
+      - token
+      - refresh_token
+      - session_info
+      properties:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
+          type: string
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
+          type: string
+          description: 'New token to be used for authentication. Requests to signing endpoints
+
+            should include this value in the `Authorization` header.'
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    HistoricalTxConfiguration:
+      type: object
+      description: Configuration governing whether and how to save historical transactions.
+      properties:
+        lifetime:
+          allOf:
+          - $ref: '#/components/schemas/Seconds'
+          nullable: true
+    CreateOrgRequest:
+      type: object
+      required:
+      - name
+      properties:
+        metrics_enabled:
+          type: boolean
+          description: Whether to enable metrics for the new organization
+        name:
+          type: string
+          description: The human readable name of the new organization
+          example: My Cool Org
+    AccessModel:
+      type: string
+      description: Determines who controls the keys within an org
+      enum:
+      - User
+      - Org
+  responses:
+    UpdateOrgResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - org_id
+            - version
+            properties:
+              alien_login_requirement:
+                allOf:
+                - $ref: '#/components/schemas/SecondFactorRequirement'
+                nullable: true
+              allowed_mfa_types:
+                type: object
+                description: 'MFA types that are allowed to be used for implicitly security-sensitive
+
+                  operations (like logging in, adding an MFA factor, exporting keys, etc.).'
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MfaType'
+                  uniqueItems: true
+                nullable: true
+              custom_chains:
+                allOf:
+                - $ref: '#/components/schemas/CustomChainsData'
+                nullable: true
+              default_invite_kind:
+                allOf:
+                - $ref: '#/components/schemas/InviteKind'
+                nullable: true
+              edit_policy:
+                allOf:
+                - $ref: '#/components/schemas/EditPolicy'
+                nullable: true
+              email_preferences:
+                allOf:
+                - $ref: '#/components/schemas/EmailPreferences'
+                nullable: true
+              enabled:
+                type: boolean
+                description: The new value of the 'enabled' property
+                nullable: true
+              ext_data:
+                allOf:
+                - allOf:
+                  - type: object
+                    description: Extended org properties, which are rarely used and thus not stored within the [Org] record.
+                    properties:
+                      alien_key_count_threshold:
+                        type: integer
+                        format: int32
+                        description: 'Per alien user key count threshold, which, once exceeded, disallows further key creation by alien users.
+
+
+                          This setting is checked only when an alien user requests to create or import a new key.
+
+                          In other words, org admins can still assign unlimited number of keys to their alien users.'
+                        nullable: true
+                        minimum: 0
+                      aliens_can_update_key_policy:
+                        type: boolean
+                        description: 'Whether alien users are allowed to update their own key policies.
+
+                          Defaults to ''false''.'
+                        nullable: true
+                  - type: object
+                    description: 'Versioning fields (e.g., version number, creation time, and last modified times)
+
+                      that are common to different types of resources.'
+                    properties:
+                      created:
+                        allOf:
+                        - $ref: '#/components/schemas/EpochDateTime'
+                        nullable: true
+                      last_modified:
+                        allOf:
+                        - $ref: '#/components/schemas/EpochDateTime'
+                        nullable: true
+                      version:
+                        type: integer
+                        format: int64
+                        description: Version of this object
+                        minimum: 0
+                  - type: object
+                  description: Database entry holding custom data associated with a named DB entity
+                nullable: true
+              historical_data_configuration:
+                allOf:
+                - $ref: '#/components/schemas/HistoricalDataConfiguration'
+                nullable: true
+              idp_configuration:
+                allOf:
+                - $ref: '#/components/schemas/IdpConfig'
+                nullable: true
+              key_export_requirement:
+                allOf:
+                - $ref: '#/components/schemas/SecondFactorRequirement'
+                nullable: true
+              member_login_requirement:
+                allOf:
+                - $ref: '#/components/schemas/SecondFactorRequirement'
+                nullable: true
+              name:
+                type: string
+                description: The new human-readable name for the org (must be alphanumeric)
+                example: my_org_name
+                nullable: true
+              notification_endpoints:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationEndpointConfiguration'
+                description: The new notification endpoint configurations
+                example:
+                - url: https://example.com/endpoint
+                nullable: true
+              org_id:
+                type: string
+                description: The ID of the organization
+                example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+              passkey_configuration:
+                allOf:
+                - $ref: '#/components/schemas/PasskeyConfig'
+                nullable: true
+              policy:
+                type: array
+                items:
+                  type: object
+                description: The new value of org-wide policies
+                example:
+                - MaxDailyUnstake: 5
+                - OriginAllowlist:
+                  - https://example.com
+                nullable: true
+              policy_engine_configuration:
+                allOf:
+                - $ref: '#/components/schemas/PolicyEngineConfiguration'
+                nullable: true
+              require_scope_ceiling:
+                type: boolean
+                description: The new value of require_scope_ceiling
+                nullable: true
+              sign_policy:
+                type: array
+                items:
+                  type: object
+                description: The new value of the org-wide sign rules
+                example:
+                - TxReceiver: '0x0000000000000000000000000000000000000000'
+                nullable: true
+              totp_failure_limit:
+                type: integer
+                format: int32
+                description: The new value of the TOTP failure limit
+                nullable: true
+                minimum: 0
+              user_export_delay:
+                type: integer
+                format: int64
+                description: The new value of user-export delay
+                nullable: true
+                minimum: 0
+              user_export_disabled:
+                type: boolean
+                description: The new value of user-export disabled
+                nullable: true
+              user_export_window:
+                type: integer
+                format: int64
+                description: The new value of user-export window
+                nullable: true
+                minimum: 0
+              version:
+                type: integer
+                format: int64
+                description: New org version
+                minimum: 0
+    EmptyImpl:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+    OrgInfo:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/MfaRequirements'
+            - $ref: '#/components/schemas/CommonFields'
+            - type: object
+              required:
+              - org_id
+              - access_model
+              - enabled
+              - last_unstake
+              - last_unstake_day_count
+              - kwk_id
+              - user_export_delay
+              - user_export_window
+              - totp_failure_limit
+              properties:
+                access_model:
+                  $ref: '#/components/schemas/AccessModel'
+                custom_chains:
+                  allOf:
+                  - $ref: '#/components/schemas/CustomChainsData'
+                  nullable: true
+                default_invite_kind:
+                  $ref: '#/components/schemas/InviteKind'
+                email_preferences:
+                  $ref: '#/components/schemas/EmailPreferences'
+                enabled:
+                  type: boolean
+                  description: When false, all cryptographic operations involving keys in this org are disabled.
+                ext_data:
+                  allOf:
+                  - allOf:
+                    - type: object
+                      description: Extended org properties, which are rarely used and thus not stored within the [Org] record.
+                      properties:
+                        alien_key_count_threshold:
+                          type: integer
+                          format: int32
+                          description: 'Per alien user key count threshold, which, once exceeded, disallows further key creation by alien users.
+
+
+                            This setting is checked only when an alien user requests to create or import a new key.
+
+                            In other words, org admins can still assign unlimited number of keys to their alien users.'
+                          nullable: true
+                          minimum: 0
+                        aliens_can_update_key_policy:
+                          type: boolean
+                          description: 'Whether alien users are allowed to update their own key policies.
+
+                            Defaults to ''false''.'
+                          nullable: true
+                    - type: object
+                      description: 'Versioning fields (e.g., version number, creation time, and last modified times)
+
+                        that are common to different types of resources.'
+                      properties:
+                        created:
+                          allOf:
+                          - $ref: '#/components/schemas/EpochDateTime'
+                          nullable: true
+                        last_modified:
+                          allOf:
+                          - $ref: '#/components/schemas/EpochDateTime'
+                          nullable: true
+                        version:
+                          type: integer
+                          format: int64
+                          description: Version of this object
+                          minimum: 0
+                    - type: object
+                    description: Database entry holding custom data associated with a named DB entity
+                  nullable: true
+                historical_data_configuration:
+                  $ref: '#/components/schemas/HistoricalDataConfiguration'
+                idp_configuration:
+                  $ref: '#/components/schemas/IdpConfig'
+                key_import_key:
+                  type: string
+                  description: 'Deprecated: this field should be ignored.'
+                  nullable: true
+                kwk_id:
+                  type: string
+                  description: 'The organization''s universally unique key-wrapping-key identifier.
+
+                    This value is required when setting up key export.'
+                  example: mrk-fce09525e81587d23520f11e07e2e9d9
+                last_unstake:
+                  type: string
+                  description: Date/time (in UTC) when last 'unstake' was performed. Unix epoch if none.
+                  example: TODO
+                last_unstake_day_count:
+                  type: integer
+                  format: int32
+                  description: How many 'unstake' calls happened on the day when `last_unstake` was performed.
+                  minimum: 0
+                metrics_enabled:
+                  type: boolean
+                  description: Whether metrics are collected for this org
+                name:
+                  type: string
+                  description: The human-readable name for the org
+                  example: my_org_name
+                  nullable: true
+                notification_endpoints:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NotificationEndpoint'
+                  description: 'The organization''s notification endpoints, which are HTTPS URLs are notified about a
+
+                    configurable set of events in an organization. For each event, CubeSigner sends a POST
+
+                    request with a JSON-formatted body that contains the event details.'
+                  example:
+                  - arn: arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000001
+                    config:
+                      url: https://example.com/endpoint1
+                    status: Confirmed
+                  - arn: arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000002
+                    config:
+                      filter:
+                        OneOf:
+                        - Eth2ConcurrentAttestationSigning
+                        - Eth2ConcurrentBlockSigning
+                      url: https://example.com/endpoint2
+                    status: Pending
+                org_id:
+                  type: string
+                  description: The ID of the organization
+                  example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+                passkey_configuration:
+                  $ref: '#/components/schemas/PasskeyConfig'
+                policy:
+                  type: array
+                  items:
+                    type: object
+                  description: Org-wide policies that are checked before a key is used for signing
+                  example:
+                  - MaxDailyUnstake: 5
+                policy_engine_configuration:
+                  $ref: '#/components/schemas/PolicyEngineConfiguration'
+                sign_policy:
+                  type: array
+                  items:
+                    type: object
+                  description: Global sign policy that applies to every sign operation (every key, every role) in the org
+                  example:
+                  - TxReceiver: '0x0000000000000000000000000000000000000000'
+                totp_failure_limit:
+                  type: integer
+                  format: int32
+                  description: 'The organization''s currently configured TOTP failure limit, i.e., the number
+
+                    of times a user can provide an incorrect TOTP code before being rate limited.
+
+                    This value can be between 1 and 5 (inclusive).'
+                  minimum: 0
+                user_export_delay:
+                  type: integer
+                  format: int64
+                  description: 'The organization''s currently configured user-export delay, i.e., the minimum
+
+                    amount of time (in seconds) between when a user-export is initiated and when
+
+                    it may be completed. (This value is meaningless for organizations that use
+
+                    org-wide export.)'
+                  minimum: 0
+                user_export_disabled:
+                  type: boolean
+                  description: Whether user export is disabled
+                user_export_window:
+                  type: integer
+                  format: int64
+                  description: 'The organization''s currently configured user-export window, i.e., the amount
+
+                    of time (in seconds) between when the user-export delay is completed and when
+
+                    the user export request has expired and can no longer be completed. (This value
+
+                    is meaningless for organizations that use org-wide export.)'
+                  minimum: 0
+                webapp_enabled:
+                  type: boolean
+                  description: If set, the official webapp origin is automatically allowed
+    PublicOrgInfo:
+      description: Public information about an organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Public information about an organization.
+            required:
+            - org_id
+            - passkey_login_enabled
+            - oidc_issuers
+            properties:
+              oidc_issuers:
+                type: array
+                items:
+                  type: object
+                  description: Information about an explicitly configured (allowlisted) OpenID provider for an org
+                  required:
+                  - issuer
+                  - audiences
+                  - users
+                  properties:
+                    audiences:
+                      type: array
+                      items:
+                        type: string
+                      description: Intended audiences (client IDs)
+                    issuer:
+                      type: string
+                      description: Issuer URL
+                    nickname:
+                      type: string
+                      description: Optional issuer nickname
+                      nullable: true
+                    users:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/MemberRole'
+                      description: The user roles allowed to use this IDP
+                      uniqueItems: true
+                description: Explicitly configured (allowlisted) OpenID providers for an org
+              org_id:
+                type: string
+                description: Org identifier
+                example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+              passkey_login_enabled:
+                type: boolean
+                description: Whether logging in with just a passkey is allowed
+  securitySchemes:
+    Oidc:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: OIDC tokens allow users to authenticate using a third-party service. These are exchanged for signer session tokens.
+    SignerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Signing API end-points use session tokens for auth. Specifically, with each request you need to use the \`token\` from your signer session (which you create with `cs token create`).

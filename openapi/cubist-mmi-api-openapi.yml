@@ -1,0 +1,2047 @@
+openapi: 3.0.3
+info:
+  title: CubeSigner Account MMI API
+  description: The CubeSigner management and signing service.
+  contact:
+    name: Cubist Inc.
+    email: hello@cubist.dev
+  version: v0.1.0
+servers:
+- url: https://gamma.signer.cubist.dev
+  description: Testing and staging environment
+- url: https://prod.signer.cubist.dev
+  description: Production environment
+security:
+- Cognito: []
+tags:
+- name: MMI
+paths:
+  /v0/mmi/v3/.well-known/jwks.json:
+    get:
+      tags:
+      - MMI
+      summary: JWKS endpoint for MMI
+      description: 'JWKS endpoint for MMI
+
+
+        Returns the public key used to sign JSON Web Tokens for MMI.'
+      operationId: mmiJwkSet
+      responses:
+        '200':
+          $ref: '#/components/responses/JwkSetResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - {}
+  /v0/mmi/v3/json-rpc:
+    post:
+      tags:
+      - MMI
+      summary: MMI JSON-RPC endpoint
+      description: 'MMI JSON-RPC endpoint
+
+
+        Handler for all [MMI JSON-RPC](https://docs.metamask-institutional.io/custodian-integration/integration-docs/api/methods)
+
+        requests.'
+      operationId: mmi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/JrpcResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - mmi:*
+  /v0/org/{org_id}/mmi/v3/messages:
+    get:
+      tags:
+      - MMI
+      summary: List pending MMI requests
+      description: 'List pending MMI requests
+
+
+        Retrieves and returns all pending MMI messages accessible to the current session identity, i.e.,
+
+        - a role session can access only the messages created by that role
+
+        - a user session can access the messages created by either that user or any role which the user is a member of'
+      operationId: mmiMessageList
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPendingMessagesResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:mmi:list
+  /v0/org/{org_id}/mmi/v3/messages/{msg_id}:
+    get:
+      tags:
+      - MMI
+      summary: Get an MMI request
+      description: 'Get an MMI request
+
+
+        Retrieves a pending MMI request by its ID.'
+      operationId: mmiMessageGet
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: msg_id
+        in: path
+        description: Name or ID of the desired PendingMessage
+        required: true
+        schema:
+          type: string
+        example: PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/PendingMessageInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:mmi:get
+    delete:
+      tags:
+      - MMI
+      summary: Delete an MMI request
+      description: 'Delete an MMI request
+
+
+        Rejects an existing MMI request and then deletes it from the database.'
+      operationId: mmiMessageDelete
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: msg_id
+        in: path
+        description: Name or ID of the desired PendingMessage
+        required: true
+        schema:
+          type: string
+        example: PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyImpl'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:mmi:delete
+  /v0/org/{org_id}/mmi/v3/messages/{msg_id}/reject:
+    post:
+      tags:
+      - MMI
+      summary: Reject an MMI request
+      description: 'Reject an MMI request
+
+
+        Rejects a pending MMI request. The record of the MMI request is kept in
+
+        the database until it expires or is explicitly deleted.
+
+
+        Returns the updated request information.'
+      operationId: mmiMessageReject
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: msg_id
+        in: path
+        description: Name or ID of the desired PendingMessage
+        required: true
+        schema:
+          type: string
+        example: PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/MmiRejectRequest'
+              nullable: true
+        required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/PendingMessageInfo'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - manage:mmi:reject
+  /v0/org/{org_id}/mmi/v3/messages/{msg_id}/sign:
+    post:
+      tags:
+      - MMI
+      summary: Approve and sign an MMI request
+      description: 'Approve and sign an MMI request
+
+
+        Signs a pending request that was generated through the MMI JSON RPC endpoint.
+
+        The signature is stored with the pending message and the updated request info is returned.
+
+
+        The message should be associated with the organization this is called from,
+
+        and the user should be the owner of the corresponding message''s key.'
+      operationId: mmiMessageSign
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      - name: msg_id
+        in: path
+        description: Name or ID of the desired PendingMessage
+        required: true
+        schema:
+          type: string
+        example: PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PendingMessageInfo'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/PendingMessageSignResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - sign:mmi
+components:
+  schemas:
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    Request:
+      type: object
+      description: JSON-RPC request object
+      required:
+      - jsonrpc
+      - method
+      properties:
+        id:
+          description: Request ID
+          nullable: true
+        jsonrpc:
+          type: string
+          description: JSON-RPC version.
+        method:
+          type: string
+          description: Name of the method to be invoked.
+        params:
+          description: Parameter values of the request.
+          nullable: true
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+          nullable: true
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    MmiMetadata:
+      type: object
+      properties:
+        chainId:
+          type: string
+          description: Chain ID (not required when signing a personal message (EIP-191))
+          nullable: true
+        custodianPublishesTransaction:
+          type: boolean
+          description: If the custodian should publish the transaction
+          nullable: true
+        note:
+          type: string
+          description: A note to be attached to the transaction which can be specified by the user
+          nullable: true
+        originUrl:
+          type: string
+          description: The web page/dapp where the transaction originated
+          nullable: true
+        rpcUrl:
+          type: string
+          description: User's preferred RPC URL, and it should be the same as the RPC URL for the network corresponding to the Chain ID
+          nullable: true
+        transactionCategory:
+          type: string
+          description: The category of transaction, as best can be determined by the wallet
+          nullable: true
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    HttpRequestCmp:
+      oneOf:
+      - type: string
+        description: The requests must match exactly. Any given MFA receipt can be used at most once.
+        enum:
+        - Eq
+      - type: object
+        required:
+        - EvmTx
+        properties:
+          EvmTx:
+            $ref: '#/components/schemas/EvmTxCmp'
+      - type: object
+        required:
+        - SolanaTx
+        properties:
+          SolanaTx:
+            $ref: '#/components/schemas/SolanaTxCmp'
+      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
+    BadGatewayErrorCode:
+      type: string
+      enum:
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    InternalErrorCode:
+      type: string
+      enum:
+      - NoMaterialId
+      - InvalidAuditLogEntry
+      - UnexpectedCheckerRule
+      - UnresolvedPolicyReference
+      - UnexpectedAclAction
+      - FidoKeyAssociatedWithMultipleUsers
+      - ClaimsParseError
+      - InvalidThrottleId
+      - InvalidEmailAddress
+      - EmailTemplateRender
+      - OidcIdentityHeaderMissing
+      - OidcIdentityParseError
+      - SystemTimeError
+      - PasswordHashParseError
+      - SendMailError
+      - ReqwestError
+      - EmailConstructionError
+      - TsWriteError
+      - TsQueryError
+      - DbQueryError
+      - DbGetError
+      - DbDeleteError
+      - DbPutError
+      - DbUpdateError
+      - SerdeError
+      - TestAndSetError
+      - DbGetItemsError
+      - DbWriteError
+      - CubistSignerError
+      - CwListMetricsError
+      - CwPutMetricDataError
+      - GetAwsSecretError
+      - SecretNotFound
+      - KmsGenerateRandomError
+      - MalformedTotpBytes
+      - KmsGenerateRandomNoResponseError
+      - CreateKeyError
+      - ParseDerivationPathError
+      - SplitSignerError
+      - CreateImportKeyError
+      - CreateEotsNoncesError
+      - EotsSignError
+      - BabylonCovSignError
+      - CognitoDeleteUserError
+      - CognitoListUsersError
+      - CognitoGetUserError
+      - MissingUserEmail
+      - CognitoResendUserInvitation
+      - CognitoSetUserPasswordError
+      - GenericInternalError
+      - AssumeRoleWithoutEvidence
+      - OidcAuthWithoutOrg
+      - MissingKeyMetadata
+      - KmsEnableKeyError
+      - KmsDisableKeyError
+      - LambdaInvokeError
+      - LambdaNoResponseError
+      - LambdaFailure
+      - LambdaUnparsableResponse
+      - SerializeEncryptedExportKeyError
+      - DeserializeEncryptedExportKeyError
+      - ReEncryptUserExport
+      - S3UploadError
+      - S3DownloadError
+      - S3CopyError
+      - S3ListObjectsError
+      - S3DeleteObjectsError
+      - S3BuildError
+      - S3PresignedUrlError
+      - ManagedStateMissing
+      - InternalHeaderMissing
+      - InvalidInternalHeaderValue
+      - RequestLocalStateAlreadySet
+      - OidcOrgMismatch
+      - OidcIssuerInvalidJwk
+      - InvalidPkForMaterialId
+      - SegwitTweakFailed
+      - UncheckedOrg
+      - SessionOrgIdMissing
+      - AvaSignCredsMissing
+      - AvaSignSignatureMissing
+      - ExpectedRoleSession
+      - InvalidThirdPartyIdentity
+      - CognitoGetUser
+      - SnsSubscribeError
+      - SnsUnsubscribeError
+      - SnsGetSubscriptionAttributesError
+      - SnsSubscriptionAttributesMissing
+      - SnsSetSubscriptionAttributesError
+      - SnsPublishBatchError
+      - InconsistentMultiValueTestAndSet
+      - MaterialIdError
+      - InvalidBtcAddress
+      - HistoricalTxBodyMissing
+      - InvalidOperation
+      - ParentOrgNotFound
+      - OrgParentLoop
+      - ResolvedParentOrgWithNoScopeCeiling
+      - InvalidUploadObjectId
+      - PolicyEngineNotFound
+      - PolicyEngineError
+      - PolicySecretsEncryptionError
+      - CreatePolicyImportKeyError
+      - InvalidAlias
+      - EmptyUpdateModifiedObject
+      - EmptyUpdateModifiedActions
+      - DbContactAddressesInvalid
+      - InvalidEvmSigedRlp
+      - InvalidErc20Data
+      - InvalidRpcUrl
+    Response:
+      type: object
+      description: JSON-RPC response object
+      required:
+      - jsonrpc
+      properties:
+        error:
+          allOf:
+          - $ref: '#/components/schemas/ErrorObj'
+          nullable: true
+        id:
+          description: ID from the corresponding request
+          nullable: true
+        jsonrpc:
+          type: string
+          description: Constant "2.0"
+        result:
+          type: object
+          description: Result, if success
+          nullable: true
+    TransactionAndStatus:
+      allOf:
+      - $ref: '#/components/schemas/TypedTransaction'
+      - type: object
+        required:
+        - id
+        - status
+        properties:
+          hash:
+            type: string
+            description: The hash of the transaction that was signed
+            nullable: true
+          id:
+            type: string
+            description: The ID of the request record.
+          nonce:
+            type: string
+            description: The nonce (computed right before signing)
+            nullable: true
+          signedRawTransaction:
+            type: string
+            description: The signature
+            nullable: true
+          status:
+            $ref: '#/components/schemas/MmiStatus'
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    EvmTxCmp:
+      type: object
+      properties:
+        grace:
+          type: integer
+          format: int64
+          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
+
+
+            In this case, however, because EVM transactions already have a replay prevention mechanism
+
+            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
+
+            indicate how long an MFA receipt should remain valid after its first use.
+
+
+            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
+
+            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
+
+            ensure that any subsequent requests that claim the same receipt must sign for the same
+
+            nonce as the request we signed originally with that receipt.
+
+
+            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
+
+            original expiration date.
+
+
+            The grace period must not be greater than 30 days.'
+          nullable: true
+          minimum: 0
+        ignore_gas:
+          type: boolean
+          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
+        ignore_nonce:
+          type: boolean
+          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
+    MmiRejectRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Optional reason for rejecting.
+          nullable: true
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+          nullable: true
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        request_id:
+          type: string
+          description: Optional request identifier
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    ClientSessionInfo:
+      type: object
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
+      required:
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
+      properties:
+        auth_token:
+          type: string
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
+          type: string
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    PolicyErrorOwnCodes:
+      type: string
+      enum:
+      - Inapplicable
+      - SuiTxReceiversDisallowedTransactionKind
+      - SuiTxReceiversDisallowedTransferAddress
+      - SuiTxReceiversDisallowedCommand
+      - BtcTxDisallowedOutputs
+      - BtcSignatureExceededValue
+      - BtcValueOverflow
+      - BtcSighashTypeDisallowed
+      - Eip7702AddressMismatch
+      - EvmTxReceiverMismatch
+      - EvmTxChainIdMismatch
+      - EvmTxSenderMismatch
+      - EvmTxExceededValue
+      - EvmTxExceededGasCost
+      - EvmTxGasCostUndefined
+      - EvmDataDisallowed
+      - Erc20DataInvalid
+      - EvmContractAddressUndefined
+      - EvmContractChainIdUndefined
+      - EvmDataNotDefined
+      - EvmDataInvalid
+      - EvmContractNotInAllowlist
+      - Erc20ExceededTransferLimit
+      - Erc20ReceiverMismatch
+      - Erc20ExceededApproveLimit
+      - Erc20SpenderMismatch
+      - EvmFunctionNotInAllowlist
+      - EvmFunctionCallInvalid
+      - EvmFunctionCallDisallowedArg
+      - PolicyDisjunctionError
+      - PolicyNegationError
+      - Eth2ExceededMaxUnstake
+      - Eth2ConcurrentUnstaking
+      - NotInIpv4Allowlist
+      - NotInOriginAllowlist
+      - NotInOperationAllowlist
+      - InvalidSourceIp
+      - RawSigningNotAllowed
+      - DiffieHellmanExchangeNotAllowed
+      - Eip712SigningNotAllowed
+      - OidcSourceNotAllowed
+      - NoOidcAuthSourcesDefined
+      - AddKeyToRoleDisallowed
+      - KeysAlreadyInRole
+      - KeyInMultipleRoles
+      - KeyAccessError
+      - RequireRoleSessionKeyAccessError
+      - BtcMessageSigningNotAllowed
+      - Eip191SigningNotAllowed
+      - Eip7702SigningNotAllowed
+      - TaprootSigningDisallowed
+      - SegwitSigningDisallowed
+      - PsbtSigningDisallowed
+      - BabylonStakingDisallowed
+      - TimeLocked
+      - CelPolicyDenied
+      - BabylonStakingNetwork
+      - BabylonStakingParamsVersion
+      - BabylonStakingExplicitParams
+      - BabylonStakingStakerPk
+      - BabylonStakingFinalityProviderPk
+      - BabylonStakingLockTime
+      - BabylonStakingValue
+      - BabylonStakingChangeAddress
+      - BabylonStakingFee
+      - BabylonStakingWithdrawalAddress
+      - BabylonStakingBbnAddress
+      - SolanaInstructionCountLow
+      - SolanaInstructionCountHigh
+      - SolanaNotInInstructionAllowlist
+      - SolanaInstructionMismatch
+      - WasmPoliciesDisabled
+      - WasmPolicyDenied
+      - WasmPolicyFailed
+      - WebhookPoliciesDisabled
+      - DeniedByWebhook
+      - ExplicitlyDenied
+    AcceptedValueCode:
+      type: string
+      enum:
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    BinanceDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Binance API method that would have been used
+        url:
+          type: string
+          description: The Binance API url method that would have been called
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    TypedData:
+      type: object
+      description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data object.
+
+
+        Typed data is a JSON object containing type information, domain separator parameters and the
+
+        message object.'
+      required:
+      - domain
+      - primaryType
+      - message
+      - types
+      properties:
+        domain:
+          type: object
+          description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) EIP712Domain object.
+
+
+            EIP712Domain is a JSON object with one or more of the below fields. Protocol designers only need to include the fields that make sense for their signing domain.'
+          properties:
+            chainId:
+              type: string
+              description: 'The EIP-155 chain id. The user-agent should refuse signing if it does not match the
+
+                currently active chain.'
+              example: '0x1'
+              nullable: true
+            name:
+              type: string
+              description: The user readable name of signing domain, i.e., the name of the DApp or the protocol.
+              example: Ether Mail
+              nullable: true
+            salt:
+              oneOf:
+              - type: string
+                description: Hex-encoded byte array of length 32
+                example: '0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5'
+              - type: array
+                items:
+                  type: number
+                  example: 165
+                description: Byte array of length 32
+                example:
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+              description: A disambiguating salt for the protocol. This can be used as a domain separator of last resort. Can be either a hex-encoded string or byte array
+            verifyingContract:
+              type: string
+              description: The address of the contract that will verify the signature.
+              example: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+              nullable: true
+            version:
+              type: string
+              description: 'The current major version of the signing domain. Signatures from different versions are not
+
+                compatible.'
+              example: '1'
+              nullable: true
+        message:
+          type: object
+          description: The message to be signed.
+          additionalProperties: {}
+        primaryType:
+          type: string
+          description: The type of the message.
+        types:
+          type: object
+          description: The custom types used by this message.
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              description: Represents the name and type pair
+              required:
+              - name
+              - type
+              properties:
+                name:
+                  type: string
+                  example: name
+                type:
+                  type: string
+                  example: type
+              example:
+                name: name
+                type: type
+    CoinbaseDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Coinbase API method that would have been used
+        url:
+          type: string
+          description: The Coinbase API url method that would have been called
+    SignDryRunArgs:
+      type: object
+      required:
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+          nullable: true
+    Id:
+      type: string
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    MmiStatus:
+      type: object
+      required:
+      - finished
+      - signed
+      - success
+      - displayText
+      properties:
+        displayText:
+          type: string
+          description: Short text to display to the user
+        finished:
+          type: boolean
+          description: Whether the signed message has finished, e.g. it is completed, failed or cancelled
+        reason:
+          type: string
+          description: The reason for the signed message status
+          nullable: true
+        signed:
+          type: boolean
+          description: Whether the message was signed
+        submitted:
+          type: boolean
+          description: Whether the transaction was submitted to the blockchain
+        success:
+          type: boolean
+          description: Whether the transaction was successful, i.e. it was included in a block and not reverted
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+          nullable: true
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+          nullable: true
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
+    BadRequestErrorCode:
+      type: string
+      enum:
+      - GenericBadRequest
+      - DisallowedAllowRuleReference
+      - InvalidPaginationToken
+      - InvalidEmail
+      - InvalidEmailTemplate
+      - QueryMetricsError
+      - InvalidTelegramData
+      - ValidationError
+      - WebhookPolicyTimeoutOutOfBounds
+      - WebhookPolicyDisallowedUrlScheme
+      - WebhookPolicyDisallowedUrlHost
+      - WebhookPolicyDisallowedHeaders
+      - ReservedName
+      - UserEmailNotConfigured
+      - EmailPasswordNotFound
+      - PasswordAuthNotAllowedByInvitation
+      - OneTimeCodeExpired
+      - InvalidBody
+      - InvalidJwt
+      - InvitationNoLongerValid
+      - TokenRequestError
+      - InvalidMfaReceipt
+      - InvalidMfaPolicyCount
+      - InvalidMfaPolicyNumAuthFactors
+      - InvalidMfaPolicyNumAllowedApprovers
+      - InvalidMfaPolicyGracePeriodTooLong
+      - InvalidBabylonStakingPolicyParams
+      - InvalidSuiTxReceiversEmptyAllowlist
+      - InvalidBtcTxReceiversEmptyAllowlist
+      - InvalidRequireRoleSessionAllowlist
+      - InvalidCreateKeyCount
+      - InvalidDiffieHellmanCount
+      - OrgInviteExistingUser
+      - OrgUserAlreadyExists
+      - OrgNameTaken
+      - KwkNotFoundInRegion
+      - OrgIsNotOrgExport
+      - RoleNameTaken
+      - PolicyNameTaken
+      - NameTaken
+      - ContactNameInvalid
+      - ContactAddressesInvalid
+      - ContactLabelInvalid
+      - ContactModified
+      - PolicyNotFound
+      - PolicyVersionNotFound
+      - PolicyRuleDisallowedByType
+      - PolicyTypeDisallowed
+      - PolicyDuplicateError
+      - PolicyStillAttached
+      - PolicyModified
+      - PolicyNotAttached
+      - AddKeyToRoleCountTooHigh
+      - InvalidKeyId
+      - InvalidTimeLockAlreadyInThePast
+      - InvalidRestrictedScopes
+      - InvalidUpdate
+      - InvalidMetadataLength
+      - InvalidLength
+      - InvalidKeyMaterialId
+      - KeyNotFound
+      - SiweChallengeNotFound
+      - SiweInvalidRequest
+      - SiwsChallengeNotFound
+      - SiwsInvalidRequest
+      - UserExportDerivedKey
+      - UserExportPublicKeyInvalid
+      - NistP256PublicKeyInvalid
+      - UnableToAccessSmtpRelay
+      - UserExportInProgress
+      - RoleNotFound
+      - InvalidRoleNameOrId
+      - InvalidMfaReceiptOrgIdMissing
+      - InvalidMfaReceiptInvalidOrgId
+      - MfaRequestNotFound
+      - InvalidKeyType
+      - InvalidPropertiesForKeyType
+      - MismatchedKeyPropertiesPatch
+      - MissingBinanceApiKey
+      - MissingBybitApiKey
+      - MissingCoinbaseApiKey
+      - BinanceKeyMasterMismatch
+      - BybitAccountMismatch
+      - InvalidKeyMaterial
+      - InvalidHexValue
+      - InvalidBase32Value
+      - InvalidBase58Value
+      - InvalidBase64Value
+      - InvalidSs58Value
+      - InvalidForkVersionLength
+      - InvalidEthAddress
+      - InvalidStellarAddress
+      - InvalidOrgNameOrId
+      - InvalidUpdateOrgRequestDisallowedMfaType
+      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
+      - EmailOtpDelayTooShortForRegisterMfa
+      - InvalidStakeDeposit
+      - InvalidBlobSignRequest
+      - InvalidDiffieHellmanRequest
+      - InvalidSolanaSignRequest
+      - InvalidEip712SignRequest
+      - InvalidEip7702SignRequest
+      - OnlySpecifyOne
+      - IncompatibleParams
+      - NoOidcDataInProof
+      - InvalidEvmSignRequest
+      - InvalidEth2SignRequest
+      - InvalidDeriveKeyRequest
+      - InvalidStakingAmount
+      - CustomStakingAmountNotAllowedForWrapperContract
+      - InvalidUnstakeRequest
+      - InvalidCreateUserRequest
+      - UserAlreadyExists
+      - IdpUserAlreadyExists
+      - CognitoUserAlreadyOrgMember
+      - UserNotFound
+      - UserWithEmailNotFound
+      - PolicyKeyMismatch
+      - EmptyScopes
+      - InvalidScopesForRoleSession
+      - InvalidLifetime
+      - NoSingleKeyForUser
+      - InvalidOrgPolicyRule
+      - SourceIpAllowlistEmpty
+      - LimitWindowTooLong
+      - Erc20ContractDisallowed
+      - EmptyRuleError
+      - PolicyFieldValidationError
+      - OptionalListEmpty
+      - MultipleExclusiveFieldsProvided
+      - DuplicateFieldEntry
+      - InvalidRange
+      - InvalidOrgPolicyRepeatedRule
+      - InvalidSuiTransaction
+      - SuiSenderMismatch
+      - AvaSignHashError
+      - AvaSignError
+      - BtcSegwitHashError
+      - BtcTaprootHashError
+      - BtcSignError
+      - TaprootSignError
+      - Eip712SignError
+      - InvalidMemberRoleInUserAdd
+      - InvalidMemberRoleInRecipientAdd
+      - ThirdPartyUserAlreadyExists
+      - OidcIdentityAlreadyExists
+      - UserAlreadyHasIdentity
+      - ThirdPartyUserNotFound
+      - DeleteOidcUserError
+      - DeleteUserError
+      - SessionRoleMismatch
+      - InvalidOidcToken
+      - InvalidOidcIdentity
+      - OidcIssuerUnsupported
+      - OidcIssuerNotAllowed
+      - OidcIssuerNoApplicableJwk
+      - FidoKeyAlreadyRegistered
+      - FidoKeySignCountTooLow
+      - FidoVerificationFailed
+      - FidoChallengeMfaMismatch
+      - UnsupportedLegacyCognitoSession
+      - InvalidIdentityProof
+      - PaginationDataExpired
+      - ExistingKeysViolateExclusiveKeyAccess
+      - ExportDelayTooShort
+      - ExportWindowTooLong
+      - InvalidTotpFailureLimit
+      - InvalidEip191SignRequest
+      - CannotResendUserInvitation
+      - InvalidNotificationEndpointCount
+      - CannotDeletePendingSubscription
+      - InvalidNotificationUrlProtocol
+      - EmptyOneOfOrgEventFilter
+      - EmptyAllExceptOrgEventFilter
+      - InvalidTapNodeHash
+      - InvalidOneTimeCode
+      - MessageNotFound
+      - MessageAlreadySigned
+      - MessageRejected
+      - MessageReplaced
+      - InvalidMessageType
+      - EmptyAddress
+      - InvalidEth2SigningPolicySlotRange
+      - InvalidEth2SigningPolicyEpochRange
+      - InvalidEth2SigningPolicyTimestampRange
+      - InvalidEth2SigningPolicyOverlappingRule
+      - RpcUrlMissing
+      - MmiChainIdMissing
+      - EthersInvalidRpcUrl
+      - EthersGetTransactionCountError
+      - InvalidPassword
+      - BabylonStakingFeePlusDustOverflow
+      - BabylonStaking
+      - BabylonStakingIncorrectKey
+      - BabylonStakingSegwitNonDeposit
+      - BabylonStakingRegistrationRequiresTaproot
+      - PsbtSigning
+      - TooManyResets
+      - TooManyRequests
+      - TooManyFailedLogins
+      - BadBtcMessageSignP2shFlag
+      - InvalidTendermintRequest
+      - PolicyVersionMaxReached
+      - PolicyVersionInvalid
+      - PolicySecretLimitReached
+      - PolicySecretTooLarge
+      - InvalidImportKey
+      - AlienOwnerInvalid
+      - EmptyUpdateRequest
+      - InvalidPolicyReference
+      - PolicyEngineDisabled
+      - InvalidWasmPolicy
+      - CelProgramTooLarge
+      - InvalidPolicy
+      - RedundantDerivationPath
+      - ImportKeyMissing
+      - InvalidAbiMethods
+      - BabylonCovSign
+      - InvalidPolicyLogsRequest
+      - UserProfileMigrationMultipleEntries
+      - UserProfileMigrationTooManyItems
+      - InputTooShort
+      - InvalidTweakLength
+      - InvalidCustomChains
+      - InvalidRpcRequest
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    ForbiddenErrorCode:
+      type: string
+      enum:
+      - AlienKeyCreate
+      - CannotAssumeIdentity
+      - SentryDisallowed
+      - PasskeyLoginDisabled
+      - PasskeyNotRegistered
+      - CannotCreateOrg
+      - WrongMfaEmailOtpJwt
+      - OrgFlagNotSet
+      - FidoRequiredToRemoveTotp
+      - OidcIdentityLimitReached
+      - OidcScopeCeilingMissing
+      - OidcIssuerNotAllowedForMemberRole
+      - OidcNoMemberRolesAllowed
+      - EmailOtpNotConfigured
+      - MfaChallengeExpired
+      - ChainIdNotAllowed
+      - InvalidOrg
+      - OrgIdMismatch
+      - SessionForWrongOrg
+      - SelfDelete
+      - SelfDisable
+      - SelfMfaReset
+      - InvalidOrgMembershipRoleChange
+      - UserDisabled
+      - OrgDisabled
+      - OrgNotFound
+      - OrgWithoutOwner
+      - OrphanedUser
+      - OidcUserNotFound
+      - UserNotInOrg
+      - UserNotOrgOwner
+      - UserNotKeyOwner
+      - InvalidRole
+      - DisabledRole
+      - KeyDisabled
+      - KeyNotInRole
+      - ContactNotInOrg
+      - UserExportRequestNotInOrg
+      - UserExportRequestInvalid
+      - UserExportDisabled
+      - UserNotOriginalKeyOwner
+      - UserNotInRole
+      - MustBeFullMember
+      - SessionExpired
+      - SessionChanged
+      - SessionRevoked
+      - ExpectedUserSession
+      - SessionRoleChanged
+      - ScopedNameNotFound
+      - SessionInvalidEpochToken
+      - SessionInvalidRefreshToken
+      - SessionRefreshTokenExpired
+      - InvalidAuthHeader
+      - SessionNotFound
+      - InvalidArn
+      - SessionInvalidAuthToken
+      - SessionAuthTokenExpired
+      - SessionPossiblyStolenToken
+      - MfaDisallowedIdentity
+      - MfaDisallowedApprover
+      - MfaTypeNotAllowed
+      - MfaNotApprovedYet
+      - MfaConfirmationCodeMismatch
+      - MfaHttpRequestMismatch
+      - MfaRemoveBelowMin
+      - MfaOrgRequirementNotMet
+      - MfaRegistrationDisallowed
+      - TotpAlreadyConfigured
+      - TotpConfigurationChanged
+      - MfaTotpBadConfiguration
+      - MfaTotpBadCode
+      - MfaTotpRateLimit
+      - ImproperSessionScope
+      - FullSessionRequired
+      - SessionWithoutAnyScopeUnder
+      - UserRoleUnprivileged
+      - MemberRoleForbidden
+      - MfaNotConfigured
+      - RemoveLastOidcIdentity
+      - OperationNotAllowed
+      - OrgExportRetrievalDisabled
+      - ChangingKeyExportRequirementIsDisabled
+      - AutoAddBlsKeyToProtectedRole
+      - UserNotPolicyOwner
+      - UserNotContactOwner
+      - UserNotBucketOwner
+      - LegacySessionCannotHaveScopeCeiling
+      - RoleInParentOrgNotAllowed
+      - RemoveKeyFromRoleUserNotAllowed
+      - SiweChallengeExpired
+      - SiweMessageNotValid
+      - SiweMessageInvalidSignature
+      - SiwsChallengeExpired
+      - SiwsDomain
+      - SiwsMessageInvalid
+      - Acl
+    ErrorObj:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Code
+        data:
+          description: Optional data
+          nullable: true
+        message:
+          type: string
+          description: Message
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    TypedTransaction:
+      oneOf:
+      - type: object
+        description: Legacy (pre EIP-2718) Ethereum transaction type
+        required:
+        - type
+        properties:
+          data:
+            type: string
+            example: '0x01'
+          from:
+            type: string
+            example: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
+          gas:
+            type: string
+            example: '0x1'
+          gasPrice:
+            type: string
+            example: '0x1'
+          nonce:
+            type: string
+            example: '0x1'
+          to:
+            type: string
+            example: '0x068bd529426f4f27e248baf36e4558e440738fbb'
+          type:
+            type: string
+            example: '0x00'
+          value:
+            type: string
+            example: '0x1'
+        example:
+          data: '0x01'
+          from: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
+          gas: '0x1'
+          gasPrice: '0x1'
+          nonce: '0x1'
+          to: '0x068bd529426f4f27e248baf36e4558e440738fbb'
+          type: '0x00'
+          value: '0x1'
+      - type: object
+        description: EIP-1559 Ethereum transaction type
+        required:
+        - type
+        properties:
+          accessList:
+            type: array
+            items:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: '0x0000000000000000000000000000000000000000'
+                storageKeys:
+                  type: array
+                  items:
+                    type: string
+                    example: '0x0000000000000000000000000000000000000000000000000000000000000000'
+                  example:
+                  - '0x0000000000000000000000000000000000000000000000000000000000000000'
+              example:
+                address: '0x0000000000000000000000000000000000000000'
+                storageKeys:
+                - '0x0000000000000000000000000000000000000000000000000000000000000000'
+            example:
+            - address: '0x0000000000000000000000000000000000000000'
+              storageKeys:
+              - '0x0000000000000000000000000000000000000000000000000000000000000000'
+          data:
+            type: string
+            example: '0x01'
+          from:
+            type: string
+            example: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
+          gas:
+            type: string
+            example: '0x61a80'
+          maxFeePerGas:
+            type: string
+            example: '0x9502f900'
+          maxPriorityFeePerGas:
+            type: string
+            example: '0x9502f900'
+          nonce:
+            type: string
+            example: '0xb'
+          to:
+            type: string
+            example: '0x068bd539426f4f27e248baf36e4558e440738fbb'
+          type:
+            type: string
+            example: '0x02'
+          value:
+            type: string
+            example: '0x1'
+        example:
+          accessList:
+          - address: '0x0000000000000000000000000000000000000000'
+            storageKeys:
+            - '0x0000000000000000000000000000000000000000000000000000000000000000'
+          data: '0x01'
+          from: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
+          gas: '0x61a80'
+          maxFeePerGas: '0x9502f900'
+          maxPriorityFeePerGas: '0x9502f900'
+          nonce: '0xb'
+          to: '0x068bd539426f4f27e248baf36e4558e440738fbb'
+          type: '0x02'
+          value: '0x1'
+      description: 'EIP-2718 typed transaction, including EIP-1559 transactions (`{ "type": "0x02" ... }`), and legacy transactions (`{ "type": "0x00" ... }`). All values in the transaction are expected to be (0x-prefixed or not) hex strings or byte arrays.'
+    SignedMessage:
+      type: object
+      required:
+      - id
+      - address
+      - signatureVersion
+      - status
+      properties:
+        address:
+          type: string
+          description: The address of the signer, with leading '0x'
+          example: '0x0123456789012345678901234567890123456789'
+          pattern: ^0x[0-9a-fA-F]{40}$
+        id:
+          type: string
+          description: The ID of the request record.
+        signature:
+          type: string
+          description: The signature, hex encoded, with leading '0x'
+          nullable: true
+        signatureVersion:
+          $ref: '#/components/schemas/SignatureVersion'
+        status:
+          $ref: '#/components/schemas/MmiStatus'
+    NewSessionResponse:
+      type: object
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      required:
+      - org_id
+      - token
+      - refresh_token
+      - session_info
+      properties:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
+          type: string
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
+          type: string
+          description: 'New token to be used for authentication. Requests to signing endpoints
+
+            should include this value in the `Authorization` header.'
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type: object
+          description: HTTP request body
+          nullable: true
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    SignatureVersion:
+      type: string
+      enum:
+      - eip_712_v3
+      - eip_712_v4
+      - personal_sign
+    PendingMessageInfo:
+      allOf:
+      - type: object
+        description: This is the payload returned by various MMI endpoints
+        required:
+        - metadata
+        properties:
+          metadata:
+            $ref: '#/components/schemas/MmiMetadata'
+          signedMessage:
+            allOf:
+            - $ref: '#/components/schemas/SignedMessage'
+            nullable: true
+          transaction:
+            allOf:
+            - $ref: '#/components/schemas/TransactionAndStatus'
+            nullable: true
+      - type: object
+        required:
+        - id
+        - identity
+        - expires_at
+        - created_at
+        properties:
+          created_at:
+            $ref: '#/components/schemas/EpochDateTime'
+          expires_at:
+            $ref: '#/components/schemas/EpochDateTime'
+          id:
+            type: string
+            description: The ID of the pending message
+          identity:
+            type: string
+            description: The identity (a user or a role id) which created this message.
+          message_eip191:
+            allOf:
+            - type: object
+              required:
+              - address
+              - message
+              properties:
+                address:
+                  type: string
+                  description: From address, hex-encoded, with leading '0x'
+                  example: '0x0123456789012345678901234567890123456789'
+                  pattern: ^0x[0-9a-fA-F]{40}$
+                message:
+                  type: string
+                  description: Hex-encoded (including a '0x' prefix) message to sign.
+            nullable: true
+          message_eip712:
+            allOf:
+            - type: object
+              required:
+              - address
+              - data
+              - version
+              properties:
+                address:
+                  type: string
+                  description: From address, hex-encoded, with leading '0x'
+                  example: '0x0123456789012345678901234567890123456789'
+                  pattern: ^0x[0-9a-fA-F]{40}$
+                data:
+                  $ref: '#/components/schemas/TypedData'
+                version:
+                  type: string
+                  enum:
+                  - v3
+                  - v4
+            nullable: true
+          message_tx:
+            allOf:
+            - $ref: '#/components/schemas/TypedTransaction'
+            nullable: true
+      description: Extended information about an existing MMI request.
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
+  responses:
+    ListPendingMessagesResponse:
+      description: All pending MMI requests created by the current user.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: All pending MMI requests created by the current user.
+            required:
+            - pending_messages
+            properties:
+              pending_messages:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PendingMessageInfo'
+                description: All pending messages for a user.
+    JrpcResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/Response'
+            - type: object
+    EmptyImpl:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+    PendingMessageInfo:
+      description: Extended information about an existing MMI request.
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              description: This is the payload returned by various MMI endpoints
+              required:
+              - metadata
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/MmiMetadata'
+                signedMessage:
+                  allOf:
+                  - $ref: '#/components/schemas/SignedMessage'
+                  nullable: true
+                transaction:
+                  allOf:
+                  - $ref: '#/components/schemas/TransactionAndStatus'
+                  nullable: true
+            - type: object
+              required:
+              - id
+              - identity
+              - expires_at
+              - created_at
+              properties:
+                created_at:
+                  $ref: '#/components/schemas/EpochDateTime'
+                expires_at:
+                  $ref: '#/components/schemas/EpochDateTime'
+                id:
+                  type: string
+                  description: The ID of the pending message
+                identity:
+                  type: string
+                  description: The identity (a user or a role id) which created this message.
+                message_eip191:
+                  allOf:
+                  - type: object
+                    required:
+                    - address
+                    - message
+                    properties:
+                      address:
+                        type: string
+                        description: From address, hex-encoded, with leading '0x'
+                        example: '0x0123456789012345678901234567890123456789'
+                        pattern: ^0x[0-9a-fA-F]{40}$
+                      message:
+                        type: string
+                        description: Hex-encoded (including a '0x' prefix) message to sign.
+                  nullable: true
+                message_eip712:
+                  allOf:
+                  - type: object
+                    required:
+                    - address
+                    - data
+                    - version
+                    properties:
+                      address:
+                        type: string
+                        description: From address, hex-encoded, with leading '0x'
+                        example: '0x0123456789012345678901234567890123456789'
+                        pattern: ^0x[0-9a-fA-F]{40}$
+                      data:
+                        $ref: '#/components/schemas/TypedData'
+                      version:
+                        type: string
+                        enum:
+                        - v3
+                        - v4
+                  nullable: true
+                message_tx:
+                  allOf:
+                  - $ref: '#/components/schemas/TypedTransaction'
+                  nullable: true
+            description: Extended information about an existing MMI request.
+    JwkSetResponse:
+      description: A JSON Web Key set describing the key used to sign JSON Web Tokens
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - keys
+            properties:
+              keys:
+                type: array
+                items:
+                  type: object
+                  description: JSON Web Key properties
+                description: The keys included in this set
+    PendingMessageSignResponse:
+      description: Extended information about an existing MMI message, including the signature.
+      content:
+        application/json:
+          schema:
+            allOf:
+            - allOf:
+              - type: object
+                description: This is the payload returned by various MMI endpoints
+                required:
+                - metadata
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/MmiMetadata'
+                  signedMessage:
+                    allOf:
+                    - $ref: '#/components/schemas/SignedMessage'
+                    nullable: true
+                  transaction:
+                    allOf:
+                    - $ref: '#/components/schemas/TransactionAndStatus'
+                    nullable: true
+              - type: object
+                required:
+                - id
+                - identity
+                - expires_at
+                - created_at
+                properties:
+                  created_at:
+                    $ref: '#/components/schemas/EpochDateTime'
+                  expires_at:
+                    $ref: '#/components/schemas/EpochDateTime'
+                  id:
+                    type: string
+                    description: The ID of the pending message
+                  identity:
+                    type: string
+                    description: The identity (a user or a role id) which created this message.
+                  message_eip191:
+                    allOf:
+                    - type: object
+                      required:
+                      - address
+                      - message
+                      properties:
+                        address:
+                          type: string
+                          description: From address, hex-encoded, with leading '0x'
+                          example: '0x0123456789012345678901234567890123456789'
+                          pattern: ^0x[0-9a-fA-F]{40}$
+                        message:
+                          type: string
+                          description: Hex-encoded (including a '0x' prefix) message to sign.
+                    nullable: true
+                  message_eip712:
+                    allOf:
+                    - type: object
+                      required:
+                      - address
+                      - data
+                      - version
+                      properties:
+                        address:
+                          type: string
+                          description: From address, hex-encoded, with leading '0x'
+                          example: '0x0123456789012345678901234567890123456789'
+                          pattern: ^0x[0-9a-fA-F]{40}$
+                        data:
+                          $ref: '#/components/schemas/TypedData'
+                        version:
+                          type: string
+                          enum:
+                          - v3
+                          - v4
+                    nullable: true
+                  message_tx:
+                    allOf:
+                    - $ref: '#/components/schemas/TypedTransaction'
+                    nullable: true
+              description: Extended information about an existing MMI request.
+            - type: object
+            description: Extended information about an existing MMI message, including the signature.
+  securitySchemes:
+    Oidc:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: OIDC tokens allow users to authenticate using a third-party service. These are exchanged for signer session tokens.
+    SignerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Signing API end-points use session tokens for auth. Specifically, with each request you need to use the \`token\` from your signer session (which you create with `cs token create`).

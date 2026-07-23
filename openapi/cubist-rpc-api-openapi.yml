@@ -1,0 +1,3130 @@
+openapi: 3.0.3
+info:
+  title: CubeSigner Account RPC API
+  description: The CubeSigner management and signing service.
+  contact:
+    name: Cubist Inc.
+    email: hello@cubist.dev
+  version: v0.1.0
+servers:
+- url: https://gamma.signer.cubist.dev
+  description: Testing and staging environment
+- url: https://prod.signer.cubist.dev
+  description: Production environment
+security:
+- Cognito: []
+tags:
+- name: RPC
+paths:
+  /v0/org/{org_id}/rpc:
+    post:
+      tags:
+      - RPC
+      summary: High-level RPC endpoint.
+      description: High-level RPC endpoint.
+      operationId: rpcApi
+      parameters:
+      - name: org_id
+        in: path
+        description: Name or ID of the desired Org
+        required: true
+        schema:
+          type: string
+        example: Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonRpcRequest'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/JsonRpcResponse'
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - SignerAuth:
+        - rpc:*
+components:
+  schemas:
+    BybitWithdrawalsParams:
+      allOf:
+      - $ref: '#/components/schemas/BybitWithdrawalsRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BybitDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: integer
+            format: int32
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              Specified in milliseconds. If omitted, defaults to 10000.'
+            nullable: true
+            minimum: 0
+      description: 'Parameters envelope for all Bybit RPC variants whose payload schema is
+
+        derived from a `*Request` struct. (`BybitQueryUserParams` and
+
+        `BybitQuerySubMembersParams` have no per-variant payload and are defined
+
+        directly below.)'
+    DepositRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/capital/deposit/address`.
+
+
+        Fetches the deposit address for `coin` on the account that the signing key
+
+        authenticates as. Optionally narrows the address to a specific `network`.'
+      required:
+      - coin
+      properties:
+        amount:
+          type: string
+          description: 'Required only when `network` is `"LIGHTNING"`: the deposit amount that
+
+            the returned invoice should encode, as a decimal string.'
+          nullable: true
+        coin:
+          type: string
+          description: The asset symbol whose deposit address to fetch (e.g. `"USDT"`, `"BTC"`).
+        network:
+          type: string
+          description: 'Network identifier (e.g. `"BSC"`, `"ETH"`). If omitted, Binance returns
+
+            the address on the asset''s default network.'
+          nullable: true
+    BybitQueryDepositAddressParams:
+      allOf:
+      - $ref: '#/components/schemas/BybitQueryDepositAddressRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BybitDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: integer
+            format: int32
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              Specified in milliseconds. If omitted, defaults to 10000.'
+            nullable: true
+            minimum: 0
+      description: 'Parameters envelope for all Bybit RPC variants whose payload schema is
+
+        derived from a `*Request` struct. (`BybitQueryUserParams` and
+
+        `BybitQuerySubMembersParams` have no per-variant payload and are defined
+
+        directly below.)'
+    BinanceAccountInfoParams:
+      allOf:
+      - $ref: '#/components/schemas/AccountInfoRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    UniversalTransferRequest:
+      type: object
+      description: 'Parameters for `POST /sapi/v1/sub-account/universalTransfer`.
+
+
+        Transfers an asset between any two accounts (master to/from sub, or sub
+
+        to/from sub) and between any two wallet types (spot, futures, margin, etc).
+
+        The signing credential (the API key + Ed25519 key pair) must belong to the
+
+        master account.'
+      required:
+      - asset
+      - amount
+      properties:
+        amount:
+          type: string
+          description: The amount being transferred, as a decimal string.
+        asset:
+          type: string
+          description: The asset symbol being transferred (e.g. `"USDT"`).
+        clientTranId:
+          type: string
+          description: 'Optional client-supplied transfer id. If set, Binance echoes it back
+
+            as `client_tran_id` on the `UniversalTransferResponse` and lets it be
+
+            used as a filter on
+
+            [`UniversalTransferHistoryRequest::client_tran_id`].'
+          nullable: true
+        fromAccountType:
+          $ref: '#/components/schemas/AccountType'
+        fromEmail:
+          type: string
+          description: Source sub-account email. If `None`, the source is the master account.
+          nullable: true
+        toAccountType:
+          $ref: '#/components/schemas/AccountType'
+        toEmail:
+          type: string
+          description: Destination sub-account email. If `None`, the destination is the master account.
+          nullable: true
+    SubAccountAssetsRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v4/sub-account/assets`.
+
+
+        Queries the spot-wallet balances of a single sub-account. Must be called by
+
+        a master-account credential.'
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          description: Email address of the sub-account whose balances to fetch.
+    BybitWithdrawParams:
+      allOf:
+      - $ref: '#/components/schemas/BybitWithdrawRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BybitDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: integer
+            format: int32
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              Specified in milliseconds. If omitted, defaults to 10000.'
+            nullable: true
+            minimum: 0
+      description: 'Parameters envelope for all Bybit RPC variants whose payload schema is
+
+        derived from a `*Request` struct. (`BybitQueryUserParams` and
+
+        `BybitQuerySubMembersParams` have no per-variant payload and are defined
+
+        directly below.)'
+    BinanceDryRunMode:
+      type: string
+      description: Different "dry run" modes for executing Binance requests.
+      enum:
+      - NO_SIGN
+      - NO_SUBMIT
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    HttpRequestCmp:
+      oneOf:
+      - type: string
+        description: The requests must match exactly. Any given MFA receipt can be used at most once.
+        enum:
+        - Eq
+      - type: object
+        required:
+        - EvmTx
+        properties:
+          EvmTx:
+            $ref: '#/components/schemas/EvmTxCmp'
+      - type: object
+        required:
+        - SolanaTx
+        properties:
+          SolanaTx:
+            $ref: '#/components/schemas/SolanaTxCmp'
+      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
+    BinanceSubToMasterParams:
+      allOf:
+      - $ref: '#/components/schemas/SubToMasterRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    BadGatewayErrorCode:
+      type: string
+      enum:
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    BybitQueryUserParams:
+      type: object
+      description: 'Parameters for [`BybitRpc::QueryUser`].
+
+
+        Bybit endpoint: `GET /v5/user/query-api`. Takes no inputs beyond the common
+
+        `recvWindow` / `timestamp` envelope; defined directly (instead of through
+
+        the [`BybitParams`] generic alias) so utoipa emits a non-empty schema.'
+      required:
+      - keyId
+      properties:
+        dryRun:
+          allOf:
+          - $ref: '#/components/schemas/BybitDryRunMode'
+          nullable: true
+        keyId:
+          $ref: '#/components/schemas/Id'
+        recvWindow:
+          type: integer
+          format: int32
+          description: Optional receive window in milliseconds. Defaults to 10000.
+          nullable: true
+          minimum: 0
+    BtcNetwork:
+      type: string
+      description: The Bitcoin network to query for UTXOs.
+      enum:
+      - mainnet
+      - testnet
+    SubToSubRequest:
+      type: object
+      description: 'Parameters for `POST /sapi/v1/sub-account/transfer/subToSub`.
+
+
+        Transfers an asset from the caller''s sub-account to another sub-account
+
+        under the same master account.'
+      required:
+      - toEmail
+      - asset
+      - amount
+      properties:
+        amount:
+          type: string
+          description: The amount being transferred, as a decimal string (e.g. `"0.1"`).
+        asset:
+          type: string
+          description: The asset symbol being transferred (e.g. `"USDT"`).
+        toEmail:
+          type: string
+          description: 'Email address of the destination sub-account. Must be a sub-account of
+
+            the same master.'
+    ClientSessionInfo:
+      type: object
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
+      required:
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
+      properties:
+        auth_token:
+          type: string
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
+          type: string
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    BinanceDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Binance API method that would have been used
+        url:
+          type: string
+          description: The Binance API url method that would have been called
+    CoinbaseRpc:
+      oneOf:
+      - type: object
+        description: List the brokerage accounts the calling key can see.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_coinbaseListAccounts
+          params:
+            $ref: '#/components/schemas/CoinbaseListAccountsParams'
+      - type: object
+        description: List the portfolios the calling key can see.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_coinbaseListPortfolios
+          params:
+            $ref: '#/components/schemas/CoinbaseListPortfoliosParams'
+      - type: object
+        description: Move funds between two portfolios on the calling key's account.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_coinbaseMoveFunds
+          params:
+            $ref: '#/components/schemas/CoinbaseMoveFundsParams'
+      description: 'Coinbase-family RPC methods. Each variant authenticates as the
+
+        [`KeyType::Ed25519CoinbaseApi`] key in its `params.key_id`.'
+    BinanceWithdrawParams:
+      allOf:
+      - $ref: '#/components/schemas/WithdrawRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    RpcMethod:
+      oneOf:
+      - $ref: '#/components/schemas/CsRpc'
+      - $ref: '#/components/schemas/BinanceRpc'
+      - $ref: '#/components/schemas/BybitRpc'
+      - $ref: '#/components/schemas/CoinbaseRpc'
+      description: 'The RPC API method and matching parameters.
+
+
+        Top-level dispatch. Wire format is preserved by `#[serde(untagged)]`: each
+
+        inbound request is matched against one of the internally-tagged inner enums
+
+        ([`CsRpc`] for the core methods, [`BinanceRpc`] for the Binance family,
+
+        [`BybitRpc`] for the Bybit family, [`CoinbaseRpc`] for the Coinbase family).'
+    CoinbaseDryRunMode:
+      type: string
+      description: Different "dry run" modes for executing Coinbase requests.
+      enum:
+      - NO_SIGN
+      - NO_SUBMIT
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    GetTransactionRequest:
+      type: object
+      description: Parameters for the [`cs_getTransaction`](RpcMethod::GetTransaction) method.
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+    CreateEvmTransactionRequest:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/CreateEvmTransferRequest'
+        - type: object
+          required:
+          - type
+          properties:
+            type:
+              type: string
+              enum:
+              - Transfer
+      description: Parameters for creating an EVM transaction.
+      discriminator:
+        propertyName: type
+    Page:
+      type: object
+      description: 'The rocket query parameter representing the page from which to start a paginated query.
+
+
+        MUST be named `<page>` in rocket url spec so that ''serde(rename = "page.*")'' below continues to work'
+      properties:
+        page.size:
+          type: integer
+          format: int32
+          description: 'Max number of items to return per page.
+
+
+            If the actual number of returned items may be less that this, even if there exist more
+
+            data in the result set. To reliably determine if more data is left in the result set,
+
+            inspect the [UnencryptedLastEvalKey] value in the response object.'
+          minimum: 0
+        page.start:
+          type: string
+          description: 'The start of the page.  Omit to start from the beginning; otherwise, only specify a
+
+            the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
+          nullable: true
+    AccountInfoRequest:
+      type: object
+      description: 'Parameters for `GET /api/v3/account`.
+
+
+        Returns Spot account info for whichever account the signing key
+
+        authenticates as (master or sub).'
+      properties:
+        omitZeroBalances:
+          type: boolean
+          description: 'If `true`, the response omits assets with all-zero balances. Defaults to
+
+            `false` (Binance''s default).'
+          nullable: true
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+          nullable: true
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    CancelTransactionRequest:
+      type: object
+      description: Parameters for the [`cs_cancelTransaction`](RpcMethod::CancelTransaction) method.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The transaction id.
+    DepositHistoryRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/capital/deposit/hisrec`.
+
+
+        Returns the calling account''s deposit history. All filters are optional;
+
+        if `start_time`/`end_time` are omitted, Binance returns the most recent 90
+
+        days. Use `tx_id` to look up a specific deposit by its on-chain
+
+        transaction hash, or `coin`/`status` to narrow the result set.'
+      properties:
+        coin:
+          type: string
+          description: Filter to a specific asset (e.g. `"USDT"`, `"BTC"`).
+          nullable: true
+        endTime:
+          type: integer
+          format: int64
+          description: 'Window end (ms since epoch, Binance default: present timestamp).'
+          nullable: true
+          minimum: 0
+        includeSource:
+          type: boolean
+          description: 'If `true`, include the deposit''s source address in each entry. Binance
+
+            defaults to `false`.'
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Binance default and max: 1000).'
+          nullable: true
+          minimum: 0
+        offset:
+          type: integer
+          format: int32
+          description: 'Pagination offset (Binance default: 0).'
+          nullable: true
+          minimum: 0
+        startTime:
+          type: integer
+          format: int64
+          description: 'Window start (ms since epoch, Binance default: 90 days from current timestamp).'
+          nullable: true
+          minimum: 0
+        status:
+          type: integer
+          format: int32
+          description: 'Filter by deposit status. Binance values: `0` = pending, `6` = credited
+
+            but cannot withdraw, `7` = wrong deposit, `8` = waiting user confirm,
+
+            `1` = success, `2` = rejected. Left as `u8` for forward compatibility.'
+          nullable: true
+          minimum: 0
+        txId:
+          type: string
+          description: Look up a specific deposit by its on-chain transaction hash.
+          nullable: true
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+          nullable: true
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    CoinbaseAmount:
+      type: object
+      description: A `{ value, currency }` amount pair used throughout Coinbase responses.
+      required:
+      - value
+      - currency
+      properties:
+        currency:
+          type: string
+          description: Asset symbol (e.g. `"USD"`, `"BTC"`).
+        value:
+          type: string
+          description: 'Decimal-string amount (Coinbase preserves precision by not converting
+
+            to floats).'
+    BinanceUniversalTransferHistoryParams:
+      allOf:
+      - $ref: '#/components/schemas/UniversalTransferHistoryRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    CoinbaseListPortfoliosParams:
+      allOf:
+      - $ref: '#/components/schemas/ListPortfoliosRequest'
+      - type: object
+        required:
+        - key_id
+        properties:
+          dry_run:
+            allOf:
+            - $ref: '#/components/schemas/CoinbaseDryRunMode'
+            nullable: true
+          key_id:
+            $ref: '#/components/schemas/Id'
+      description: Parameters envelope for all Coinbase RPC methods.
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    RetryTransactionRequest:
+      allOf:
+      - $ref: '#/components/schemas/EvmTxCustomization'
+      - type: object
+        required:
+        - id
+        properties:
+          id:
+            type: string
+            description: The transaction id.
+      description: Parameters for the [`cs_retryTransaction`](RpcMethod::RetryTransaction) method.
+    InternalErrorCode:
+      type: string
+      enum:
+      - NoMaterialId
+      - InvalidAuditLogEntry
+      - UnexpectedCheckerRule
+      - UnresolvedPolicyReference
+      - UnexpectedAclAction
+      - FidoKeyAssociatedWithMultipleUsers
+      - ClaimsParseError
+      - InvalidThrottleId
+      - InvalidEmailAddress
+      - EmailTemplateRender
+      - OidcIdentityHeaderMissing
+      - OidcIdentityParseError
+      - SystemTimeError
+      - PasswordHashParseError
+      - SendMailError
+      - ReqwestError
+      - EmailConstructionError
+      - TsWriteError
+      - TsQueryError
+      - DbQueryError
+      - DbGetError
+      - DbDeleteError
+      - DbPutError
+      - DbUpdateError
+      - SerdeError
+      - TestAndSetError
+      - DbGetItemsError
+      - DbWriteError
+      - CubistSignerError
+      - CwListMetricsError
+      - CwPutMetricDataError
+      - GetAwsSecretError
+      - SecretNotFound
+      - KmsGenerateRandomError
+      - MalformedTotpBytes
+      - KmsGenerateRandomNoResponseError
+      - CreateKeyError
+      - ParseDerivationPathError
+      - SplitSignerError
+      - CreateImportKeyError
+      - CreateEotsNoncesError
+      - EotsSignError
+      - BabylonCovSignError
+      - CognitoDeleteUserError
+      - CognitoListUsersError
+      - CognitoGetUserError
+      - MissingUserEmail
+      - CognitoResendUserInvitation
+      - CognitoSetUserPasswordError
+      - GenericInternalError
+      - AssumeRoleWithoutEvidence
+      - OidcAuthWithoutOrg
+      - MissingKeyMetadata
+      - KmsEnableKeyError
+      - KmsDisableKeyError
+      - LambdaInvokeError
+      - LambdaNoResponseError
+      - LambdaFailure
+      - LambdaUnparsableResponse
+      - SerializeEncryptedExportKeyError
+      - DeserializeEncryptedExportKeyError
+      - ReEncryptUserExport
+      - S3UploadError
+      - S3DownloadError
+      - S3CopyError
+      - S3ListObjectsError
+      - S3DeleteObjectsError
+      - S3BuildError
+      - S3PresignedUrlError
+      - ManagedStateMissing
+      - InternalHeaderMissing
+      - InvalidInternalHeaderValue
+      - RequestLocalStateAlreadySet
+      - OidcOrgMismatch
+      - OidcIssuerInvalidJwk
+      - InvalidPkForMaterialId
+      - SegwitTweakFailed
+      - UncheckedOrg
+      - SessionOrgIdMissing
+      - AvaSignCredsMissing
+      - AvaSignSignatureMissing
+      - ExpectedRoleSession
+      - InvalidThirdPartyIdentity
+      - CognitoGetUser
+      - SnsSubscribeError
+      - SnsUnsubscribeError
+      - SnsGetSubscriptionAttributesError
+      - SnsSubscriptionAttributesMissing
+      - SnsSetSubscriptionAttributesError
+      - SnsPublishBatchError
+      - InconsistentMultiValueTestAndSet
+      - MaterialIdError
+      - InvalidBtcAddress
+      - HistoricalTxBodyMissing
+      - InvalidOperation
+      - ParentOrgNotFound
+      - OrgParentLoop
+      - ResolvedParentOrgWithNoScopeCeiling
+      - InvalidUploadObjectId
+      - PolicyEngineNotFound
+      - PolicyEngineError
+      - PolicySecretsEncryptionError
+      - CreatePolicyImportKeyError
+      - InvalidAlias
+      - EmptyUpdateModifiedObject
+      - EmptyUpdateModifiedActions
+      - DbContactAddressesInvalid
+      - InvalidEvmSigedRlp
+      - InvalidErc20Data
+      - InvalidRpcUrl
+    SubAccountTransferHistoryRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/sub-account/transfer/subUserHistory`.
+
+
+        Lists the transfer history of the calling sub-account. Covers both
+
+        sub-to-master and sub-to-sub transfers. All filters are optional; if
+
+        `start_time`/`end_time` are omitted, Binance returns the most recent 30
+
+        days. If `r#type` is omitted, Binance defaults to `TransferOut` (`2`).'
+      properties:
+        asset:
+          type: string
+          description: Filter to a specific asset (e.g. `"USDT"`).
+          nullable: true
+        endTime:
+          type: integer
+          format: int64
+          description: Window end (ms since epoch).
+          nullable: true
+          minimum: 0
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Binance default: 500).'
+          nullable: true
+          minimum: 0
+        returnFailHistory:
+          type: boolean
+          description: 'If `true`, include failed transfers in the response. Binance defaults
+
+            to `false`.'
+          nullable: true
+        startTime:
+          type: integer
+          format: int64
+          description: Window start (ms since epoch).
+          nullable: true
+          minimum: 0
+        type:
+          type: integer
+          format: int32
+          description: Direction filter (`1` = transfer in, `2` = transfer out).
+          nullable: true
+          minimum: 0
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    CreateTransactionRequest:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/CreateEvmTransactionRequest'
+        - type: object
+          required:
+          - chain
+          properties:
+            chain:
+              type: string
+              enum:
+              - Evm
+      description: Parameters for the [`cs_createTransaction`](RpcMethod::CreateTransaction) method.
+      discriminator:
+        propertyName: chain
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+          nullable: true
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+          nullable: true
+        request_id:
+          type: string
+          description: Optional request identifier
+    WithdrawHistoryRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/capital/withdraw/history`.
+
+
+        Returns the master account''s withdrawal history. All filters are
+
+        optional; if `start_time`/`end_time` are omitted, Binance returns the
+
+        most recent 90 days. Use `id_list` to look up specific withdrawals by
+
+        the `id` returned from [`BinanceRpc::Withdraw`], or `withdraw_order_id`
+
+        to look one up by its client-supplied id.'
+      properties:
+        coin:
+          type: string
+          description: Filter to a specific asset (e.g. `"USDT"`).
+          nullable: true
+        endTime:
+          type: integer
+          format: int64
+          description: Window end (ms since epoch).
+          nullable: true
+          minimum: 0
+        idList:
+          type: string
+          description: 'Comma-separated list of Binance-assigned withdrawal ids (the `id`
+
+            field of `WithdrawResponse`). Up to 45 ids per query, per Binance.'
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Binance default and max: 1000).'
+          nullable: true
+          minimum: 0
+        offset:
+          type: integer
+          format: int32
+          description: Pagination offset.
+          nullable: true
+          minimum: 0
+        startTime:
+          type: integer
+          format: int64
+          description: Window start (ms since epoch).
+          nullable: true
+          minimum: 0
+        status:
+          type: integer
+          format: int32
+          description: 'Filter by withdrawal status. Binance values:
+
+            `0` = Email Sent, `2` = Awaiting Approval, `3` = Rejected,
+
+            `4` = Processing, `6` = Completed. Left as `u8` for forward
+
+            compatibility.'
+          nullable: true
+          minimum: 0
+        withdrawOrderId:
+          type: string
+          description: 'Filter by the client-supplied withdrawal id originally passed to
+
+            [`WithdrawRequest::withdraw_order_id`].'
+          nullable: true
+    BinanceRpc:
+      oneOf:
+      - type: object
+        description: Transfer an asset from a sub-account to its master account.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceSubToMaster
+          params:
+            $ref: '#/components/schemas/BinanceSubToMasterParams'
+      - type: object
+        description: Transfer an asset between two sub-accounts of the same master.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceSubToSub
+          params:
+            $ref: '#/components/schemas/BinanceSubToSubParams'
+      - type: object
+        description: 'Transfer an asset between any two Binance accounts and wallet types.
+
+          The provided key, however, must correspond to the Binance master account.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceUniversalTransfer
+          params:
+            $ref: '#/components/schemas/BinanceUniversalTransferParams'
+      - type: object
+        description: 'Query the spot-wallet balances of one sub-account. The provided key
+
+          must correspond to the Binance master account.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceSubAccountAssets
+          params:
+            $ref: '#/components/schemas/BinanceSubAccountAssetsParams'
+      - type: object
+        description: 'Query the calling key''s Binance Spot account info (balances,
+
+          permissions, commissions, uid). Works for both master and sub-account
+
+          keys; the response is the account info for whichever account the key
+
+          authenticates as.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceAccountInfo
+          params:
+            $ref: '#/components/schemas/BinanceAccountInfoParams'
+      - type: object
+        description: 'Query the history of sub-account-initiated transfers (i.e., transfers
+
+          originated by [`BinanceRpc::SubToMaster`] and [`BinanceRpc::SubToSub`]).
+
+          The provided key must correspond to the same Binance sub-account that
+
+          initiated the transfers; results are scoped to that sub-account''s
+
+          activity. Use the returned `tranId` to match a record against the
+
+          `txnId` returned by the original transfer call.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceSubAccountTransferHistory
+          params:
+            $ref: '#/components/schemas/BinanceSubAccountTransferHistoryParams'
+      - type: object
+        description: 'Query the history of universal transfers initiated by the master
+
+          account (i.e., transfers originated by
+
+          [`BinanceRpc::UniversalTransfer`]). The provided key must correspond to
+
+          the Binance master account. Match the returned `tranId` against the
+
+          one returned by the original universal transfer call.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceUniversalTransferHistory
+          params:
+            $ref: '#/components/schemas/BinanceUniversalTransferHistoryParams'
+      - type: object
+        description: 'Submit a withdrawal of an asset to an external address. Withdrawals
+
+          to an external wallet can only be done from the master account.
+
+          Additionally, the corresponding API key must be configured to allow
+
+          withdrawals, which, in turn, requires a restricted list of IP addresses
+
+          to be configured as well (which should be set to our lambda''s EIPs).'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceWithdraw
+          params:
+            $ref: '#/components/schemas/BinanceWithdrawParams'
+      - type: object
+        description: 'Query the history of external withdrawals submitted via
+
+          [`BinanceRpc::Withdraw`]. The provided key must correspond to the
+
+          Binance master account. Filter by the `idList` query parameter — or
+
+          by `withdrawOrderId` if one was set on the original
+
+          [`BinanceRpc::Withdraw`] call — to look up a specific withdrawal.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceWithdrawHistory
+          params:
+            $ref: '#/components/schemas/BinanceWithdrawHistoryParams'
+      - type: object
+        description: 'Fetch the deposit address for an asset on the calling account. Works
+
+          for both master and sub-account keys; the returned address belongs to
+
+          whichever account the key authenticates as.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceDeposit
+          params:
+            $ref: '#/components/schemas/BinanceDepositParams'
+      - type: object
+        description: 'Query the calling account''s deposit history. Works for both master and
+
+          sub-account keys; the results are scoped to whichever account the key
+
+          authenticates as. All filters are optional.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceDepositHistory
+          params:
+            $ref: '#/components/schemas/BinanceDepositHistoryParams'
+      - type: object
+        description: 'Enumerate the sub-accounts under the master account. The provided key
+
+          must correspond to the Binance master account. All filters are
+
+          optional; pagination follows Binance''s defaults.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceListSubAccounts
+          params:
+            $ref: '#/components/schemas/BinanceListSubAccountsParams'
+      - type: object
+        description: 'Query the list of coins supported by the calling account along with
+
+          per-coin balances, deposit/withdraw enablement, and network info.
+
+          Works for both master and sub-account keys.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_binanceCoinInfo
+          params:
+            $ref: '#/components/schemas/BinanceCoinInfoParams'
+      description: 'Binance-family RPC methods. Each variant authenticates as the
+
+        [`KeyType::Ed25519BinanceApi`] key in its `params.key_id`.'
+    AcceptedValueCode:
+      type: string
+      enum:
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    MoveFundsRequest:
+      type: object
+      description: 'Parameters for `cs_coinbaseMoveFunds`.
+
+
+        Coinbase endpoint: `POST /api/v3/brokerage/portfolios/move_funds`.'
+      required:
+      - funds
+      - source_portfolio_uuid
+      - target_portfolio_uuid
+      properties:
+        funds:
+          $ref: '#/components/schemas/CoinbaseAmount'
+        source_portfolio_uuid:
+          type: string
+          description: UUID of the portfolio the funds are debited from.
+        target_portfolio_uuid:
+          type: string
+          description: UUID of the portfolio the funds are credited to.
+    SignDryRunArgs:
+      type: object
+      required:
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+          nullable: true
+    BybitWithdrawalsRequest:
+      type: object
+      description: Parameters for `GET /v5/asset/withdraw/query-record`.
+      properties:
+        coin:
+          type: string
+          description: Filter by coin symbol.
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: Page size.
+          nullable: true
+          minimum: 0
+        withdrawID:
+          type: string
+          description: 'Filter by Bybit-assigned withdrawal id (the `id` returned by
+
+            [`BybitRpc::Withdraw`]).'
+          nullable: true
+    BybitUniversalTransferParams:
+      allOf:
+      - $ref: '#/components/schemas/BybitUniversalTransferRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BybitDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: integer
+            format: int32
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              Specified in milliseconds. If omitted, defaults to 10000.'
+            nullable: true
+            minimum: 0
+      description: 'Parameters envelope for all Bybit RPC variants whose payload schema is
+
+        derived from a `*Request` struct. (`BybitQueryUserParams` and
+
+        `BybitQuerySubMembersParams` have no per-variant payload and are defined
+
+        directly below.)'
+    SubToMasterRequest:
+      type: object
+      description: 'Parameters for `POST /sapi/v1/sub-account/transfer/subToMaster`.
+
+
+        Transfers an asset from the caller''s sub-account to the master account.'
+      required:
+      - asset
+      - amount
+      properties:
+        amount:
+          type: string
+          description: 'The amount being transferred, formatted as a decimal string (e.g. `"0.1"`).
+
+            Sent verbatim: Binance is strict about decimal formatting.'
+        asset:
+          type: string
+          description: The asset symbol being transferred (e.g. `"USDT"`, `"BTC"`).
+    ListSubAccountsRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/sub-account/list`.
+
+
+        Enumerates the sub-accounts under the calling master account. All filters
+
+        are optional; if `email`/`is_freeze` are omitted, every sub-account is
+
+        returned subject to pagination.'
+      properties:
+        email:
+          type: string
+          description: Filter to the sub-account with this email.
+          nullable: true
+        isFreeze:
+          type: boolean
+          description: 'Filter by freeze status (`true` = frozen sub-accounts only,
+
+            `false` = active sub-accounts only). Binance accepts this as the
+
+            literal strings `"true"`/`"false"`, which is exactly what
+
+            `serde_urlencoded` emits for `bool`.'
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Binance default: 1, max: 200).'
+          nullable: true
+          minimum: 0
+        page:
+          type: integer
+          format: int32
+          description: '1-based page number (Binance default: 1).'
+          nullable: true
+          minimum: 0
+    BinanceWithdrawHistoryParams:
+      allOf:
+      - $ref: '#/components/schemas/WithdrawHistoryRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    EvmTxCmp:
+      type: object
+      properties:
+        grace:
+          type: integer
+          format: int64
+          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
+
+
+            In this case, however, because EVM transactions already have a replay prevention mechanism
+
+            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
+
+            indicate how long an MFA receipt should remain valid after its first use.
+
+
+            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
+
+            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
+
+            ensure that any subsequent requests that claim the same receipt must sign for the same
+
+            nonce as the request we signed originally with that receipt.
+
+
+            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
+
+            original expiration date.
+
+
+            The grace period must not be greater than 30 days.'
+          nullable: true
+          minimum: 0
+        ignore_gas:
+          type: boolean
+          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
+        ignore_nonce:
+          type: boolean
+          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
+    BybitWithdrawRequest:
+      type: object
+      description: Parameters for `POST /v5/asset/withdraw/create`. Master-only.
+      required:
+      - requestId
+      - coin
+      - chain
+      - address
+      - amount
+      properties:
+        accountType:
+          type: string
+          description: 'Source wallet (`"FUND"` or `"SPOT"`). Defaults to Bybit''s account-level
+
+            default when omitted.'
+          nullable: true
+        address:
+          type: string
+          description: Destination address. Must already be in Bybit's address book.
+        amount:
+          type: string
+          description: Amount as a decimal string. Sent verbatim.
+        chain:
+          type: string
+          description: Network identifier (e.g. `"ETH"`, `"TRX"`). Required by Bybit.
+        coin:
+          type: string
+          description: Coin symbol (e.g. `"USDT"`, `"BTC"`).
+        forceChain:
+          type: integer
+          format: int32
+          description: 'Force-chain flag: `0` (default), `1`, or `2`. See Bybit docs.'
+          nullable: true
+          minimum: 0
+        requestId:
+          type: string
+          description: Client-supplied request id (UUID). Used by Bybit for idempotency.
+        tag:
+          type: string
+          description: Optional memo / tag (e.g. for XRP, XLM).
+          nullable: true
+        timestamp:
+          type: integer
+          format: int64
+          description: 'Server-supplied timestamp (ms since epoch). Set by the signer just before
+
+            signing; clients leave this `None` (because the server will ignore it anyway).'
+          nullable: true
+          minimum: 0
+    AccountType:
+      type: string
+      description: 'Wallet type used as the source or destination of a [`UniversalTransferRequest`].
+
+
+        Serializes to the SCREAMING_SNAKE_CASE strings Binance expects. The default
+
+        is [`AccountType::Spot`].'
+      enum:
+      - SPOT
+      - USDT_FUTURE
+      - COIN_FUTURE
+      - MARGIN
+    BybitDryRunMode:
+      type: string
+      description: '"Dry run" modes for Bybit requests.'
+      enum:
+      - NO_SIGN
+      - NO_SUBMIT
+    CreateEvmTransferRequest:
+      allOf:
+      - $ref: '#/components/schemas/EvmToken'
+      - $ref: '#/components/schemas/EvmTxCustomization'
+      - type: object
+        required:
+        - chain_id
+        - from
+        - to
+        - value
+        properties:
+          chain_id:
+            type: integer
+            format: int64
+            description: The EVM chain id this transaction is for.
+            minimum: 0
+          from:
+            type: string
+            description: 'The address that the amount will be transferred from.
+
+
+              Must match the material id of a key the session can access.'
+            pattern: ^(0x)?[a-fA-F0-9]{40}$
+          to:
+            type: string
+            description: The address that the amount will be transferred to.
+            pattern: ^(0x)?[a-fA-F0-9]{40}$
+          value:
+            type: string
+            description: 'The amount being transferred, as a hex value.
+
+
+              This value should be in WEI for native transfers, and in the token''s denomination
+
+              for ERC-20 transfers.'
+            pattern: ^(0x)?[a-fA-F0-9]{64}$
+      description: Parameters for creating an EVM transfer.
+    CoinbaseListAccountsParams:
+      allOf:
+      - $ref: '#/components/schemas/ListAccountsRequest'
+      - type: object
+        required:
+        - key_id
+        properties:
+          dry_run:
+            allOf:
+            - $ref: '#/components/schemas/CoinbaseDryRunMode'
+            nullable: true
+          key_id:
+            $ref: '#/components/schemas/Id'
+      description: Parameters envelope for all Coinbase RPC methods.
+    BybitQuerySubMembersParams:
+      type: object
+      description: 'Parameters for [`BybitRpc::QuerySubMembers`].
+
+
+        Bybit endpoint: `GET /v5/user/query-sub-members`. Takes no inputs beyond
+
+        the common envelope.'
+      required:
+      - keyId
+      properties:
+        dryRun:
+          allOf:
+          - $ref: '#/components/schemas/BybitDryRunMode'
+          nullable: true
+        keyId:
+          $ref: '#/components/schemas/Id'
+        recvWindow:
+          type: integer
+          format: int32
+          description: Optional receive window in milliseconds. Defaults to 10000.
+          nullable: true
+          minimum: 0
+    BinanceListSubAccountsParams:
+      allOf:
+      - $ref: '#/components/schemas/ListSubAccountsRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    BinanceSubAccountAssetsParams:
+      allOf:
+      - $ref: '#/components/schemas/SubAccountAssetsRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    PolicyErrorOwnCodes:
+      type: string
+      enum:
+      - Inapplicable
+      - SuiTxReceiversDisallowedTransactionKind
+      - SuiTxReceiversDisallowedTransferAddress
+      - SuiTxReceiversDisallowedCommand
+      - BtcTxDisallowedOutputs
+      - BtcSignatureExceededValue
+      - BtcValueOverflow
+      - BtcSighashTypeDisallowed
+      - Eip7702AddressMismatch
+      - EvmTxReceiverMismatch
+      - EvmTxChainIdMismatch
+      - EvmTxSenderMismatch
+      - EvmTxExceededValue
+      - EvmTxExceededGasCost
+      - EvmTxGasCostUndefined
+      - EvmDataDisallowed
+      - Erc20DataInvalid
+      - EvmContractAddressUndefined
+      - EvmContractChainIdUndefined
+      - EvmDataNotDefined
+      - EvmDataInvalid
+      - EvmContractNotInAllowlist
+      - Erc20ExceededTransferLimit
+      - Erc20ReceiverMismatch
+      - Erc20ExceededApproveLimit
+      - Erc20SpenderMismatch
+      - EvmFunctionNotInAllowlist
+      - EvmFunctionCallInvalid
+      - EvmFunctionCallDisallowedArg
+      - PolicyDisjunctionError
+      - PolicyNegationError
+      - Eth2ExceededMaxUnstake
+      - Eth2ConcurrentUnstaking
+      - NotInIpv4Allowlist
+      - NotInOriginAllowlist
+      - NotInOperationAllowlist
+      - InvalidSourceIp
+      - RawSigningNotAllowed
+      - DiffieHellmanExchangeNotAllowed
+      - Eip712SigningNotAllowed
+      - OidcSourceNotAllowed
+      - NoOidcAuthSourcesDefined
+      - AddKeyToRoleDisallowed
+      - KeysAlreadyInRole
+      - KeyInMultipleRoles
+      - KeyAccessError
+      - RequireRoleSessionKeyAccessError
+      - BtcMessageSigningNotAllowed
+      - Eip191SigningNotAllowed
+      - Eip7702SigningNotAllowed
+      - TaprootSigningDisallowed
+      - SegwitSigningDisallowed
+      - PsbtSigningDisallowed
+      - BabylonStakingDisallowed
+      - TimeLocked
+      - CelPolicyDenied
+      - BabylonStakingNetwork
+      - BabylonStakingParamsVersion
+      - BabylonStakingExplicitParams
+      - BabylonStakingStakerPk
+      - BabylonStakingFinalityProviderPk
+      - BabylonStakingLockTime
+      - BabylonStakingValue
+      - BabylonStakingChangeAddress
+      - BabylonStakingFee
+      - BabylonStakingWithdrawalAddress
+      - BabylonStakingBbnAddress
+      - SolanaInstructionCountLow
+      - SolanaInstructionCountHigh
+      - SolanaNotInInstructionAllowlist
+      - SolanaInstructionMismatch
+      - WasmPoliciesDisabled
+      - WasmPolicyDenied
+      - WasmPolicyFailed
+      - WebhookPoliciesDisabled
+      - DeniedByWebhook
+      - ExplicitlyDenied
+    BybitQueryDepositAddressRequest:
+      type: object
+      description: Parameters for `GET /v5/asset/deposit/query-address`.
+      required:
+      - coin
+      properties:
+        chainType:
+          type: string
+          description: 'Optional network identifier (e.g. `"ETH"`, `"TRX"`). When omitted,
+
+            Bybit returns the deposit address on every supported chain.'
+          nullable: true
+        coin:
+          type: string
+          description: Coin symbol (e.g. `"BTC"`, `"USDT"`).
+    CoinbaseDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Coinbase API method that would have been used
+        url:
+          type: string
+          description: The Coinbase API url method that would have been called
+    Id:
+      type: string
+    ListPortfoliosRequest:
+      type: object
+      description: 'Parameters for `cs_coinbaseListPortfolios`.
+
+
+        Coinbase endpoint: `GET /api/v3/brokerage/portfolios`.'
+      properties:
+        portfolio_type:
+          type: string
+          description: 'Filter by portfolio type (e.g. `"DEFAULT"`, `"CONSUMER"`, `"INTX"`).
+
+            Left as `String` for forward compatibility.'
+          nullable: true
+    BinanceSubToSubParams:
+      allOf:
+      - $ref: '#/components/schemas/SubToSubRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    BadRequestErrorCode:
+      type: string
+      enum:
+      - GenericBadRequest
+      - DisallowedAllowRuleReference
+      - InvalidPaginationToken
+      - InvalidEmail
+      - InvalidEmailTemplate
+      - QueryMetricsError
+      - InvalidTelegramData
+      - ValidationError
+      - WebhookPolicyTimeoutOutOfBounds
+      - WebhookPolicyDisallowedUrlScheme
+      - WebhookPolicyDisallowedUrlHost
+      - WebhookPolicyDisallowedHeaders
+      - ReservedName
+      - UserEmailNotConfigured
+      - EmailPasswordNotFound
+      - PasswordAuthNotAllowedByInvitation
+      - OneTimeCodeExpired
+      - InvalidBody
+      - InvalidJwt
+      - InvitationNoLongerValid
+      - TokenRequestError
+      - InvalidMfaReceipt
+      - InvalidMfaPolicyCount
+      - InvalidMfaPolicyNumAuthFactors
+      - InvalidMfaPolicyNumAllowedApprovers
+      - InvalidMfaPolicyGracePeriodTooLong
+      - InvalidBabylonStakingPolicyParams
+      - InvalidSuiTxReceiversEmptyAllowlist
+      - InvalidBtcTxReceiversEmptyAllowlist
+      - InvalidRequireRoleSessionAllowlist
+      - InvalidCreateKeyCount
+      - InvalidDiffieHellmanCount
+      - OrgInviteExistingUser
+      - OrgUserAlreadyExists
+      - OrgNameTaken
+      - KwkNotFoundInRegion
+      - OrgIsNotOrgExport
+      - RoleNameTaken
+      - PolicyNameTaken
+      - NameTaken
+      - ContactNameInvalid
+      - ContactAddressesInvalid
+      - ContactLabelInvalid
+      - ContactModified
+      - PolicyNotFound
+      - PolicyVersionNotFound
+      - PolicyRuleDisallowedByType
+      - PolicyTypeDisallowed
+      - PolicyDuplicateError
+      - PolicyStillAttached
+      - PolicyModified
+      - PolicyNotAttached
+      - AddKeyToRoleCountTooHigh
+      - InvalidKeyId
+      - InvalidTimeLockAlreadyInThePast
+      - InvalidRestrictedScopes
+      - InvalidUpdate
+      - InvalidMetadataLength
+      - InvalidLength
+      - InvalidKeyMaterialId
+      - KeyNotFound
+      - SiweChallengeNotFound
+      - SiweInvalidRequest
+      - SiwsChallengeNotFound
+      - SiwsInvalidRequest
+      - UserExportDerivedKey
+      - UserExportPublicKeyInvalid
+      - NistP256PublicKeyInvalid
+      - UnableToAccessSmtpRelay
+      - UserExportInProgress
+      - RoleNotFound
+      - InvalidRoleNameOrId
+      - InvalidMfaReceiptOrgIdMissing
+      - InvalidMfaReceiptInvalidOrgId
+      - MfaRequestNotFound
+      - InvalidKeyType
+      - InvalidPropertiesForKeyType
+      - MismatchedKeyPropertiesPatch
+      - MissingBinanceApiKey
+      - MissingBybitApiKey
+      - MissingCoinbaseApiKey
+      - BinanceKeyMasterMismatch
+      - BybitAccountMismatch
+      - InvalidKeyMaterial
+      - InvalidHexValue
+      - InvalidBase32Value
+      - InvalidBase58Value
+      - InvalidBase64Value
+      - InvalidSs58Value
+      - InvalidForkVersionLength
+      - InvalidEthAddress
+      - InvalidStellarAddress
+      - InvalidOrgNameOrId
+      - InvalidUpdateOrgRequestDisallowedMfaType
+      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
+      - EmailOtpDelayTooShortForRegisterMfa
+      - InvalidStakeDeposit
+      - InvalidBlobSignRequest
+      - InvalidDiffieHellmanRequest
+      - InvalidSolanaSignRequest
+      - InvalidEip712SignRequest
+      - InvalidEip7702SignRequest
+      - OnlySpecifyOne
+      - IncompatibleParams
+      - NoOidcDataInProof
+      - InvalidEvmSignRequest
+      - InvalidEth2SignRequest
+      - InvalidDeriveKeyRequest
+      - InvalidStakingAmount
+      - CustomStakingAmountNotAllowedForWrapperContract
+      - InvalidUnstakeRequest
+      - InvalidCreateUserRequest
+      - UserAlreadyExists
+      - IdpUserAlreadyExists
+      - CognitoUserAlreadyOrgMember
+      - UserNotFound
+      - UserWithEmailNotFound
+      - PolicyKeyMismatch
+      - EmptyScopes
+      - InvalidScopesForRoleSession
+      - InvalidLifetime
+      - NoSingleKeyForUser
+      - InvalidOrgPolicyRule
+      - SourceIpAllowlistEmpty
+      - LimitWindowTooLong
+      - Erc20ContractDisallowed
+      - EmptyRuleError
+      - PolicyFieldValidationError
+      - OptionalListEmpty
+      - MultipleExclusiveFieldsProvided
+      - DuplicateFieldEntry
+      - InvalidRange
+      - InvalidOrgPolicyRepeatedRule
+      - InvalidSuiTransaction
+      - SuiSenderMismatch
+      - AvaSignHashError
+      - AvaSignError
+      - BtcSegwitHashError
+      - BtcTaprootHashError
+      - BtcSignError
+      - TaprootSignError
+      - Eip712SignError
+      - InvalidMemberRoleInUserAdd
+      - InvalidMemberRoleInRecipientAdd
+      - ThirdPartyUserAlreadyExists
+      - OidcIdentityAlreadyExists
+      - UserAlreadyHasIdentity
+      - ThirdPartyUserNotFound
+      - DeleteOidcUserError
+      - DeleteUserError
+      - SessionRoleMismatch
+      - InvalidOidcToken
+      - InvalidOidcIdentity
+      - OidcIssuerUnsupported
+      - OidcIssuerNotAllowed
+      - OidcIssuerNoApplicableJwk
+      - FidoKeyAlreadyRegistered
+      - FidoKeySignCountTooLow
+      - FidoVerificationFailed
+      - FidoChallengeMfaMismatch
+      - UnsupportedLegacyCognitoSession
+      - InvalidIdentityProof
+      - PaginationDataExpired
+      - ExistingKeysViolateExclusiveKeyAccess
+      - ExportDelayTooShort
+      - ExportWindowTooLong
+      - InvalidTotpFailureLimit
+      - InvalidEip191SignRequest
+      - CannotResendUserInvitation
+      - InvalidNotificationEndpointCount
+      - CannotDeletePendingSubscription
+      - InvalidNotificationUrlProtocol
+      - EmptyOneOfOrgEventFilter
+      - EmptyAllExceptOrgEventFilter
+      - InvalidTapNodeHash
+      - InvalidOneTimeCode
+      - MessageNotFound
+      - MessageAlreadySigned
+      - MessageRejected
+      - MessageReplaced
+      - InvalidMessageType
+      - EmptyAddress
+      - InvalidEth2SigningPolicySlotRange
+      - InvalidEth2SigningPolicyEpochRange
+      - InvalidEth2SigningPolicyTimestampRange
+      - InvalidEth2SigningPolicyOverlappingRule
+      - RpcUrlMissing
+      - MmiChainIdMissing
+      - EthersInvalidRpcUrl
+      - EthersGetTransactionCountError
+      - InvalidPassword
+      - BabylonStakingFeePlusDustOverflow
+      - BabylonStaking
+      - BabylonStakingIncorrectKey
+      - BabylonStakingSegwitNonDeposit
+      - BabylonStakingRegistrationRequiresTaproot
+      - PsbtSigning
+      - TooManyResets
+      - TooManyRequests
+      - TooManyFailedLogins
+      - BadBtcMessageSignP2shFlag
+      - InvalidTendermintRequest
+      - PolicyVersionMaxReached
+      - PolicyVersionInvalid
+      - PolicySecretLimitReached
+      - PolicySecretTooLarge
+      - InvalidImportKey
+      - AlienOwnerInvalid
+      - EmptyUpdateRequest
+      - InvalidPolicyReference
+      - PolicyEngineDisabled
+      - InvalidWasmPolicy
+      - CelProgramTooLarge
+      - InvalidPolicy
+      - RedundantDerivationPath
+      - ImportKeyMissing
+      - InvalidAbiMethods
+      - BabylonCovSign
+      - InvalidPolicyLogsRequest
+      - UserProfileMigrationMultipleEntries
+      - UserProfileMigrationTooManyItems
+      - InputTooShort
+      - InvalidTweakLength
+      - InvalidCustomChains
+      - InvalidRpcRequest
+    UniversalTransferHistoryRequest:
+      type: object
+      description: 'Parameters for `GET /sapi/v1/sub-account/universalTransfer`.
+
+
+        Lists universal transfers initiated by the master account. All filters
+
+        are optional; if `start_time`/`end_time` are omitted, Binance returns the
+
+        most recent 30 days. Binance does not support filtering by `tran_id`
+
+        directly — use `client_tran_id` if you set one when initiating the
+
+        transfer, or page through the result and match the `tranId` client-side.'
+      properties:
+        clientTranId:
+          type: string
+          description: Filter by client-supplied transfer id.
+          nullable: true
+        endTime:
+          type: integer
+          format: int64
+          description: Window end (ms since epoch).
+          nullable: true
+          minimum: 0
+        fromEmail:
+          type: string
+          description: Filter to transfers originating from this sub-account email.
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Binance default: 500, max: 500).'
+          nullable: true
+          minimum: 0
+        page:
+          type: integer
+          format: int32
+          description: '1-based page number (Binance default: 1).'
+          nullable: true
+          minimum: 0
+        startTime:
+          type: integer
+          format: int64
+          description: Window start (ms since epoch).
+          nullable: true
+          minimum: 0
+        toEmail:
+          type: string
+          description: Filter to transfers destined for this sub-account email.
+          nullable: true
+    JsonRpcRequest:
+      allOf:
+      - $ref: '#/components/schemas/RpcMethod'
+      - type: object
+        required:
+        - jsonrpc
+        properties:
+          id:
+            type: string
+            description: Request ID
+          jsonrpc:
+            type: string
+            description: JSON-RPC version.
+      description: The top-level JSON-RPC request type.
+    EvmToken:
+      oneOf:
+      - type: object
+        required:
+        - token
+        properties:
+          token:
+            type: string
+            enum:
+            - Native
+      - type: object
+        description: An ERC-20 token.
+        required:
+        - token_address
+        - token
+        properties:
+          token:
+            type: string
+            enum:
+            - Erc20
+          token_address:
+            type: string
+            description: The ERC-20 token address.
+            pattern: ^(0x)?[a-fA-F0-9]{40}$
+      description: An EVM token.
+      discriminator:
+        propertyName: token
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type: object
+          description: HTTP request body
+          nullable: true
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    ForbiddenErrorCode:
+      type: string
+      enum:
+      - AlienKeyCreate
+      - CannotAssumeIdentity
+      - SentryDisallowed
+      - PasskeyLoginDisabled
+      - PasskeyNotRegistered
+      - CannotCreateOrg
+      - WrongMfaEmailOtpJwt
+      - OrgFlagNotSet
+      - FidoRequiredToRemoveTotp
+      - OidcIdentityLimitReached
+      - OidcScopeCeilingMissing
+      - OidcIssuerNotAllowedForMemberRole
+      - OidcNoMemberRolesAllowed
+      - EmailOtpNotConfigured
+      - MfaChallengeExpired
+      - ChainIdNotAllowed
+      - InvalidOrg
+      - OrgIdMismatch
+      - SessionForWrongOrg
+      - SelfDelete
+      - SelfDisable
+      - SelfMfaReset
+      - InvalidOrgMembershipRoleChange
+      - UserDisabled
+      - OrgDisabled
+      - OrgNotFound
+      - OrgWithoutOwner
+      - OrphanedUser
+      - OidcUserNotFound
+      - UserNotInOrg
+      - UserNotOrgOwner
+      - UserNotKeyOwner
+      - InvalidRole
+      - DisabledRole
+      - KeyDisabled
+      - KeyNotInRole
+      - ContactNotInOrg
+      - UserExportRequestNotInOrg
+      - UserExportRequestInvalid
+      - UserExportDisabled
+      - UserNotOriginalKeyOwner
+      - UserNotInRole
+      - MustBeFullMember
+      - SessionExpired
+      - SessionChanged
+      - SessionRevoked
+      - ExpectedUserSession
+      - SessionRoleChanged
+      - ScopedNameNotFound
+      - SessionInvalidEpochToken
+      - SessionInvalidRefreshToken
+      - SessionRefreshTokenExpired
+      - InvalidAuthHeader
+      - SessionNotFound
+      - InvalidArn
+      - SessionInvalidAuthToken
+      - SessionAuthTokenExpired
+      - SessionPossiblyStolenToken
+      - MfaDisallowedIdentity
+      - MfaDisallowedApprover
+      - MfaTypeNotAllowed
+      - MfaNotApprovedYet
+      - MfaConfirmationCodeMismatch
+      - MfaHttpRequestMismatch
+      - MfaRemoveBelowMin
+      - MfaOrgRequirementNotMet
+      - MfaRegistrationDisallowed
+      - TotpAlreadyConfigured
+      - TotpConfigurationChanged
+      - MfaTotpBadConfiguration
+      - MfaTotpBadCode
+      - MfaTotpRateLimit
+      - ImproperSessionScope
+      - FullSessionRequired
+      - SessionWithoutAnyScopeUnder
+      - UserRoleUnprivileged
+      - MemberRoleForbidden
+      - MfaNotConfigured
+      - RemoveLastOidcIdentity
+      - OperationNotAllowed
+      - OrgExportRetrievalDisabled
+      - ChangingKeyExportRequirementIsDisabled
+      - AutoAddBlsKeyToProtectedRole
+      - UserNotPolicyOwner
+      - UserNotContactOwner
+      - UserNotBucketOwner
+      - LegacySessionCannotHaveScopeCeiling
+      - RoleInParentOrgNotAllowed
+      - RemoveKeyFromRoleUserNotAllowed
+      - SiweChallengeExpired
+      - SiweMessageNotValid
+      - SiweMessageInvalidSignature
+      - SiwsChallengeExpired
+      - SiwsDomain
+      - SiwsMessageInvalid
+      - Acl
+    BybitQueryCoinsBalanceParams:
+      allOf:
+      - $ref: '#/components/schemas/BybitQueryCoinsBalanceRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BybitDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: integer
+            format: int32
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              Specified in milliseconds. If omitted, defaults to 10000.'
+            nullable: true
+            minimum: 0
+      description: 'Parameters envelope for all Bybit RPC variants whose payload schema is
+
+        derived from a `*Request` struct. (`BybitQueryUserParams` and
+
+        `BybitQuerySubMembersParams` have no per-variant payload and are defined
+
+        directly below.)'
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    BinanceSubAccountTransferHistoryParams:
+      allOf:
+      - $ref: '#/components/schemas/SubAccountTransferHistoryRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    BinanceUniversalTransferParams:
+      allOf:
+      - $ref: '#/components/schemas/UniversalTransferRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    BybitQueryCoinsBalanceRequest:
+      type: object
+      description: Parameters for `GET /v5/asset/transfer/query-account-coins-balance`.
+      required:
+      - accountType
+      properties:
+        accountType:
+          type: string
+          description: 'Wallet type. Common values: `"FUND"`, `"UNIFIED"`, `"CONTRACT"`. Bybit
+
+            expects this verbatim; we don''t constrain it on our side.'
+        coin:
+          type: string
+          description: 'Optional list of coin symbols, comma-separated (e.g. `"BTC,USDT"`).
+
+            Bybit returns balances for all coins when omitted.'
+          nullable: true
+        memberId:
+          type: string
+          description: 'Optional sub-account UID. When supplied, the master key queries the
+
+            named sub-account''s balance.'
+          nullable: true
+        withBonus:
+          type: string
+          description: 'Optional flag: `"0"` query without conversion to USD (default),
+
+            `"1"` include USD valuation. Bybit accepts this as a string.'
+          nullable: true
+    BinanceDepositParams:
+      allOf:
+      - $ref: '#/components/schemas/DepositRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    ListAccountsRequest:
+      type: object
+      description: 'Parameters for `cs_coinbaseListAccounts`.
+
+
+        Coinbase endpoint: `GET /api/v3/brokerage/accounts`.
+
+
+        Lists the brokerage accounts the calling key can see. All filters are
+
+        optional; Coinbase paginates the result via `cursor` / `has_next`.'
+      properties:
+        cursor:
+          type: string
+          description: Cursor from a previous response's [`CoinbaseListAccountsResponse::cursor`].
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          description: 'Page size (Coinbase default: 49, max: 250).'
+          nullable: true
+          minimum: 0
+        retail_portfolio_id:
+          type: string
+          description: Filter to a specific retail portfolio.
+          nullable: true
+    ListTransactionsRequest:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          owner:
+            type: string
+            description: 'Optional user or role id.
+
+
+              If defined, the response is filtered to transactions created by the given id.'
+            nullable: true
+      description: Parameters for the [`cs_listTransactions`](RpcMethod::ListTransactions) method.
+    WithdrawRequest:
+      type: object
+      description: 'Parameters for `POST /sapi/v1/capital/withdraw/apply`.
+
+
+        Submits a withdrawal of `amount` of `coin` to the given external `address`.
+
+        The signing key''s account must have withdrawal permissions enabled.'
+      required:
+      - coin
+      - address
+      - amount
+      properties:
+        address:
+          type: string
+          description: Destination address.
+        addressTag:
+          type: string
+          description: 'Secondary address identifier required by some assets (e.g. memo for
+
+            XRP, tag for XLM).'
+          nullable: true
+        amount:
+          type: string
+          description: 'The amount being withdrawn, formatted as a decimal string (e.g. `"0.1"`).
+
+            Sent verbatim: Binance is strict about decimal formatting.'
+        coin:
+          type: string
+          description: The asset symbol being withdrawn (e.g. `"USDT"`, `"BTC"`).
+        name:
+          type: string
+          description: Optional human-readable description for the withdrawal.
+          nullable: true
+        network:
+          type: string
+          description: 'Network identifier (e.g. `"BSC"`, `"ETH"`). If omitted, Binance picks
+
+            the default network for the asset.'
+          nullable: true
+        transactionFeeFlag:
+          type: boolean
+          description: 'If `true`, the withdrawal fee is deducted from the destination amount;
+
+            if `false` (Binance default), it is deducted from the account balance
+
+            in addition to `amount`.'
+          nullable: true
+        walletType:
+          type: integer
+          format: int32
+          description: 'Source wallet: `0` = spot wallet (default), `1` = funding wallet.'
+          nullable: true
+          minimum: 0
+        withdrawOrderId:
+          type: string
+          description: 'Client-supplied withdrawal id, returned by Binance as `withdrawOrderId`
+
+            in subsequent withdrawal-history queries.'
+          nullable: true
+    BinanceDepositHistoryParams:
+      allOf:
+      - $ref: '#/components/schemas/DepositHistoryRequest'
+      - type: object
+        required:
+        - keyId
+        properties:
+          dryRun:
+            allOf:
+            - $ref: '#/components/schemas/BinanceDryRunMode'
+            nullable: true
+          keyId:
+            $ref: '#/components/schemas/Id'
+          recvWindow:
+            type: number
+            format: float
+            description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+              May only be specified in milliseconds, with up to three decimal places of precision.
+
+              If omitted, defaults to 10000. Must not be greater than 60000.'
+            nullable: true
+      description: Parameters envelope for all Binance RPC methods.
+    EvmTxCustomization:
+      type: object
+      description: Optional fields used to customize EVM transactions.
+      properties:
+        gas_limit:
+          type: string
+          description: 'Optional gas limit.
+
+
+            If not specified, estimated gas is used.'
+          nullable: true
+          pattern: ^(0x)?[a-fA-F0-9]+$
+        max_fee_per_gas:
+          type: string
+          description: 'Optional max fee for the transaction.
+
+
+            If not specified, estimated fees are used.'
+          nullable: true
+          pattern: ^(0x)?[a-fA-F0-9]+$
+        max_priority_fee_per_gas:
+          type: string
+          description: 'Optional max priority fee for the transaction.
+
+
+            If not specified, estimated fees are used.'
+          nullable: true
+          pattern: ^(0x)?[a-fA-F0-9]+$
+        nonce:
+          type: string
+          description: 'Optional nonce.
+
+
+            If not specified, the next available nonce is used.'
+          nullable: true
+          pattern: ^(0x)?[a-fA-F0-9]+$
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    BtcListUtxosRequest:
+      type: object
+      description: Parameters for the [`cs_btcListUtxos`](CsRpc::BtcListUtxos) method.
+      required:
+      - address
+      - network
+      properties:
+        address:
+          type: string
+          description: The Bitcoin address whose unspent outputs (UTXOs) are being queried.
+        max_results:
+          type: integer
+          format: int32
+          description: The maximum number of UTXOs to return (1-250).
+          default: 100
+          minimum: 0
+        network:
+          $ref: '#/components/schemas/BtcNetwork'
+        next_token:
+          type: string
+          description: Pagination token returned by a previous call.
+          nullable: true
+    BinanceCoinInfoParams:
+      type: object
+      description: 'Parameters for `cs_binanceCoinInfo`.
+
+
+        Binance endpoint: `GET /sapi/v1/capital/config/getall`. Returns the list
+
+        of coins supported by the calling account along with per-coin balances,
+
+        deposit/withdraw enablement, and network info. Since the endpoint takes
+
+        no parameters beyond the common `recvWindow` / `timestamp` envelope, this
+
+        struct is defined directly instead of going through the
+
+        [`BinanceParams`] generic alias.'
+      required:
+      - keyId
+      properties:
+        dryRun:
+          allOf:
+          - $ref: '#/components/schemas/BinanceDryRunMode'
+          nullable: true
+        keyId:
+          $ref: '#/components/schemas/Id'
+        recvWindow:
+          type: number
+          format: float
+          description: 'Optional "receive window", i.e., for how long the request stays valid.
+
+            May only be specified in milliseconds, with up to three decimal places of precision.
+
+            If omitted, defaults to 10000. Must not be greater than 60000.'
+          nullable: true
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+          nullable: true
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
+    CsRpc:
+      oneOf:
+      - type: object
+        description: Create a transaction for a given chain.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_createTransaction
+          params:
+            $ref: '#/components/schemas/CreateTransactionRequest'
+      - type: object
+        description: Retry an existing failed transaction.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_retryTransaction
+          params:
+            $ref: '#/components/schemas/RetryTransactionRequest'
+      - type: object
+        description: Cancel an existing unsuccessful transaction.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_cancelTransaction
+          params:
+            $ref: '#/components/schemas/CancelTransactionRequest'
+      - type: object
+        description: Get an existing transaction.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_getTransaction
+          params:
+            $ref: '#/components/schemas/GetTransactionRequest'
+      - type: object
+        description: List all existing transactions.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_listTransactions
+          params:
+            $ref: '#/components/schemas/ListTransactionsRequest'
+      - type: object
+        description: List the unspent transaction outputs (UTXOs) for a Bitcoin address.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_btcListUtxos
+          params:
+            $ref: '#/components/schemas/BtcListUtxosRequest'
+      description: Core RPC methods (transaction CRUD).
+    BybitRpc:
+      oneOf:
+      - type: object
+        description: 'Query info about the calling API key, including the `userID` and
+
+          `parentUid` of the account it authenticates as.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitQueryUser
+          params:
+            $ref: '#/components/schemas/BybitQueryUserParams'
+      - type: object
+        description: Enumerate the sub-accounts of the calling master account.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitQuerySubMembers
+          params:
+            $ref: '#/components/schemas/BybitQuerySubMembersParams'
+      - type: object
+        description: 'Query the asset balances (per-coin) for an account. The `memberId`
+
+          field optionally targets a sub-account; when omitted, the calling key''s
+
+          own account is queried.'
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitQueryCoinsBalance
+          params:
+            $ref: '#/components/schemas/BybitQueryCoinsBalanceParams'
+      - type: object
+        description: Fetch the deposit address for `coin` on the calling account.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitQueryDepositAddress
+          params:
+            $ref: '#/components/schemas/BybitQueryDepositAddressParams'
+      - type: object
+        description: Move funds between Bybit accounts (master ↔ sub, sub ↔ sub).
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitUniversalTransfer
+          params:
+            $ref: '#/components/schemas/BybitUniversalTransferParams'
+      - type: object
+        description: Submit a withdrawal to an external address. Master-only.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitWithdraw
+          params:
+            $ref: '#/components/schemas/BybitWithdrawParams'
+      - type: object
+        description: Query the withdrawal history of the calling account.
+        required:
+        - params
+        - method
+        properties:
+          method:
+            type: string
+            enum:
+            - cs_bybitWithdrawals
+          params:
+            $ref: '#/components/schemas/BybitWithdrawalsParams'
+      description: 'Bybit-family RPC methods. Each variant authenticates as the
+
+        [`KeyType::HmacSha256Bybit`] key in its `params.key_id` (which must carry
+
+        [`KeyProperties::BybitApi`]).'
+    ErrorObj:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Code
+        data:
+          description: Optional data
+          nullable: true
+        message:
+          type: string
+          description: Message
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    NewSessionResponse:
+      type: object
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      required:
+      - org_id
+      - token
+      - refresh_token
+      - session_info
+      properties:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
+          type: string
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
+          type: string
+          description: 'New token to be used for authentication. Requests to signing endpoints
+
+            should include this value in the `Authorization` header.'
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    CoinbaseMoveFundsParams:
+      allOf:
+      - $ref: '#/components/schemas/MoveFundsRequest'
+      - type: object
+        required:
+        - key_id
+        properties:
+          dry_run:
+            allOf:
+            - $ref: '#/components/schemas/CoinbaseDryRunMode'
+            nullable: true
+          key_id:
+            $ref: '#/components/schemas/Id'
+      description: Parameters envelope for all Coinbase RPC methods.
+    BybitUniversalTransferRequest:
+      type: object
+      description: Parameters for `POST /v5/asset/transfer/universal-transfer`.
+      required:
+      - transferId
+      - coin
+      - amount
+      - fromMemberId
+      - toMemberId
+      properties:
+        amount:
+          type: string
+          description: Amount as a decimal string (e.g. `"1.5"`). Sent verbatim.
+        coin:
+          type: string
+          description: Coin symbol (e.g. `"USDT"`).
+        fromAccountType:
+          type: string
+          description: 'Source wallet type. Defaults to `"FUND"` if omitted; the signer
+
+            substitutes the default before signing so the signed and submitted
+
+            payloads match.'
+          nullable: true
+        fromMemberId:
+          type: integer
+          format: int64
+          description: 'Source account UID. For "self", the manager substitutes the caller''s
+
+            own UID before this struct reaches the signer.'
+          minimum: 0
+        toAccountType:
+          type: string
+          description: Destination wallet type. Defaults to `"FUND"` if omitted.
+          nullable: true
+        toMemberId:
+          type: integer
+          format: int64
+          description: Destination account UID.
+          minimum: 0
+        transferId:
+          type: string
+          description: 'Client-supplied transfer id (UUID). Bybit echoes it back as the
+
+            canonical reference for this transfer.'
+  responses:
+    JsonRpcResponse:
+      description: The RPC API's response.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The RPC API's response.
+            required:
+            - jsonrpc
+            properties:
+              error:
+                allOf:
+                - $ref: '#/components/schemas/ErrorObj'
+                nullable: true
+              id:
+                description: ID from the corresponding request.
+                nullable: true
+              jsonrpc:
+                type: string
+                description: Constant "2.0".
+              result:
+                type: object
+                description: Result, if success.
+                nullable: true
+  securitySchemes:
+    Oidc:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: OIDC tokens allow users to authenticate using a third-party service. These are exchanged for signer session tokens.
+    SignerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Signing API end-points use session tokens for auth. Specifically, with each request you need to use the \`token\` from your signer session (which you create with `cs token create`).
