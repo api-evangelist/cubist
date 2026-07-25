@@ -1,0 +1,47 @@
+generated: '2026-07-18'
+method: searched
+source: https://github.com/cubist-labs
+note: >-
+  First-party CubeSigner client libraries. The TypeScript SDK is the reference
+  implementation (published to npm under the @cubist-labs scope); Go is a
+  separate published SDK repo. No first-party Python or Rust package is
+  published to PyPI / crates.io as of July 2026.
+packages:
+  - language: javascript
+    registry: npm
+    name: "@cubist-labs/cubesigner-sdk"
+    version: 0.4.272
+    url: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk
+    repository: https://github.com/cubist-labs/CubeSigner-TypeScript-SDK
+    install: npm install @cubist-labs/cubesigner-sdk
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@cubist-labs/cubesigner-sdk-fs-storage"
+    version: 0.4.272
+    url: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk-fs-storage
+    install: npm install @cubist-labs/cubesigner-sdk-fs-storage
+    description: Filesystem session storage for the CubeSigner SDK
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@cubist-labs/cubesigner-sdk-ethers-v6"
+    version: 0.4.272
+    url: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk-ethers-v6
+    install: npm install @cubist-labs/cubesigner-sdk-ethers-v6
+    description: ethers.js v6 Signer implementation backed by CubeSigner
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@cubist-labs/cubesigner-snap"
+    version: 0.2.13
+    url: https://www.npmjs.com/package/@cubist-labs/cubesigner-snap
+    install: npm install @cubist-labs/cubesigner-snap
+    description: CubeSigner MetaMask Snap
+    official: true
+  - language: go
+    registry: pkg.go.dev
+    name: github.com/cubist-labs/CubeSigner-Go-SDK
+    url: https://github.com/cubist-labs/CubeSigner-Go-SDK
+    install: go get github.com/cubist-labs/CubeSigner-Go-SDK
+    official: true

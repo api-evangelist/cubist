@@ -1,0 +1,14 @@
+{
+  "repo": "cubist",
+  "feeds": [
+    {
+      "source": "https://cubist.dev/product-suite",
+      "feed_url": "https://cubist.dev/product-suite",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-20T13:31:34Z"
+}

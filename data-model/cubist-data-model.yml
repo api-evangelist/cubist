@@ -1,0 +1,74 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/cubist-cubesigner-openapi-original.json
+entities:
+- name: Org
+  id_field: org_id
+  description: Top-level tenant. Owns users, roles, keys, policies, contacts, sessions.
+- name: User
+  id_field: user_id
+  description: Member or end-user identity in an org; authenticates via OIDC or passkey.
+- name: Role
+  id_field: role_id
+  description: A scoped signing identity. Holds keys and access tokens; gates which keys can be used and
+    how.
+- name: Key
+  id_field: key_id
+  description: A cryptographic key managed in HSM-sealed enclaves; signs for a specific chain/scheme.
+- name: Policy
+  id_field: policy_id
+  description: Programmable Policy-as-Code attached to keys/roles/orgs; evaluated on every signing request.
+- name: Contact
+  id_field: contact_id
+  description: A named address-book entry used by policies (allow-listed destinations).
+- name: Session
+  id_field: session_id
+  description: A signer session token with a bounded scope set and lifetime.
+- name: MfaRequest
+  id_field: mfa_id
+  description: A pending multi-factor approval challenge raised when a policy requires MFA (HTTP 202).
+relationships:
+- from: Org
+  type: has_many
+  to: User
+  via: org_id
+- from: Org
+  type: has_many
+  to: Role
+  via: org_id
+- from: Org
+  type: has_many
+  to: Key
+  via: org_id
+- from: Org
+  type: has_many
+  to: Policy
+  via: org_id
+- from: Org
+  type: has_many
+  to: Contact
+  via: org_id
+- from: Org
+  type: has_many
+  to: Session
+  via: org_id
+- from: Role
+  type: has_many
+  to: Key
+  via: role_id
+- from: Role
+  type: has_many
+  to: User
+  via: role_id
+- from: Key
+  type: belongs_to
+  to: Policy
+  via: policy
+- from: Session
+  type: belongs_to
+  to: User
+  via: user_id
+- from: MfaRequest
+  type: belongs_to
+  to: Org
+  via: org_id

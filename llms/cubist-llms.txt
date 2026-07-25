@@ -1,0 +1,29 @@
+# Cubist (CubeSigner)
+
+> Cubist builds hardware-backed key management and embedded wallet infrastructure for Web3. Its flagship product, CubeSigner, generates and seals cryptographic keys inside FIPS 140 HSMs running in AWS Nitro Enclaves, and enforces transaction approvals with a programmable, Policy-as-Code engine. The CubeSigner REST API (173 operations) covers organizations, users, roles, keys, policies, contacts, sessions, MFA, and multi-chain signing (EVM, Bitcoin/Taproot, Solana, Avalanche, Babylon/Bitcoin staking). Auth is a two-stage OIDC-to-session-token exchange with least-privilege scopes and step-up MFA.
+
+## APIs
+- [CubeSigner API (OpenAPI 3.0)](openapi/cubist-cubesigner-openapi-original.json): 173 operations across key management, policy, and multi-chain signing. Hosts: gamma.signer.cubist.dev (test), prod.signer.cubist.dev (production).
+
+## Specs & artifacts
+- [Authentication profile](authentication/cubist-authentication.yml): OIDC exchange + signer session tokens.
+- [OAuth/session scopes](scopes/cubist-scopes.yml): 135 documented least-privilege scopes.
+- [Error codes](errors/cubist-error-codes.yml): structured ErrorResponse envelope, 561 error codes by status class.
+- [API conventions](conventions/cubist-conventions.yml): auth, MFA step-up (HTTP 202), pagination, versioning.
+- [Data model](data-model/cubist-data-model.yml): Org, User, Role, Key, Policy, Contact, Session entities.
+- [Conformance](conformance/cubist-conformance.yml): OIDC, OAuth2, FIDO2, TOTP, FIPS 140, SOC 2.
+- [Agentic access profile](agentic-access/cubist-agentic-access.yml): per-operation execution contracts.
+
+## SDKs & tools
+- [TypeScript SDK](https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk)
+- [Go SDK](https://github.com/cubist-labs/CubeSigner-Go-SDK)
+- [ethers.js v6 signer](https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk-ethers-v6)
+- [MetaMask Snap](https://snaps.metamask.io/snap/npm/cubist-labs/cubesigner-snap/)
+- [CLI (cs)](cli/cubist-cli.yml)
+
+## Docs & site
+- [Product suite](https://cubist.dev/product-suite)
+- [Product security](https://cubist.dev/product-security)
+- [Blog](https://cubist.dev/blog)
+- [GitHub org](https://github.com/cubist-labs)
+- [Responsible disclosure](https://cubist.dev/legal/responsible-disclosure)

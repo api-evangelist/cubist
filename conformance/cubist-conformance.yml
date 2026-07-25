@@ -1,0 +1,35 @@
+generated: '2026-07-18'
+method: searched
+source: https://cubist.dev/product-security
+standards:
+  - id: oidc
+    conforms: true
+    evidence: >-
+      OIDC tokens authenticate users and are exchanged for signer session
+      tokens (securityScheme Oidc; OAuth2 tag with oauth2TokenRefresh /
+      idpAuthenticate operations).
+  - id: oauth2
+    conforms: true
+    evidence: OAuth2 tag exposes token refresh + IdP authenticate flows.
+  - id: fido2-webauthn
+    conforms: true
+    evidence: FIDO/passkey MFA registration and authentication operations (mfaFidoInit, passkeyAuthInit).
+  - id: totp-mfa
+    conforms: true
+    evidence: TOTP MFA registration and voting operations (manage:mfa:register:totp, mfaVoteTotp).
+  - id: fips-140
+    conforms: true
+    evidence: >-
+      FIPS 140 HSM root of trust — keys generated and sealed inside HSM-backed
+      AWS Nitro Enclaves (product-security page).
+  - id: soc2
+    conforms: true
+    evidence: SOC 2 compliant infrastructure (product-security / information-security pages).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use a custom ErrorResponse envelope (error_code + message), not
+      application/problem+json.
+compliance_program:
+  certifications: [SOC 2, FIPS 140]
+  url: https://cubist.dev/product-security

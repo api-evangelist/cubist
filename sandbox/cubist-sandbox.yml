@@ -1,0 +1,25 @@
+generated: '2026-07-18'
+method: searched
+source: https://github.com/cubist-labs/CubeSigner-TypeScript-SDK
+note: >-
+  CubeSigner separates test and production by ENVIRONMENT (host), not by key
+  prefix. The `gamma` environment is the non-production/test signer; `prod` is
+  live. The `cs` CLI and the SDKs select the environment with an --env flag.
+  No fabricated test values below — only the published environment surface.
+environments:
+  - name: gamma
+    role: test
+    api_host: https://gamma.signer.cubist.dev
+    select_cli: cs login owner@example.com --env gamma
+  - name: prod
+    role: production
+    api_host: https://prod.signer.cubist.dev
+    select_cli: cs login owner@example.com --env prod
+sessions:
+  note: >-
+    Sessions are created with `cs token create` (or via the SDK) and carry a
+    bounded scope set and lifetime; the fs-storage package persists a session to
+    disk for local testing. FIDO/TOTP MFA can be exercised in gamma.
+test_credentials:
+  cards: null
+  reason: Not a payments API — no test cards. Test signing uses gamma-environment keys created by the tester.

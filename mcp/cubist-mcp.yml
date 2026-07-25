@@ -1,0 +1,252 @@
+generated: '2026-07-18'
+method: derived
+status: candidate
+source: openapi/cubist-cubesigner-openapi-original.json
+note: No official hosted CubeSigner MCP server was found (July 2026). DERIVED candidate tool list — one
+  tool per key-management/signing operation — proposed for an MCP server fronting the CubeSigner API.
+  Not an authoritative Cubist claim.
+server:
+  name: cubist-cubesigner
+  transport: http
+tool_count: 102
+tools:
+- name: email_my_orgs
+  description: List accessible organizations.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#email_my_orgs
+- name: getOrg
+  description: Get Org
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getOrg
+- name: updateOrg
+  description: Update Org
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updateOrg
+- name: avaSerializedTxSign
+  description: Sign a serialized Avalanche C/X/P-Chain Message
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#avaSerializedTxSign
+- name: avaSign
+  description: Sign JSON-encoded Avalanche X- or P-Chain Message
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#avaSign
+- name: babylonCovSign
+  description: Sign Babylon Covenant Committee Request
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#babylonCovSign
+- name: babylonRegistration
+  description: Sign Babylon Staking Registration
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#babylonRegistration
+- name: babylonStaking
+  description: Sign Babylon Staking Transaction
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#babylonStaking
+- name: btcMessageSign
+  description: Sign a Bitcoin message.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#btcMessageSign
+- name: psbtSign
+  description: Sign a Partially Signed Bitcoin Transaction (PSBT)
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#psbtSign
+- name: btcSign
+  description: Sign Bitcoin Segwit Transaction
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#btcSign
+- name: btcTaprootSign
+  description: Sign Bitcoin Taproot Transaction
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#btcTaprootSign
+- name: listContacts
+  description: List Contacts
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listContacts
+- name: createContact
+  description: Create Contact
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createContact
+- name: lookupContactsByAddress
+  description: Lookup Contacts by Address
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#lookupContactsByAddress
+- name: getContact
+  description: Get Contact
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getContact
+- name: deleteContact
+  description: Delete Contact
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deleteContact
+- name: updateContact
+  description: Update Contact
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updateContact
+- name: deriveKeyLegacy
+  description: Derive Key From Long-Lived Mnemonic
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deriveKeyLegacy
+- name: deriveKey
+  description: Derive Key From New Or Existing Long-Lived Mnemonic
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deriveKey
+- name: diffieHellmanExchange
+  description: Compute Diffie Hellman shared secret
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#diffieHellmanExchange
+- name: getEmailConfig
+  description: Get Email Template
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getEmailConfig
+- name: configureEmail
+  description: Configure Email Template
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#configureEmail
+- name: deleteEmailConfig
+  description: Delete Email Template
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deleteEmailConfig
+- name: eip191Sign
+  description: Sign EIP-191 Data
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#eip191Sign
+- name: eip712Sign
+  description: Sign EIP-712 Typed Data
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#eip712Sign
+- name: eip7702Sign
+  description: Sign an EIP-7702 Authorization
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#eip7702Sign
+- name: getOrgExport
+  description: Get an Org-Export Ciphertext
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getOrgExport
+- name: createKeyImportKey
+  description: Create Key-Import Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createKeyImportKey
+- name: importKey
+  description: Import Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#importKey
+- name: public_org_info
+  description: Public Org Info
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#public_org_info
+- name: listInvitations
+  description: List pending invitations
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listInvitations
+- name: cancelInvitation
+  description: Cancel a pending invitation
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#cancelInvitation
+- name: invite
+  description: Invite User
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#invite
+- name: listKeysInOrg
+  description: List Keys
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listKeysInOrg
+- name: createKey
+  description: Create Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createKey
+- name: getKeyInOrg
+  description: Get Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getKeyInOrg
+- name: deleteKey
+  description: Delete Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deleteKey
+- name: updateKey
+  description: Update Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updateKey
+- name: attestKey
+  description: Attest to Key Properties
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#attestKey
+- name: listKeyRoles
+  description: List Key Roles
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listKeyRoles
+- name: listHistoricalKeyTx
+  description: List Historical Transactions
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listHistoricalKeyTx
+- name: getKeyByMaterialId
+  description: Get Key by Material ID
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getKeyByMaterialId
+- name: mfaList
+  description: List Pending MFA Requests
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaList
+- name: mfaGet
+  description: Get Pending MFA Request
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaGet
+- name: mfaVoteCs
+  description: Approve or Reject MFA Request
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaVoteCs
+- name: mfaEmailInit
+  description: Initiate an Email OTP MFA Approval/Rejection
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaEmailInit
+- name: mfaVoteEmailComplete
+  description: Finalize a Email OTP MFA Approval/Rejection.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaVoteEmailComplete
+- name: mfaFidoInit
+  description: Initiate a FIDO MFA Approval/Rejection
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaFidoInit
+- name: mfaVoteFidoComplete
+  description: Finalize a FIDO MFA Approval/Rejection
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaVoteFidoComplete
+- name: mfaVoteTotp
+  description: Approve/Reject a TOTP MFA Request
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#mfaVoteTotp
+- name: createOrg
+  description: Create Org
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createOrg
+- name: listPolicies
+  description: List Policies
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listPolicies
+- name: createPolicy
+  description: Create Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createPolicy
+- name: deletePolicy
+  description: Delete Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deletePolicy
+- name: updatePolicy
+  description: Update Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updatePolicy
+- name: getPolicyLogs
+  description: Get Policy Logs
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getPolicyLogs
+- name: getPolicy
+  description: Get Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getPolicy
+- name: invokePolicy
+  description: Invoke Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#invokePolicy
+- name: listPolicyBuckets
+  description: List Buckets
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listPolicyBuckets
+- name: getPolicyBucket
+  description: Get Bucket
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getPolicyBucket
+- name: updatePolicyBucket
+  description: Update Bucket
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updatePolicyBucket
+- name: createPolicyImportKey
+  description: Create Policy Import Key
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createPolicyImportKey
+- name: getPolicySecrets
+  description: Get the org-wide policy secrets.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getPolicySecrets
+- name: updatePolicySecrets
+  description: Update org-level policy secrets
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updatePolicySecrets
+- name: setPolicySecret
+  description: Create or overwrite an org-level policy secret.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#setPolicySecret
+- name: deletePolicySecret
+  description: Delete an org-level policy secret.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deletePolicySecret
+- name: uploadWasmPolicy
+  description: Upload Wasm Policy
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#uploadWasmPolicy
+- name: listRoles
+  description: List Roles
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listRoles
+- name: createRole
+  description: Create Role
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createRole
+- name: getRole
+  description: Get Role
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getRole
+- name: deleteRole
+  description: Delete Role
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#deleteRole
+- name: updateRole
+  description: Update Role
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#updateRole
+- name: attestRole
+  description: Attest to Role Properties
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#attestRole
+- name: listRoleKeys
+  description: List Role Keys
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listRoleKeys
+- name: getRoleKey
+  description: Get a Key in Role
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#getRoleKey
+- name: listHistoricalRoleTx
+  description: List Historical Transactions
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listHistoricalRoleTx
+- name: listRoleUsers
+  description: List Role Users.
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listRoleUsers
+- name: listSessions
+  description: List sessions
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#listSessions
+- name: createSession
+  description: Create new user session (management and/or signing)
+  source_operation: openapi/cubist-cubesigner-openapi-original.json#createSession

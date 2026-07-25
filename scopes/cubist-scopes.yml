@@ -1,0 +1,559 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/cubist-cubesigner-openapi-original.json
+docs: https://cubist.dev/product-suite
+model: CubeSigner session-token scopes. OIDC tokens are exchanged for signer session tokens; each session
+  (and each Role access token) is minted with a scope set drawn from this list. Scopes follow a manage:<domain>:<action>
+  / sign:<chain> / export:user:<phase> grammar. Role scopes gate what a session may do (least-privilege
+  signing).
+schemes:
+- name: SignerAuth
+  type: session-token
+  header: Authorization
+  source: openapi/cubist-cubesigner-openapi-original.json
+- name: Oidc
+  type: oidc-exchange
+  header: Authorization
+  source: openapi/cubist-cubesigner-openapi-original.json
+scope_count: 135
+scopes:
+- scope: export:user:complete
+  description: Grants user complete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: export:user:init
+  description: Grants user init access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:authMigration:identity:add
+  description: Grants authMigration identity add access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:authMigration:identity:remove
+  description: Grants authMigration identity remove access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:authMigration:user:update
+  description: Grants authMigration user update access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:create
+  description: Grants contact create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:delete
+  description: Grants contact delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:get
+  description: Grants contact get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:list
+  description: Grants contact list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:lookup:address
+  description: Grants contact lookup address access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:update:addresses
+  description: Grants contact update addresses access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:update:editPolicy
+  description: Grants contact update editPolicy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:update:metadata
+  description: Grants contact update metadata access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:update:name
+  description: Grants contact update name access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:contact:update:owner
+  description: Grants contact update owner access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:email:delete
+  description: Grants email delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:email:get
+  description: Grants email get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:email:update
+  description: Grants email update access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:export:org:get
+  description: Grants export org get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:export:user:delete
+  description: Grants export user delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:export:user:list
+  description: Grants export user list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:identity:add
+  description: Grants identity add access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:identity:list
+  description: Grants identity list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:identity:remove
+  description: Grants identity remove access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:identity:verify
+  description: Grants identity verify access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:attest
+  description: Grants key attest access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:create
+  description: Grants key create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:delete
+  description: Grants key delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:get
+  description: Grants key get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:history:tx:list
+  description: Grants key history tx list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:import
+  description: Grants key import access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:list
+  description: Grants key list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:list_roles
+  description: Grants key list_roles access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:update:editPolicy
+  description: Grants key update editPolicy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:update:enabled
+  description: Grants key update enabled access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:update:metadata
+  description: Grants key update metadata access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:update:owner
+  description: Grants key update owner access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:key:update:policy
+  description: Grants key update policy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:list
+  description: Grants mfa list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:register:email
+  description: Grants mfa register email access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:register:fido
+  description: Grants mfa register fido access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:register:totp
+  description: Grants mfa register totp access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:unregister:fido
+  description: Grants mfa unregister fido access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:unregister:totp
+  description: Grants mfa unregister totp access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:verify:totp
+  description: Grants mfa verify totp access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:vote:cs
+  description: Grants mfa vote cs access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:vote:email
+  description: Grants mfa vote email access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:vote:fido
+  description: Grants mfa vote fido access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mfa:vote:totp
+  description: Grants mfa vote totp access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mmi:delete
+  description: Grants mmi delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mmi:get
+  description: Grants mmi get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mmi:list
+  description: Grants mmi list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:mmi:reject
+  description: Grants mmi reject access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:addUser
+  description: Grants org addUser access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:audit:query
+  description: Grants org audit query access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:create
+  description: Grants org create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:deleteUser
+  description: Grants org deleteUser access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:get
+  description: Grants org get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:invitation:cancel
+  description: Grants org invitation cancel access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:invitation:list
+  description: Grants org invitation list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:inviteUser
+  description: Grants org inviteUser access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:metrics:query
+  description: Grants org metrics query access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:resetMfa
+  description: Grants org resetMfa access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:update:*
+  description: Grants org update * access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:updateMembership
+  description: Grants org updateMembership access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:user:get
+  description: Grants org user get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:org:user:list
+  description: Grants org user list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:bucket:get
+  description: Grants policy bucket get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:bucket:update:acl
+  description: Grants policy bucket update acl access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:bucket:update:metadata
+  description: Grants policy bucket update metadata access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:buckets:list
+  description: Grants policy buckets list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:create
+  description: Grants policy create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:createImportKey
+  description: Grants policy createImportKey access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:delete
+  description: Grants policy delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:get
+  description: Grants policy get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:invoke
+  description: Grants policy invoke access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:list
+  description: Grants policy list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:logs:get
+  description: Grants policy logs get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:secrets:get
+  description: Grants policy secrets get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:secrets:update
+  description: Grants policy secrets update access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:secrets:update:editPolicy
+  description: Grants policy secrets update editPolicy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:secrets:update:values
+  description: Grants policy secrets update values access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:update
+  description: Grants policy update access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:update:editPolicy
+  description: Grants policy update editPolicy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:update:name
+  description: Grants policy update name access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:update:owner
+  description: Grants policy update owner access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:update:rule
+  description: Grants policy update rule access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:policy:wasm:upload
+  description: Grants policy wasm upload access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:attest
+  description: Grants role attest access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:create
+  description: Grants role create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:delete
+  description: Grants role delete access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:get
+  description: Grants role get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:get:keys
+  description: Grants role get keys access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:get:users
+  description: Grants role get users access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:history:tx:list
+  description: Grants role history tx list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:list
+  description: Grants role list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:editPolicy
+  description: Grants role update editPolicy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:enable
+  description: Grants role update enable access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:key:add
+  description: Grants role update key add access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:key:remove
+  description: Grants role update key remove access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:policy
+  description: Grants role update policy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:user:add
+  description: Grants role update user add access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:role:update:user:remove
+  description: Grants role update user remove access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:session:create
+  description: Grants session create access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:session:get
+  description: Grants session get access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:session:list
+  description: Grants session list access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: manage:session:revoke
+  description: Grants session revoke access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: mmi:*
+  description: Grants * access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: rpc:*
+  description: Grants * access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:ava
+  description: Grants ava access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:babylon:covenant
+  description: Grants babylon covenant access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:babylon:eots:nonces
+  description: Grants babylon eots nonces access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:babylon:eots:sign
+  description: Grants babylon eots sign access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:babylon:registration
+  description: Grants babylon registration access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:babylon:staking
+  description: Grants babylon staking access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:blob
+  description: Grants blob access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:message:legacy
+  description: Grants btc message legacy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:message:segwit
+  description: Grants btc message segwit access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:psbt:legacy
+  description: Grants btc psbt legacy access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:psbt:segwit
+  description: Grants btc psbt segwit access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:psbt:taproot
+  description: Grants btc psbt taproot access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:segwit
+  description: Grants btc segwit access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:btc:taproot
+  description: Grants btc taproot access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:diffieHellman
+  description: Grants diffieHellman access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:eth2:stake
+  description: Grants eth2 stake access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:eth2:unstake
+  description: Grants eth2 unstake access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:eth2:validate
+  description: Grants eth2 validate access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:evm:eip191
+  description: Grants evm eip191 access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:evm:eip712
+  description: Grants evm eip712 access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:evm:eip7702
+  description: Grants evm eip7702 access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:evm:tx
+  description: Grants evm tx access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:mmi
+  description: Grants mmi access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:solana
+  description: Grants solana access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:sui
+  description: Grants sui access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json
+- scope: sign:tendermint
+  description: Grants tendermint access
+  sources:
+  - openapi/cubist-cubesigner-openapi-original.json

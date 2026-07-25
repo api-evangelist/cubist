@@ -1,0 +1,28 @@
+generated: '2026-07-18'
+method: searched
+source: https://github.com/cubist-labs/CubeSigner-TypeScript-SDK
+name: cs
+description: >-
+  The CubeSigner CLI (`cs`) authenticates a developer/operator against a
+  CubeSigner environment and manages signer sessions and tokens used by the
+  SDKs and API. Distributed alongside the CubeSigner tooling.
+install:
+  - method: npm
+    note: The CLI ships with the CubeSigner toolchain; the SDK is installed via @cubist-labs/cubesigner-sdk.
+environments: [gamma, prod]
+global_flags:
+  - flag: --env
+    values: [gamma, prod]
+    description: Select the CubeSigner environment (test vs production host).
+commands:
+  - group: login
+    example: cs login owner@example.com --env prod
+    description: Authenticate via OIDC and establish a management session.
+  - group: token
+    subcommands: [create]
+    example: cs token create
+    description: Mint a signer session token (with a scope set) for use with the signing API / SDKs.
+note: >-
+  Full command surface is documented in the (auth-gated) CubeSigner docs; the
+  login and token flows above are the flows referenced in the public SDK README
+  and examples. Not fabricated beyond documented commands.

@@ -1,0 +1,12 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/cubist-cubesigner-openapi-original.json
+skills:
+  - file: cubist-create-key-and-sign-evm.md
+    name: Create a key and sign an EVM transaction
+    api: openapi/cubist-cubesigner-openapi-original.json
+    operations: [createKey, eip191Sign, eip712Sign]
+  - file: cubist-scoped-role-with-policy.md
+    name: Set up a scoped role with a policy and session
+    api: openapi/cubist-cubesigner-openapi-original.json
+    operations: [createRole, addKeysToRole, createPolicy, createRoleToken]

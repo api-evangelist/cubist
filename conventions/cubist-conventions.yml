@@ -1,0 +1,40 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/cubist-cubesigner-openapi-original.json
+summary: >-
+  Cross-cutting request/response semantics for the CubeSigner API, derived from
+  the OpenAPI and the published SDK/CLI behaviour.
+authentication:
+  style: bearer-token (Authorization header)
+  schemes:
+    - Oidc — third-party OIDC token, exchanged for a signer session token
+    - SignerAuth — signer session token (from `cs token create`) used on signing endpoints
+  reference: authentication/cubist-authentication.yml
+authorization:
+  model: scope-based least-privilege
+  reference: scopes/cubist-scopes.yml
+  note: Sessions and Role access tokens carry a bounded scope set (manage:*, sign:*, export:user:*).
+mfa:
+  style: step-up approval
+  signal: HTTP 202 Accepted with an `accepted` MfaRequired body
+  factors: [email-otp, totp, fido/passkey, cubesigner-approval]
+  note: >-
+    Policy-gated operations (e.g. signing) can require MFA. The API responds 202
+    with a challenge; the client votes/approves (mfaVote*), then retries.
+idempotency:
+  supported: false
+  note: No idempotency-key header/parameter is defined in the spec.
+pagination:
+  style: token/offset
+  params: [page.start, page.size]
+  note: page.start is an opaque continuation token; InvalidPaginationToken is returned for a bad token.
+versioning:
+  scheme: uri-path (/v0/) + host-based environment selection
+  reference: lifecycle/cubist-lifecycle.yml
+error_envelope:
+  shape: "{ error_code, message, accepted?, policy_eval? }"
+  content_type: application/json
+  reference: errors/cubist-error-codes.yml
+rate_limiting:
+  signal: unknown
+  note: No rate-limit headers documented in the public spec.

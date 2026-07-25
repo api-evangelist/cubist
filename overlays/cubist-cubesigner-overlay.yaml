@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for CubeSigner
+  version: 1.0.0
+extends: openapi/cubist-cubesigner-openapi-original.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: cubist
+      x-apievangelist-product: CubeSigner
+      x-apievangelist-categories:
+        - Key Management
+        - Wallets
+        - Digital Signatures
+        - Security
+        - Blockchain
+      x-apievangelist-artifacts:
+        authentication: authentication/cubist-authentication.yml
+        scopes: scopes/cubist-scopes.yml
+        errors: errors/cubist-error-codes.yml
+        conventions: conventions/cubist-conventions.yml
+        data-model: data-model/cubist-data-model.yml
+        agentic-access: agentic-access/cubist-agentic-access.yml
+  - target: $.info
+    update:
+      x-apievangelist-auth-model: >-
+        OIDC token exchanged for a scoped, time-bounded signer session token;
+        policy-gated operations may step up to MFA (HTTP 202 approval challenge).

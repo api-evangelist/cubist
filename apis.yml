@@ -1,23 +1,411 @@
 aid: cubist
 name: Cubist
-description: 'Cubist is a company surfaced as a portfolio company of amplify-partners, polychain and added
-  to the API Evangelist network as a stub for enrichment. Sector: developer-tools. This profile is a lead
-  awaiting the enrichment pipeline.'
+description: >-
+  Cubist builds hardware-backed key management and embedded wallet
+  infrastructure for Web3. Its flagship product, CubeSigner, generates and seals
+  cryptographic keys inside FIPS 140 HSMs running in AWS Nitro Enclaves and
+  enforces transaction approvals with a programmable Policy-as-Code engine. The
+  CubeSigner REST API spans organizations, users, roles, keys, policies,
+  contacts, sessions, and multi-factor approvals, plus multi-chain signing for
+  EVM (Ethereum, Avalanche), Bitcoin/Taproot, Solana, Sui, Tendermint, Ethereum
+  validators (eth2), and Babylon Bitcoin staking. Authentication is a two-stage
+  OIDC-to-session-token exchange with least-privilege scopes and step-up MFA.
+  Cubist is backed by Amplify Partners and Polychain and is SOC 2 compliant.
 url: https://raw.githubusercontent.com/api-evangelist/cubist/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/638a2693daaf8527290065a3/684c2782072fa5039c3846f0_Opengraph%20-%20Home.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - amplify-partners
 - polychain
-x-tier: stub
+x-tier: enriched
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Developer Tools
-apis: []
+- Key Management
+- Wallets
+- Digital Signatures
+- Security
+- Blockchain
+- Web3
+- Custody
+apis:
+- aid: cubist:cubist-account-api
+  name: Cubist Account API
+  description: The Account API from Cubist — 1 operation(s) for account.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-account-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-accounts-api
+  name: Cubist Accounts API
+  description: The Accounts API from Cubist — 1 operation(s) for accounts.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-audit-api
+  name: Cubist Audit API
+  description: The Audit API from Cubist — 1 operation(s) for audit.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Audit
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-audit-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-authmigration-api
+  name: Cubist AuthMigration API
+  description: The AuthMigration API from Cubist — 3 operation(s) for authmigration.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - AuthMigration
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-authmigration-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-babylon-api
+  name: Cubist Babylon API
+  description: The Babylon API from Cubist — 2 operation(s) for babylon.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Babylon
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-babylon-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-contact-api
+  name: Cubist Contact API
+  description: The Contact API from Cubist — 3 operation(s) for contact.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Contact
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-contact-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-cube3signer-api
+  name: Cubist Cube3Signer API
+  description: The Cube3Signer API from Cubist — 1 operation(s) for cube3signer.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Cube3Signer
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-cube3signer-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-identity-api
+  name: Cubist Identity API
+  description: The Identity API from Cubist — 4 operation(s) for identity.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Identity
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-identity-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-internal-api
+  name: Cubist Internal API
+  description: The Internal API from Cubist — 4 operation(s) for internal.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-internal-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-keys-api
+  name: Cubist Keys API
+  description: The Keys API from Cubist — 10 operation(s) for keys.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-keys-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-keys-in-role-api
+  name: Cubist Keys In Role API
+  description: The Keys In Role API from Cubist — 2 operation(s) for keys in role.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Keys In Role
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-keys-in-role-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-login-api
+  name: Cubist Login API
+  description: The Login API from Cubist — 2 operation(s) for login.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Login
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-login-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-metrics-api
+  name: Cubist Metrics API
+  description: The Metrics API from Cubist — 2 operation(s) for metrics.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-mfa-api
+  name: Cubist MFA API
+  description: The MFA API from Cubist — 5 operation(s) for mfa.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - MFA
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-mfa-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-misc-api
+  name: Cubist Misc API
+  description: The Misc API from Cubist — 1 operation(s) for misc.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Misc
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-misc-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-mmi-api
+  name: Cubist MMI API
+  description: The MMI API from Cubist — 6 operation(s) for mmi.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - MMI
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-mmi-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-oauth2-api
+  name: Cubist OAuth2 API
+  description: The OAuth2 API from Cubist — 7 operation(s) for oauth2.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - OAuth2
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-oauth2-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-org-api
+  name: Cubist Org API
+  description: The Org API from Cubist — 1 operation(s) for org.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Org
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-org-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-orgs-api
+  name: Cubist Orgs API
+  description: The Orgs API from Cubist — 4 operation(s) for orgs.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Orgs
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-orgs-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-policies-api
+  name: Cubist Policies API
+  description: The Policies API from Cubist — 11 operation(s) for policies.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Policies
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-policies-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-role-access-tokens-api
+  name: Cubist Role Access Tokens API
+  description: The Role Access Tokens API from Cubist — 2 operation(s) for role access tokens.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Role Access Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-role-access-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-roles-api
+  name: Cubist Roles API
+  description: The Roles API from Cubist — 7 operation(s) for roles.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-roles-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-rpc-api
+  name: Cubist RPC API
+  description: The RPC API from Cubist — 1 operation(s) for rpc.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - RPC
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-rpc-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-sessions-api
+  name: Cubist Sessions API
+  description: The Sessions API from Cubist — 3 operation(s) for sessions.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-signersession-api
+  name: Cubist SignerSession API
+  description: The SignerSession API from Cubist — 1 operation(s) for signersession.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - SignerSession
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-signersession-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-signing-api
+  name: Cubist Signing API
+  description: The Signing API from Cubist — 21 operation(s) for signing.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Signing
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-signing-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-user-api
+  name: Cubist User API
+  description: The User API from Cubist — 11 operation(s) for user.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-user-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-user-export-api
+  name: Cubist User Export API
+  description: The User Export API from Cubist — 1 operation(s) for user export.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - User Export
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-user-export-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-users-in-org-api
+  name: Cubist Users In Org API
+  description: The Users In Org API from Cubist — 9 operation(s) for users in org.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Users In Org
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-users-in-org-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-users-in-role-api
+  name: Cubist Users In Role API
+  description: The Users In Role API from Cubist — 2 operation(s) for users in role.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - Users In Role
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-users-in-role-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -26,3 +414,64 @@ maintainers:
 common:
 - type: Website
   url: https://cubist.dev
+- type: Documentation
+  url: https://cubist.dev/product-suite
+- type: Blog
+  url: https://cubist.dev/blog
+- type: Support
+  url: https://cubist.dev/contact
+- type: GitHubOrganization
+  url: https://github.com/cubist-labs
+- type: TermsOfService
+  url: https://cubist.dev/legal/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://cubist.dev/legal/privacy-policy
+- type: Security
+  url: https://cubist.dev/legal/responsible-disclosure
+- type: Compliance
+  url: https://cubist.dev/product-security
+- type: TrustCenter
+  url: https://cubist.dev/information-security
+- type: Authentication
+  url: authentication/cubist-authentication.yml
+- type: OAuthScopes
+  url: scopes/cubist-scopes.yml
+- type: Conventions
+  url: conventions/cubist-conventions.yml
+- type: ErrorCatalog
+  url: errors/cubist-error-codes.yml
+- type: DataModel
+  url: data-model/cubist-data-model.yml
+- type: Lifecycle
+  url: lifecycle/cubist-lifecycle.yml
+- type: Conformance
+  url: conformance/cubist-conformance.yml
+- type: Sandbox
+  url: sandbox/cubist-sandbox.yml
+- type: CLI
+  url: cli/cubist-cli.yml
+- type: Components
+  url: components/cubist-components.yml
+- type: Packages
+  url: packages/cubist-packages.yml
+- type: SDKs
+  url: packages/cubist-packages.yml
+- type: MCPServer
+  url: mcp/cubist-mcp.yml
+- type: AgentSkill
+  url: skills/cubist-create-key-and-sign-evm.md
+- type: AgentSkill
+  url: skills/cubist-scoped-role-with-policy.md
+- type: LLMsTxt
+  url: llms/cubist-llms.txt
+- type: AgenticAccess
+  url: agentic-access/cubist-agentic-access.yml
+- type: DomainSecurity
+  url: security/cubist-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/cubist-vulnerability-disclosure.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

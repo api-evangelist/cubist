@@ -1,0 +1,29 @@
+generated: '2026-07-18'
+method: searched
+source: https://github.com/cubist-labs/CubeSigner-TypeScript-SDK
+versioning:
+  scheme: uri-path
+  current: v0
+  note: >-
+    API paths are prefixed /v0/. Environments are selected by host
+    (gamma.signer.cubist.dev for test, prod.signer.cubist.dev for production).
+    SDK packages are versioned semver on npm (current 0.4.272); a MIGRATION.md
+    in the TS SDK documents v0.3 -> v0.4 upgrade steps.
+sdk_versioning:
+  scheme: semver
+  current: 0.4.272
+  migration_guide: https://github.com/cubist-labs/CubeSigner-TypeScript-SDK/blob/main/MIGRATION.md
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    A small number of operations are retained as *Legacy variants in the spec
+    (aboutMeLegacy, deriveKeyLegacy) alongside their current replacements —
+    in-spec deprecation signalling rather than a published deprecation policy.
+status_page: null
+sla:
+  url: null
+  note: Marketing materials cite "four nines" (99.99%) availability; no public SLA document located.
+deprecated_operations:
+  - openapi/cubist-cubesigner-openapi-original.json#aboutMeLegacy
+  - openapi/cubist-cubesigner-openapi-original.json#deriveKeyLegacy

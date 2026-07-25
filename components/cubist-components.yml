@@ -1,0 +1,22 @@
+generated: '2026-07-18'
+method: searched
+source: https://snaps.metamask.io/snap/npm/cubist-labs/cubesigner-snap/
+note: >-
+  Client-side / embeddable surface distinct from the server-side SDKs. CubeSigner
+  ships a MetaMask Snap that lets a browser wallet delegate signing to CubeSigner
+  keys, plus embedded/end-user wallet building blocks (Wallet-as-a-Service).
+components:
+  - family: MetaMask Snap
+    name: CubeSigner Snap
+    package: "@cubist-labs/cubesigner-snap"
+    version: 0.2.13
+    registry_url: https://snaps.metamask.io/snap/npm/cubist-labs/cubesigner-snap/
+    description: >-
+      A MetaMask Snap that routes signing through CubeSigner's HSM-backed keys
+      from inside the MetaMask extension.
+  - family: Embedded Wallets
+    name: CubeSigner End-User Custody
+    url: https://cubist.dev/products/cubesigner-end-user-custody
+    description: >-
+      Wallet-as-a-Service / embedded end-user wallets — hosted signing surface
+      applications embed so end users hold keys without managing HSMs.

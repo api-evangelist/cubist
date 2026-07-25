@@ -1,0 +1,29 @@
+generated: '2026-07-18'
+method: searched
+note: >-
+  Probed the /.well-known/ discovery surface on the CubeSigner API hosts and the
+  marketing domain. The API hosts require authentication (401) and expose no
+  anonymous discovery documents; the marketing domain returns 404 for all
+  probed paths. Absence recorded as valid data — no documents saved.
+hosts:
+  - host: https://prod.signer.cubist.dev
+    documents:
+      - {path: /.well-known/security.txt, status: 401}
+      - {path: /.well-known/openid-configuration, status: 401}
+      - {path: /.well-known/oauth-authorization-server, status: 401}
+      - {path: /.well-known/api-catalog, status: 401}
+      - {path: /.well-known/ai-plugin.json, status: 401}
+  - host: https://gamma.signer.cubist.dev
+    documents:
+      - {path: /.well-known/security.txt, status: 401}
+      - {path: /.well-known/openid-configuration, status: 401}
+      - {path: /.well-known/oauth-authorization-server, status: 401}
+      - {path: /.well-known/api-catalog, status: 401}
+      - {path: /.well-known/ai-plugin.json, status: 401}
+  - host: https://cubist.dev
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
