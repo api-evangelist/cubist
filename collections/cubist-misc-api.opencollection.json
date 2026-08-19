@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Misc API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Misc",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "JWKS endpoint for the attestation key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/attestation/.well-known/jwks.json"
+          },
+          "docs": "JWKS endpoint for the attestation key\n\nReturns the public key used to sign Key info attestations."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

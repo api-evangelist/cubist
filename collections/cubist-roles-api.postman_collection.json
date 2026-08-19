@@ -1,0 +1,2372 @@
+{
+  "item": [
+    {
+      "id": "c5f50691-38f2-4748-92be-31bddd06f3a9",
+      "name": "Roles",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ac663203-e576-4c89-9046-ea91d33eb679",
+          "name": "List Roles",
+          "request": {
+            "name": "List Roles",
+            "description": {
+              "content": "List Roles\n\nRetrieves all roles in an organization that the current user is allowed to access.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page.size",
+                  "value": "1000",
+                  "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+                },
+                {
+                  "disabled": false,
+                  "key": "page.start",
+                  "value": "<string>",
+                  "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+                },
+                {
+                  "disabled": false,
+                  "key": "summarize",
+                  "value": "<boolean>",
+                  "description": "Don't include keys and users for each role"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c2db71a4-b2e4-4124-b9d6-c68522a8d9b3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "summarize",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"roles\": [\n    {\n      \"role_id\": \"Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b\",\n      \"enabled\": false,\n      \"restricted_actions\": {\n        \"key_0\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"member\": true,\n      \"created\": {\n        \"nullable\": true,\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"nullable\": true,\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": 2207,\n      \"edit_policy\": {\n        \"applies_to_scopes\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"mfa\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"time_lock_until\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"metadata\": {},\n      \"keys\": [\n        {\n          \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n          \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n          \"key_info\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"policy\": [\n            {\n              \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n            },\n            {\n              \"TxDeposit\": {\n                \"kind\": \"Canonical\"\n              }\n            }\n          ]\n        },\n        {\n          \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n          \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n          \"key_info\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"policy\": [\n            {\n              \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n            },\n            {\n              \"TxDeposit\": {\n                \"kind\": \"Canonical\"\n              }\n            }\n          ]\n        }\n      ],\n      \"name\": \"my_role\",\n      \"policy\": [\n        {\n          \"SourceIpAllowlist\": [\n            \"123.456.78.9/16\"\n          ]\n        },\n        {\n          \"RequireMfa\": {\n            \"count\": 1\n          }\n        }\n      ],\n      \"users\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"role_id\": \"Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b\",\n      \"enabled\": false,\n      \"restricted_actions\": {\n        \"key_0\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"key_2\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"key_3\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"member\": true,\n      \"created\": {\n        \"nullable\": true,\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"nullable\": true,\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": 8170,\n      \"edit_policy\": {\n        \"applies_to_scopes\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"mfa\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"time_lock_until\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"metadata\": {},\n      \"keys\": [\n        {\n          \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n          \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n          \"key_info\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"policy\": [\n            {\n              \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n            },\n            {\n              \"TxDeposit\": {\n                \"kind\": \"Canonical\"\n              }\n            }\n          ]\n        },\n        {\n          \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n          \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n          \"key_info\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"policy\": [\n            {\n              \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n            },\n            {\n              \"TxDeposit\": {\n                \"kind\": \"Canonical\"\n              }\n            }\n          ]\n        }\n      ],\n      \"name\": \"my_role\",\n      \"policy\": [\n        {\n          \"SourceIpAllowlist\": [\n            \"123.456.78.9/16\"\n          ]\n        },\n        {\n          \"RequireMfa\": {\n            \"count\": 1\n          }\n        }\n      ],\n      \"users\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2e5fd847-8e4a-42c7-91e6-c90160ed9a5f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "summarize",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "74fc2dcf-59ba-452f-8c85-b1cfba6ee81c",
+          "name": "Create Role",
+          "request": {
+            "name": "Create Role",
+            "description": {
+              "content": "Create Role\n\nCreates a new role in an organization. Unless the logged-in user\nis the owner, they are automatically added to the newly created role.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1db17ff3-9b3b-4a0f-adb8-8715272209f4",
+              "name": "The newly created role information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"my_role\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"role_id\": \"Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b\",\n  \"name\": \"my_role\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c3f88634-93b7-45d2-a89f-02e07bc1d4de",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"my_role\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "62a29521-4667-417b-801f-74f6ff8cd553",
+          "name": "Get Role",
+          "request": {
+            "name": "Get Role",
+            "description": {
+              "content": "Get Role\n\nRetrieves information about a role in an organization",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "summarize",
+                  "value": "<boolean>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "257b6d7b-5b1b-4d84-925b-c2de4bc37fe6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summarize",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"role_id\": \"Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b\",\n  \"enabled\": false,\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"Alien\",\n      \"Member\"\n    ],\n    \"key_1\": [\n      \"Owner\",\n      \"Member\"\n    ],\n    \"key_2\": [\n      \"Member\",\n      \"Owner\"\n    ]\n  },\n  \"member\": true,\n  \"created\": 4259,\n  \"last_modified\": 3434,\n  \"version\": 6606,\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"All\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": 7405\n  },\n  \"metadata\": {},\n  \"keys\": [\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": false,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    },\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": false,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    }\n  ],\n  \"name\": \"my_role\",\n  \"policy\": [\n    {\n      \"SourceIpAllowlist\": [\n        \"123.456.78.9/16\"\n      ]\n    },\n    {\n      \"RequireMfa\": {\n        \"count\": 1\n      }\n    }\n  ],\n  \"users\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc895b69-280e-4dbd-be30-1592e9b86bfd",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "summarize",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cc787f72-5f58-4562-92f7-283703422116",
+          "name": "Delete Role",
+          "request": {
+            "name": "Delete Role",
+            "description": {
+              "content": "Delete Role\n\nDeletes a role in an organization.\n\nOnly users in the role can perform this action.\nAdditionally, the role's edit policy (if set) must permit the update.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "null",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "62c80914-56b1-4995-af05-84824b7124cf",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "null",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8727cf2b-a35f-4072-bc1d-59cdba2303bc",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "null",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "605583da-6cbb-4ec7-812e-5517fcc501ac",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "null",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ead1bb9c-6178-461b-bae8-dcc33356d173",
+          "name": "Update Role",
+          "request": {
+            "name": "Update Role",
+            "description": {
+              "content": "Update Role\n\nEnables or disables a role (this requires the `manage:role:update:enable` scope).\nUpdates the role's policies (this requires the `manage:role:update:policy` scope).\nUpdates the role's edit policies (this requires the `manage:role:update:editPolicy` scope).\n\nThe user must be in the role or an owner of the organization.\nAdditionally, the role's edit policy (if set) must permit the update.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"allowed_mfa_types\": [\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n      ],\n      \"count\": \"<integer>\",\n      \"lifetime\": \"<long>\",\n      \"num_auth_factors\": \"<integer>\",\n      \"request_comparer\": \"<string>\",\n      \"restricted_operations\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"time_delay\": \"<long>\"\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"key_2\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"key_3\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "077b7f81-76df-4eeb-bb36-c0909c8209f3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"policy\": [\n    {\n      \"SourceIpAllowlist\": [\n        \"123.456.78.9/16\"\n      ]\n    }\n  ],\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"role_id\": \"Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b\",\n  \"enabled\": false,\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\"\n    ]\n  },\n  \"member\": false,\n  \"created\": \"<long>\",\n  \"last_modified\": \"<long>\",\n  \"version\": 2869,\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"metadata\": {},\n  \"keys\": [\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": false,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    },\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": true,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    }\n  ],\n  \"name\": \"my_role\",\n  \"policy\": [\n    {\n      \"SourceIpAllowlist\": [\n        \"123.456.78.9/16\"\n      ]\n    },\n    {\n      \"RequireMfa\": {\n        \"count\": 1\n      }\n    }\n  ],\n  \"users\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5e2bf351-2655-4b4f-ac77-9d4b4f5cebe4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"policy\": [\n    {\n      \"SourceIpAllowlist\": [\n        \"123.456.78.9/16\"\n      ]\n    }\n  ],\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c6f52a5-e0c1-4240-b5e7-acd8ec88b1e8",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"policy\": [\n    {\n      \"SourceIpAllowlist\": [\n        \"123.456.78.9/16\"\n      ]\n    }\n  ],\n  \"restricted_actions\": {\n    \"key_0\": [\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7106c2b3-3a12-4f90-8e66-3447e678446d",
+          "name": "Attest to Role Properties",
+          "request": {
+            "name": "Attest to Role Properties",
+            "description": {
+              "content": "Attest to Role Properties\n\nThe response is a JWT whose claims are the requested role properties.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id",
+                "attest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "verbosity",
+                  "value": "<string>",
+                  "description": "Role properties to include in an attestation. Defaults to basic role\nproperties, including associated users, but excluding associated keys."
+                },
+                {
+                  "disabled": false,
+                  "key": "key_filter",
+                  "value": "<string>",
+                  "description": "Associated keys filter, i.e., when specified, out all other associated\nkeys are filtered out. Defaults to including all associated keys."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c6897684-ef43-4240-9a3b-8fbe5439fbfc",
+              "name": "Response returned when requesting a role attestation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "attest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "verbosity",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "key_filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jwt\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ba41e4d-e314-434a-b8e1-3ad91e31b72b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "attest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "verbosity",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "key_filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c431aa3a-d1aa-435d-9c51-e8359ff82e55",
+          "name": "List Role Keys",
+          "request": {
+            "name": "List Role Keys",
+            "description": {
+              "content": "List Role Keys\n\nReturns an array of all keys in a role.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id",
+                "keys"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page.size",
+                  "value": "100",
+                  "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+                },
+                {
+                  "disabled": false,
+                  "key": "page.start",
+                  "value": "<string>",
+                  "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "365c0159-668f-435b-8339-5b1f7c104e5f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "keys"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"keys\": [\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": false,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    },\n    {\n      \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n      \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n      \"key_info\": {\n        \"key_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n        \"purpose\": \"Eth2Validator(1)\",\n        \"enabled\": true,\n        \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n        \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n        \"policy\": [\n          \"AllowRawBlobSigning\",\n          {\n            \"RequireMfa\": {\n              \"count\": 1\n            }\n          }\n        ],\n        \"derivation_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"properties\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"provenance\": \"string\",\n        \"region\": \"string\"\n      },\n      \"policy\": [\n        {\n          \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n        },\n        {\n          \"TxDeposit\": {\n            \"kind\": \"Canonical\"\n          }\n        }\n      ]\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a56baf92-693e-4570-bef0-242f7d638736",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "keys"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "912960a9-b725-48f4-bcce-e77ae92be123",
+          "name": "Get a Key in Role",
+          "request": {
+            "name": "Get a Key in Role",
+            "description": {
+              "content": "Get a Key in Role\n\nReturns the key-in-role information for a given key and role. If `details` is set to `true`,\nthis endpoint returns detailed key information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id",
+                "keys",
+                ":key_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "details",
+                  "value": "<boolean>",
+                  "description": "Whether to include detailed key information"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "key_id",
+                  "description": "(Required) ID of the desired Key"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "53af0389-71d8-4486-a5e1-d7ad9f1b9518",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "keys",
+                    ":key_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "details",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "key_id",
+                      "description": "(Required) ID of the desired Key"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"role_id\": \"Role#e427c28a-9c5b-49cc-a257-878aea58a22c\",\n  \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n  \"key_info\": {\n    \"key_type\": \"TaprootBtc\",\n    \"key_id\": \"Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n    \"material_id\": \"0x8e3484687e66cdd26cf04c3647633ab4f3570148\",\n    \"purpose\": \"Eth2Validator(1)\",\n    \"enabled\": true,\n    \"owner\": \"User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f\",\n    \"public_key\": \"0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431\",\n    \"policy\": [],\n    \"created\": \"<long>\",\n    \"last_modified\": \"<long>\",\n    \"version\": 9747,\n    \"edit_policy\": {\n      \"applies_to_scopes\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"mfa\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"time_lock_until\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"metadata\": {},\n    \"derivation_info\": {\n      \"mnemonic_id\": \"string\",\n      \"derivation_path\": \"string\"\n    },\n    \"properties\": {\n      \"kind\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"provenance\": \"string\",\n    \"region\": \"string\"\n  },\n  \"policy\": [\n    {\n      \"TxReceiver\": \"0x8c594691c0e592ffa21f153a16ae41db5befcaaa\"\n    },\n    {\n      \"TxDeposit\": {\n        \"kind\": \"Canonical\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a5e3926-3364-40b7-bbfd-4371a7310af2",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "keys",
+                    ":key_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "details",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "key_id",
+                      "description": "(Required) ID of the desired Key"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f3bb8e64-c7f7-431d-a9e9-fcdc89411b46",
+          "name": "List Historical Transactions",
+          "request": {
+            "name": "List Historical Transactions",
+            "description": {
+              "content": "List Historical Transactions\n\nReturns a sorted, paginated list of transactions signed by the given role,\nordered from most recent first.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id",
+                "tx"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page.size",
+                  "value": "1000",
+                  "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+                },
+                {
+                  "disabled": false,
+                  "key": "page.start",
+                  "value": "<string>",
+                  "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "caa64ed9-24ae-40a9-b6e8-ac823c86973b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "tx"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"txs\": [\n    {\n      \"key_id\": \"<string>\",\n      \"historical_tx_org_id\": \"<string>\",\n      \"operation\": \"<string>\",\n      \"request\": {\n        \"method\": \"string\",\n        \"path\": \"string\",\n        \"body\": {}\n      },\n      \"result\": {},\n      \"date\": \"<long>\",\n      \"exp_epoch\": \"<long>\",\n      \"mfa_status\": {\n        \"count\": 433,\n        \"num_auth_factors\": 517,\n        \"allowed_approvers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"approved_by\": {\n          \"key_0\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_1\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"key_1\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_1\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_2\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_3\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"allowed_mfa_types\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"request_comparer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"request_id\": \"string\",\n      \"role_id\": \"<string>\",\n      \"user_id\": \"<string>\"\n    },\n    {\n      \"key_id\": \"<string>\",\n      \"historical_tx_org_id\": \"<string>\",\n      \"operation\": \"<string>\",\n      \"request\": {\n        \"method\": \"string\",\n        \"path\": \"string\",\n        \"body\": {}\n      },\n      \"result\": {},\n      \"date\": \"<long>\",\n      \"exp_epoch\": \"<long>\",\n      \"mfa_status\": {\n        \"count\": 2995,\n        \"num_auth_factors\": 2466,\n        \"allowed_approvers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"approved_by\": {\n          \"key_0\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"allowed_mfa_types\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"request_comparer\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"request_id\": \"string\",\n      \"role_id\": \"<string>\",\n      \"user_id\": \"<string>\"\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f0f599a7-d744-496d-a818-cd60b0896e00",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "tx"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb947338-b3c1-431f-b1df-5c61231531ef",
+          "name": "List Role Users.",
+          "request": {
+            "name": "List Role Users.",
+            "description": {
+              "content": "List Role Users.\n\nReturns an array of all users who have access to a role.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "roles",
+                ":role_id",
+                "users"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page.size",
+                  "value": "1000",
+                  "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+                },
+                {
+                  "disabled": false,
+                  "key": "page.start",
+                  "value": "<string>",
+                  "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "role_id",
+                  "description": "(Required) Name or ID of the desired Role"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "36b49d4b-f8fe-426d-b393-4656f1a00291",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"users\": [\n    {\n      \"user_id\": \"string\"\n    },\n    {\n      \"user_id\": \"string\"\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "834df82c-9e52-4e6a-bc10-db57a4fe4deb",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "roles",
+                    ":role_id",
+                    "users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "role_id",
+                      "description": "(Required) Name or ID of the desired Role"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gamma.signer.cubist.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "dde2e27b-e3a7-496e-9c66-d693638ed05c",
+    "name": "CubeSigner Account Roles API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The CubeSigner management and signing service.\n\nContact Support:\n Name: Cubist Inc.\n Email: hello@cubist.dev",
+      "type": "text/plain"
+    }
+  }
+}

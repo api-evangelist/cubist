@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Login API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Login",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authenticate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/idp/authenticate",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticate\n\nThis endpoint exchanges an email & password for an OIDC token"
+        },
+        {
+          "info": {
+            "name": "Initiate Login with Passkey",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/passkey",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate Login with Passkey\n\nThe response contains a FIDO challenge that the client must answer with any of their\ndiscoverable credentials.  The answer should be submitted with the corresponding PATCH request."
+        },
+        {
+          "info": {
+            "name": "Complete Login with Passkey",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/passkey",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Complete Login with Passkey\n\nThe request should contain an answer to the challenge issued by the corresponding POST request.\nThe challenge may be answered with any of the user's discoverable credentials; if the credential\nincluded in the answer is registered with a user and an organization, the response will contain\na CubeSigner session (with the parameters supplied in the previous POST request) for that user\nin that organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

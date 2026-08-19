@@ -1,0 +1,562 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Policies API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Policies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Policies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "policy_type",
+                "value": "Key",
+                "type": "query",
+                "description": "The optional type of policies to return"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Policies\n\nReturns the list of all policies in the Org."
+        },
+        {
+          "info": {
+            "name": "Create Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Policy\n\nCreates a new named policy in the organization. The user making the request is the\nowner of the policy, giving them edit access to the policy along with the org owners."
+        },
+        {
+          "info": {
+            "name": "Update Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies/:policy_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "policy_id",
+                "value": "NamedPolicy#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired NamedPolicy"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Policy\n\nUpdates the policy with the given name or id."
+        },
+        {
+          "info": {
+            "name": "Delete Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies/:policy_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "policy_id",
+                "value": "NamedPolicy#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired NamedPolicy"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete Policy\n\nDelete the named policy with the given name or id."
+        },
+        {
+          "info": {
+            "name": "Get Policy Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies/:policy_id/logs",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "policy_id",
+                "value": "NamedPolicy#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired NamedPolicy"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Policy Logs\n\nReturns the logs for the given policy, within the given timeframe."
+        },
+        {
+          "info": {
+            "name": "Get Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies/:policy_id/:version",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "policy_id",
+                "value": "NamedPolicy#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired NamedPolicy"
+              },
+              {
+                "name": "version",
+                "value": "latest",
+                "type": "path",
+                "description": "The policy version, either 'latest' or 'v<number>'."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Policy\n\nReturns the specified version or latest of a named policy with the given name or id."
+        },
+        {
+          "info": {
+            "name": "Invoke Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policies/:policy_id/:version/invoke",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "policy_id",
+                "value": "NamedPolicy#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired NamedPolicy"
+              },
+              {
+                "name": "version",
+                "value": "latest",
+                "type": "path",
+                "description": "The policy version, either 'latest' or 'v<number>'."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Invoke Policy\n\nInvokes the [NamedPolicy] with the given ID with the given request information.\nIt is only supported for Wasm policies."
+        },
+        {
+          "info": {
+            "name": "List Buckets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/buckets",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Buckets\n\nList available meta information about all policy KV store buckets in the org."
+        },
+        {
+          "info": {
+            "name": "Get Bucket",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/buckets/:bucket_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "bucket_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Bucket\n\nReturns the meta information of a policy KV store bucket."
+        },
+        {
+          "info": {
+            "name": "Update Bucket",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/buckets/:bucket_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "bucket_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Bucket\n\nUpdates meta information for an existing policy KV store bucket."
+        },
+        {
+          "info": {
+            "name": "Create Policy Import Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/import_key",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Policy Import Key\n\nGenerate an ephemeral key that a client can use for encrypting data related to Wasm\npolicies (e.g., policy secrets)."
+        },
+        {
+          "info": {
+            "name": "Get the org-wide policy secrets.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/secrets",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the org-wide policy secrets.\n\nNote that this only returns the keys for the secrets, omitting the values.\nThe values are secret and are not accessible outside Wasm policy execution."
+        },
+        {
+          "info": {
+            "name": "Update org-level policy secrets",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/secrets",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update org-level policy secrets\n\nThe provided secrets will replace any existing org-level secrets.\nIt fails if the secrets weren't previously created.\n\nMust be permitted by the policy secret's edit policy if set, and the org's edit policy otherwise."
+        },
+        {
+          "info": {
+            "name": "Create or overwrite an org-level policy secret.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/secrets/:secret_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "secret_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create or overwrite an org-level policy secret.\nMust be permitted by the policy secret's edit policy if set, and the org's edit policy otherwise."
+        },
+        {
+          "info": {
+            "name": "Delete an org-level policy secret.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/secrets/:secret_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "secret_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete an org-level policy secret.\nMust be permitted by the policy secret's edit policy if set, and the org's edit policy otherwise."
+        },
+        {
+          "info": {
+            "name": "Upload Wasm Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/policy/wasm",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Upload Wasm Policy\n\nReturns a signed URL for uploading a wasm policy to CubeSigner. The policy will be\ndeleted if not attached to a [NamedPolicy] soon after the upload has been completed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

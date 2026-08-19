@@ -1,0 +1,411 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Roles API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Roles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "summarize",
+                "value": "",
+                "type": "query",
+                "description": "Don't include keys and users for each role"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Roles\n\nRetrieves all roles in an organization that the current user is allowed to access."
+        },
+        {
+          "info": {
+            "name": "Create Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Role\n\nCreates a new role in an organization. Unless the logged-in user\nis the owner, they are automatically added to the newly created role."
+        },
+        {
+          "info": {
+            "name": "Get Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "summarize",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Role\n\nRetrieves information about a role in an organization"
+        },
+        {
+          "info": {
+            "name": "Update Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Role\n\nEnables or disables a role (this requires the `manage:role:update:enable` scope).\nUpdates the role's policies (this requires the `manage:role:update:policy` scope).\nUpdates the role's edit policies (this requires the `manage:role:update:editPolicy` scope).\n\nThe user must be in the role or an owner of the organization.\nAdditionally, the role's edit policy (if set) must permit the update."
+        },
+        {
+          "info": {
+            "name": "Delete Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete Role\n\nDeletes a role in an organization.\n\nOnly users in the role can perform this action.\nAdditionally, the role's edit policy (if set) must permit the update."
+        },
+        {
+          "info": {
+            "name": "Attest to Role Properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/attest",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "verbosity",
+                "value": "",
+                "type": "query",
+                "description": "Role properties to include in an attestation. Defaults to basic role\nproperties, including associated users, but excluding associated keys."
+              },
+              {
+                "name": "key_filter",
+                "value": "",
+                "type": "query",
+                "description": "Associated keys filter, i.e., when specified, out all other associated\nkeys are filtered out. Defaults to including all associated keys."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Attest to Role Properties\n\nThe response is a JWT whose claims are the requested role properties."
+        },
+        {
+          "info": {
+            "name": "List Role Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Role Keys\n\nReturns an array of all keys in a role."
+        },
+        {
+          "info": {
+            "name": "Get a Key in Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/keys/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              },
+              {
+                "name": "details",
+                "value": "true",
+                "type": "query",
+                "description": "Whether to include detailed key information"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a Key in Role\n\nReturns the key-in-role information for a given key and role. If `details` is set to `true`,\nthis endpoint returns detailed key information."
+        },
+        {
+          "info": {
+            "name": "List Historical Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/tx",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Historical Transactions\n\nReturns a sorted, paginated list of transactions signed by the given role,\nordered from most recent first."
+        },
+        {
+          "info": {
+            "name": "List Role Users.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Role Users.\n\nReturns an array of all users who have access to a role."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

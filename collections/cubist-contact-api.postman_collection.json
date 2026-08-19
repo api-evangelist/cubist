@@ -1,0 +1,1279 @@
+{
+  "item": [
+    {
+      "id": "f0df03a3-d706-44c1-be33-aa23c756e90c",
+      "name": "Contact",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f120637b-609b-4e44-984a-7f9a99b92e62",
+          "name": "List Contacts",
+          "request": {
+            "name": "List Contacts",
+            "description": {
+              "content": "List Contacts\n\nList all contacts in the org.\nAny org member is allowed to list all contacts in the org.\n\n## Search Condition\nThe search condition is optional.\n\n- If the search condition starts with \"label:...\", this list will only hold contacts with\nthe label provided after the \":\". For example, \"label:cubist:erc20_token\" would return contacts that\nhold the label \"cubist:erc20_token\".\n\n- Otherwise, the result will contain only the contacts who have an address starting with, or\nequaling, the given search string. For example, \"0xee\" would return all contacts holding an\naddress starting with \"0xee\". The search is case-insensitive.\n\nIf a search term is defined, we do not guarantee\nthe number of results in a page. The behavior of this parameter may change\nin the future (for example, making results more strictly paginated or\nperforming a fuzzy search rather than a prefix search).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page.size",
+                  "value": "100",
+                  "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+                },
+                {
+                  "disabled": false,
+                  "key": "page.start",
+                  "value": "<string>",
+                  "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Either 'label:...', which lists contacts with the label provided after the ':'. Or, an entire address, or prefix of an address, that returned contacts must have. When searching by address, it must be at least 3 characters."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "790f9ccf-4b11-4c6f-b922-0d95e66a2dcc",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"contacts\": [\n    {\n      \"addresses\": {\n        \"btc\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"canton\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"evm\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sol\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sui\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"id\": \"string\",\n      \"name\": \"Satoshi Nakamoto\",\n      \"owner\": \"string\",\n      \"created\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"edit_policy\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"metadata\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"labels\": [\n        \"cubist:erc20_token\"\n      ]\n    },\n    {\n      \"addresses\": {\n        \"btc\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"canton\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"evm\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sol\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sui\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"id\": \"string\",\n      \"name\": \"Satoshi Nakamoto\",\n      \"owner\": \"string\",\n      \"created\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"edit_policy\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"metadata\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"labels\": [\n        \"cubist:erc20_token\"\n      ]\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aec97da5-ed75-45b3-a1e3-bd9d2554ce87",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page.size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page.start",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"PreComputed\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "87df7d73-b5ee-4a5b-a964-44f6328d4aff",
+          "name": "Create Contact",
+          "request": {
+            "name": "Create Contact",
+            "description": {
+              "content": "Create Contact\n\nCreates a new contact in the organization-wide address book. The\nuser making the request is the owner of the contact, giving them edit access\nto the contact along with the org owners.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      },\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      },\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"allowed_mfa_types\": [\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n      ],\n      \"count\": \"<integer>\",\n      \"lifetime\": \"<long>\",\n      \"num_auth_factors\": \"<integer>\",\n      \"request_comparer\": \"<string>\",\n      \"restricted_operations\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"time_delay\": \"<long>\"\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"metadata\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5f5661e3-da50-4e61-83be-e37c6c1d56fb",
+              "name": "Information about a Contact.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Satoshi Nakamoto\",\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ],\n  \"metadata\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"id\": \"string\",\n  \"name\": \"Satoshi Nakamoto\",\n  \"owner\": \"string\",\n  \"created\": \"<long>\",\n  \"last_modified\": \"<long>\",\n  \"version\": 9231,\n  \"edit_policy\": {\n    \"applies_to_scopes\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"mfa\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"time_lock_until\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"metadata\": {},\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d27455e2-8135-4967-aeda-75df703315d4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Satoshi Nakamoto\",\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ],\n  \"metadata\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fd6a9b55-cf10-4b76-9fa8-a09765f41b9d",
+          "name": "Lookup Contacts by Address",
+          "request": {
+            "name": "Lookup Contacts by Address",
+            "description": {
+              "content": "Lookup Contacts by Address\n\nReturns all contacts in the org that have the given address.\n\nWhen querying with an EVM address without a chain, this endpoint returns\ncontacts with that address on *any* chain, including those without a chain\ndefined.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts",
+                "by-address"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"<string>\",\n  \"chain\": \"<string>\",\n  \"network\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b3b524ac-eea3-4d6b-893f-3e289f269a7e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    "by-address"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\",\n  \"chain\": \"<string>\",\n  \"network\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"contacts\": [\n    {\n      \"addresses\": {\n        \"btc\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"canton\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"evm\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sol\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sui\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"id\": \"string\",\n      \"name\": \"Satoshi Nakamoto\",\n      \"owner\": \"string\",\n      \"created\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"edit_policy\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"metadata\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"labels\": [\n        \"cubist:erc20_token\"\n      ]\n    },\n    {\n      \"addresses\": {\n        \"btc\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"canton\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"evm\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sol\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"sui\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      \"id\": \"string\",\n      \"name\": \"Satoshi Nakamoto\",\n      \"owner\": \"string\",\n      \"created\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"last_modified\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"version\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"edit_policy\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"metadata\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"labels\": [\n        \"cubist:erc20_token\"\n      ]\n    }\n  ],\n  \"last_evaluated_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5cb330aa-7386-4462-9e52-7c1ef1b1c0c3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    "by-address"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\",\n  \"chain\": \"<string>\",\n  \"network\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d94c7698-4f8a-46a8-90d3-f4e11f7dbd1c",
+          "name": "Get Contact",
+          "request": {
+            "name": "Get Contact",
+            "description": {
+              "content": "Get Contact\n\nReturns the properties of a Contact.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contact_id",
+                  "description": "(Required) ID of the desired Contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "04fc663d-4e13-4a88-892f-f639deab4f64",
+              "name": "Information about a Contact.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"id\": \"string\",\n  \"name\": \"Satoshi Nakamoto\",\n  \"owner\": \"string\",\n  \"created\": \"<long>\",\n  \"last_modified\": \"<long>\",\n  \"version\": 9231,\n  \"edit_policy\": {\n    \"applies_to_scopes\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"mfa\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"time_lock_until\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"metadata\": {},\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dd85f734-513b-4141-ba28-64635bc72c27",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7dfec53b-da8d-45ef-b850-13f5944ec166",
+          "name": "Delete Contact",
+          "request": {
+            "name": "Delete Contact",
+            "description": {
+              "content": "Delete Contact\n\nDelete a contact, specified by its ID.\n\nOnly the contact owner and org owners are allowed to delete contacts.\nAdditionally, the contact's edit policy (if set) must permit the deletion.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contact_id",
+                  "description": "(Required) ID of the desired Contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "null",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "eb97701e-9fc1-4afb-b1f3-5631f28ab286",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "null",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff357842-270c-4591-8028-16cc65b182ed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "null",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b5a44185-4dec-4299-92b3-9fda4d62015d",
+          "name": "Update Contact",
+          "request": {
+            "name": "Update Contact",
+            "description": {
+              "content": "Update Contact\n\nUpdates an existing contact in the organization-wide address book. Only\nthe contact owner or an org owner can update contacts.\n\n*Updates will overwrite the existing value of the field.*\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contact_id",
+                  "description": "(Required) ID of the desired Contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      },\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      },\n      {\n        \"address\": \"<string>\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"allowed_mfa_types\": [\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n      ],\n      \"count\": \"<integer>\",\n      \"lifetime\": \"<long>\",\n      \"num_auth_factors\": \"<integer>\",\n      \"request_comparer\": \"<string>\",\n      \"restricted_operations\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"time_delay\": \"<long>\"\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"metadata\": {},\n  \"name\": \"<string>\",\n  \"owner\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "749fcf3c-7537-499b-9b03-29e9a07a3bff",
+              "name": "Information about a Contact.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ],\n  \"metadata\": {},\n  \"name\": \"Satoshi Nakamoto\",\n  \"owner\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"id\": \"<string>\",\n  \"name\": \"Satoshi Nakamoto\",\n  \"owner\": \"<string>\",\n  \"created\": \"<long>\",\n  \"last_modified\": \"<long>\",\n  \"version\": 6378,\n  \"edit_policy\": {\n    \"applies_to_scopes\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"mfa\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"time_lock_until\": {\n      \"nullable\": true,\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"metadata\": {},\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a8f4878-fd16-47df-bf86-5d5c29a6f0ec",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) ID of the desired Contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"addresses\": {\n    \"btc\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"bc1puc0q8jhx3knc2stlfhl35nja89nvkmqr4c5e2ldyuq2mcckhr3msavj99j\"\n      }\n    ],\n    \"canton\": [\n      {\n        \"address\": \"Alice::1220f2fe29866fd6a0009ecc8a64ccdc09f1958bd0f801166baaee469d1251b2eb72\",\n        \"chain\": \"<string>\"\n      }\n    ],\n    \"evm\": [\n      {\n        \"address\": \"0x52f6c0b306e66893c0414abb70951c4dac15a969\",\n        \"chain\": \"0x01\"\n      }\n    ],\n    \"sol\": [\n      {\n        \"cluster\": \"<string>\",\n        \"address\": \"EPw4LsNwCYCYXace1BKvwLcd7oeZzRiYGuGE5zfPvoPy\"\n      }\n    ],\n    \"sui\": [\n      {\n        \"chain\": \"<string>\",\n        \"address\": \"0x4e8712e38b09b5467c10fdc40fa7865a65563983eeb74b246df981e61a66b98d\"\n      }\n    ]\n  },\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"labels\": [\n    \"cubist:erc20_token\"\n  ],\n  \"metadata\": {},\n  \"name\": \"Satoshi Nakamoto\",\n  \"owner\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"EnclaveError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gamma.signer.cubist.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "697dfd7c-cb34-4d2c-b53c-c12794990fb5",
+    "name": "CubeSigner Account Contact API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The CubeSigner management and signing service.\n\nContact Support:\n Name: Cubist Inc.\n Email: hello@cubist.dev",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,753 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Signing API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Signing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Sign a serialized Avalanche C/X/P-Chain Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/ava/sign/:ava_chain/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "ava_chain",
+                "value": "P",
+                "type": "path",
+                "description": "Avalanche chain"
+              },
+              {
+                "name": "pubkey",
+                "value": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+                "type": "path",
+                "description": "Avalanche address in bech32 or ETH format"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign a serialized Avalanche C/X/P-Chain Message\n\nSigns an Avalanche message with a given SecpEth (C-Chain messages) or\nSecpAva (X- and P-Chain messages) key. Currently signing C-Chain messages\nwith SecpEth key must also be explicitly allowed via `AllowRawBlobSigning`\npolicy.\n\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign JSON-encoded Avalanche X- or P-Chain Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/ava/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "avax1am4w6hfrvmh3akduzkjthrtgtqafalce6an8cr",
+                "type": "path",
+                "description": "Avalanche bech32 address format without the chain prefix"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign JSON-encoded Avalanche X- or P-Chain Message\n\nSigns an Avalanche message with a given SecpAva key.\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign Babylon Covenant Committee Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/babylon/cov/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x03e38106dd76656bc68d02898ede1a911df8c793e46ac4eb37d26c266aae5d2a5a",
+                "type": "path",
+                "description": "hex-encoded public key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Babylon Covenant Committee Request\n\nSigns transactions relevant to a Babylon covenant committee signer,\ni.e., Schnorr and adaptor signatures for the unbonding, slashing, and\nslash-unbonding outputs of a Babylon staking transaction."
+        },
+        {
+          "info": {
+            "name": "Sign Babylon Staking Registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/babylon/registration/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "tb1pe4fgyn87pwku2xdptc2dtaeqzyx8wx89cqa6yntu8td49flpt5wq5k6hau",
+                "type": "path",
+                "description": "bech32 encoding of the public key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Babylon Staking Registration\n\nCreates and signs the data needed to register a Phase-2 or Phase-3\nBabylon stake. This includes the deposit and unbonding transactions,\ntwo slashing transactions, the slashing signatures, and the proof of\npossession.\n\nNote that it is also possible to generate this registration data by\nmaking four calls to the Babylon staking API, plus one call to the\nPSBT signing API to generate the BIP-322 proof of possession. The\nregistration API generates the same data but i"
+        },
+        {
+          "info": {
+            "name": "Sign Babylon Staking Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/babylon/staking/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "tb1pe4fgyn87pwku2xdptc2dtaeqzyx8wx89cqa6yntu8td49flpt5wq5k6hau",
+                "type": "path",
+                "description": "bech32 encoding of the public key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Babylon Staking Transaction\n\nCreates and signs transactions related to Babylon staking (i.e.,\ndeposit, early unbond, withdrawal). The return value is a Pre-Signed\nBitcoin Transaction (PSBT), as defined in BIP-174, which matches the\nformat used in most Babylon tooling.\n\nThe 'deposit' action can be used with either Segwit (i.e., SecpBtc/SecpBtcTest)\nor Taproot (i.e., TaprootBtc/TaprootBtcTest) keys. The remaining actions can be\nused only with Taproot keys.\n\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign a Bitcoin message.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/btc/message/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "bc1q3r35u4th78h06d64mwmp3vpu8qmzya05pq8fwl",
+                "type": "path",
+                "description": "Address of a Segwit or Legacy bitcoin key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign a Bitcoin message.\n\nSigns a message using BIP137 message signing with a given Secp256k1 key."
+        },
+        {
+          "info": {
+            "name": "Sign a Partially Signed Bitcoin Transaction (PSBT)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/btc/psbt/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "bc1p2wsldez5mud2yam29q22wgfh9439spgduvct83k3pm50fcxa5dps59h4z5",
+                "type": "path",
+                "description": "bech32(m)-encoded segwit or taproot address"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign a Partially Signed Bitcoin Transaction (PSBT)\n\nSigns all inputs of the supplied PSBT v0 (BIP-174) that pertain to the\n'pubkey' specified in the request, which can be either a Taproot or a\nSegwit key. For Segwit keys, CubeSigner-specific deterministic tweaking\ncan be applied to 'pubkey' before signing, on a per-input basis. (See the\nCubeSigner documentation for more information on Segwit tweaking.)\n\nWhen calling with a segwit key the required scope is 'sign:btc:psbt:segwit'.\nFor a taproot ke"
+        },
+        {
+          "info": {
+            "name": "Sign Bitcoin Segwit Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/btc/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "bc1q5p5qkae77ly80kr4pyfytdqm7rf08ddhdejl9g",
+                "type": "path",
+                "description": "bech32-encoded segwit address"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Bitcoin Segwit Transaction\n\nSigns a Bitcoin Segwit transaction with a given key.\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign Bitcoin Taproot Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/btc/taproot/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "bc1p2wsldez5mud2yam29q22wgfh9439spgduvct83k3pm50fcxa5dps59h4z5",
+                "type": "path",
+                "description": "bech32m-encoded taproot address"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Bitcoin Taproot Transaction\n\nSigns a Bitcoin Taproot transaction with a given key.\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Compute Diffie Hellman shared secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/diffie_hellman/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Compute Diffie Hellman shared secret\n\nFor a set of elliptic curve points (P_1, ..., P_i), computes the Diffie Hellman\nshared secret (Q_1, ..., Qi) = (sk * P_1, ... sk * P_i), for sk the secret key.\nPoints are specified in a curve-dependent format. See CubeSigner documentation\nfor more details.\n\nThe user can optionally specify a NIST P-256 public key, in which case the result\nwill be encrypted to the public key using RFC9180 HPKE(P-256, HKDF-SHA256) with\nAES-256-GCM as the symmetric cipher. In th"
+        },
+        {
+          "info": {
+            "name": "Sign EIP-191 Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/evm/eip191/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x49011adbCC3bC9c0307BB07F37Dda1a1a9c69d2E",
+                "type": "path",
+                "description": "Hex-encoded EVM address of the Secp256k1 key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign EIP-191 Data\n\nSigns a message using EIP-191 personal_sign with a given Secp256k1 key."
+        },
+        {
+          "info": {
+            "name": "Sign EIP-712 Typed Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/evm/eip712/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x49011adbCC3bC9c0307BB07F37Dda1a1a9c69d2E",
+                "type": "path",
+                "description": "Hex-encoded EVM address of the Secp256k1 key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign EIP-712 Typed Data\n\nSigns typed data according to EIP-712 with a given Secp256k1 key."
+        },
+        {
+          "info": {
+            "name": "Sign an EIP-7702 Authorization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/evm/eip7702/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x49011adbCC3bC9c0307BB07F37Dda1a1a9c69d2E",
+                "type": "path",
+                "description": "Hex-encoded EVM address of the Secp256k1 key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign an EIP-7702 Authorization\n\nSigns an EIP-7702 authorization tuple `(chain_id, address, nonce)` with a given\nSecp256k1 key. The resulting 65-byte signature (`r || s || y_parity`) can be used to\nassemble a `SignedAuthorization` for an EIP-7702 set-code transaction."
+        },
+        {
+          "info": {
+            "name": "Sign Solana Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/solana/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "86ZRPszBp5EoPj7wR3bHn7wnAZ5iYfpasRc7DKFPTUaZ",
+                "type": "path",
+                "description": "The base58-encoded public key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Solana Message\n\nSigns a Solana message with a given key.\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign a serialized SUI transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/sui/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0xdd68d35a778db1e3123c950e5db5361333f57733a77486a704dd8c994d96761d",
+                "type": "path",
+                "description": "Hex-encoded SUI key address"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign a serialized SUI transaction.\n\nThis is a pre-release feature."
+        },
+        {
+          "info": {
+            "name": "Sign a tendermint message.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/tendermint/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x7d8d344e6e53151692fa78a098630799946ad4d6a027ae6bcd7a78dc78281650",
+                "type": "path",
+                "description": "Hex-encoded validator public key with 0x prefix"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign a tendermint message.\n\nSigns the given base-64 encoded vote or proposal with the given tendermint key."
+        },
+        {
+          "info": {
+            "name": "Sign Raw Blob",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v1/org/:org_id/blob/sign/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Raw Blob\n\nSigns an arbitrary blob with a given key.\n\n- ECDSA signatures are serialized as big-endian r and s plus recovery-id\nbyte v, which can in general take any of the values 0, 1, 2, or 3.\n\n- EdDSA signatures are serialized in the standard format.\n\n- BLS signatures are not supported on the blob-sign endpoint."
+        },
+        {
+          "info": {
+            "name": "Sign EVM Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v1/org/:org_id/eth1/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x49011adbCC3bC9c0307BB07F37Dda1a1a9c69d2E",
+                "type": "path",
+                "description": "Hex-encoded ethereum address of the secp key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign EVM Transaction\n\nSigns an Ethereum (and other EVM) transaction with a given Secp256k1 key.\nReturns an RLP-encoded transaction with EIP-155 signature.\n\nThe key must be associated with the role and organization on whose behalf this action is called."
+        },
+        {
+          "info": {
+            "name": "Sign Validator Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v1/org/:org_id/eth2/sign/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0x9700fbb8c906942442c2a5b3ad7498f27aedda253786a6fbaa8fef47fb7af234e50cf2cce815a553087992ae565d48da",
+                "type": "path",
+                "description": "Hex-encoded validator (BLS) public key with 0x prefix"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Validator Request\n\nSigns an eth2 validator request with a given BLS key.\n\nThe key must be associated with the role and organization on whose behalf this action is called."
+        },
+        {
+          "info": {
+            "name": "Sign Stake Deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v1/org/:org_id/eth2/stake",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Stake Deposit\n\nSigns a deposit transaction with a `validator_key`. If `validator_key` is set to a pregenerated key, we use the\nprovided validator key. Otherwise, we generate a new BLS key.\n\nWhen using a pregenerated key, the key must be associated with the role and organization on whose\nbehalf this action is called."
+        },
+        {
+          "info": {
+            "name": "Sign Unstake Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v1/org/:org_id/eth2/unstake/:pubkey",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "pubkey",
+                "value": "0xa99a76ed7796f7be22d5b7e85deeb7c5677e88e511e0b337618f8c4eb61349b4bf2d153f649f7b53359fe8b94a38e44c",
+                "type": "path",
+                "description": "Hex-encoded validator (BLS) public key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Sign Unstake Request\n\nHandle unstaking request, producing a signed voluntary exit message\nthat can be posted directly to the Beacon chain.\n\nThe key must be associated with the role and organization on whose behalf this action is called."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

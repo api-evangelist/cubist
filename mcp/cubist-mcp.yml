@@ -250,3 +250,9 @@ tools:
 - name: createSession
   description: Create new user session (management and/or signing)
   source_operation: openapi/cubist-cubesigner-openapi-original.json#createSession
+deployment:
+  mode: none
+  verified: derived
+  tools: 102
+  checked: '2026-08-12'
+  source: catalog MCP census

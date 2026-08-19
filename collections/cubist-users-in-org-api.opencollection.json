@@ -1,0 +1,451 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Users In Org API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users In Org",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List pending invitations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/invitations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List pending invitations\n\nReturns all pending (not yet accepted) invitations for the organization."
+        },
+        {
+          "info": {
+            "name": "Cancel a pending invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/invitations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Cancel a pending invitation\n\nRemoves a pending invitation from the organization. If no pending invitation\nexists for the given email address, a not-found error is returned."
+        },
+        {
+          "info": {
+            "name": "Invite User",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/invite",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Invite User\n\nCreates a new user in an existing org and sends that user an invite email."
+        },
+        {
+          "info": {
+            "name": "List users in organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "A query string. If defined, all returned users will contain this string in their name or email."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List users in organization\n\nIf a query is defined, the result will contain only the users whose name or\nemail contain the query string. NOTE that if pagination is used and a page\nlimit is set, the returned result set may contain FEWER elements than the\nrequested page limit.\n"
+        },
+        {
+          "info": {
+            "name": "Add a third-party user to the org",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Add a third-party user to the org\n"
+        },
+        {
+          "info": {
+            "name": "Get user by email.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/email/:email",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "path",
+                "description": "The email associated with the user."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get user by email.\n\nThe search includes all users and their third-party identities."
+        },
+        {
+          "info": {
+            "name": "Remove a third-party user from the org",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/oidc",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "revoke_role_sessions_they_created",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Remove a third-party user from the org\n"
+        },
+        {
+          "info": {
+            "name": "Get a user by their OIDC identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/oidc/:iss/:sub",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "iss",
+                "value": "",
+                "type": "path",
+                "description": "The OIDC issuer."
+              },
+              {
+                "name": "sub",
+                "value": "",
+                "type": "path",
+                "description": "The OIDC subject."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a user by their OIDC identity\n\nRetrieves a user in the organization by their OIDC issuer and subject."
+        },
+        {
+          "info": {
+            "name": "Initialize MFA reset for user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/reset_mfa",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initialize MFA reset for user"
+        },
+        {
+          "info": {
+            "name": "Complete MFA reset for user",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/reset_mfa",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Complete MFA reset for user"
+        },
+        {
+          "info": {
+            "name": "Get user by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/:user_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "user_id",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired User"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get user by id\n\nIf the requesting user is an owner of the org, the response additionally\nincludes the user's OIDC identities."
+        },
+        {
+          "info": {
+            "name": "Remove a user from the org",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/:user_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "user_id",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired User"
+              },
+              {
+                "name": "revoke_role_sessions_they_created",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Remove a user from the org\n"
+        },
+        {
+          "info": {
+            "name": "Update a user's membership in the org",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/users/:user_id/membership",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "user_id",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired User"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update a user's membership in the org\n\nEnable/disable another user in the org, or change their membership role."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

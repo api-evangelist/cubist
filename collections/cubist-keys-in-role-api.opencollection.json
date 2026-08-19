@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Keys In Role API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Keys In Role",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/add_keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Add Keys\n\nAdds a list of existing keys to an existing role.\n\nThe key owner is allowed to add their key to any role that they are in.\n\nIn \"org custody\" model only, org owners are allowed to add any key to any role.\n\nIn all cases: the role's edit policy, as well as the edit policy of each of the keys, must permit the update.\n\nEach request to this endpoint can add, at maximum, 32 keys."
+        },
+        {
+          "info": {
+            "name": "Remove Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/keys/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Remove Key\n\nRemoves a given key from a role.\n\nOnly users in the role or org owners can remove keys from a role.\nAdditionally, both the role's and the key's edit policy must permit the update."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

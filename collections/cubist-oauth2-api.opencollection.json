@@ -1,0 +1,228 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account OAuth2 API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth2",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Token refresh endpoint, compliant with OAuth.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Token refresh endpoint, compliant with OAuth.\n\nThe body content type can be either 'application/json' or 'application/x-www-form-urlencoded'.\n"
+        },
+        {
+          "info": {
+            "name": "Mint an OIDC ID token for Twitter",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oauth2/twitter",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "fetch_email",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mint an OIDC ID token for Twitter\n\nThis function acts identically to Twitter's [`oauth2/token`](https://developer.twitter.com/en/docs/authentication/api-reference/token) endpoint,\nbut extends the output with an `id_token`.\n\nThis `id_token` can then be used with any CubeSigner endpoint that requires an OIDC token.\nCallers must request *at least* scopes `tweet.read` and `users.read` during auth with twitter.\n\nBy default, the id token does not contain a confirmed email;\ncallers can request this fie"
+        },
+        {
+          "info": {
+            "name": "Login with OIDC",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Login with OIDC\n\nExchange an OIDC ID token (passed via the `Authorization` header) for a signer session.\n\nMFA is required when:\n- an MFA policy is explicitly attached to the user logging in\n(e.g., an org owner can do that at user creation time to require certain kind of MFA)\n- the user has at least 1 MFA factor configured"
+        },
+        {
+          "info": {
+            "name": "Initiate login via email token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/email-otp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate login via email token\n\nThis endpoint generates an OIDC token without a signature (of the form `header.payload.`), and sends the signature to the user's email.\nClient applications can reconstruct the token by concatenating the `partial_token` with the signature, producing a valid OIDC token of the form `header.payload.signature`\nThe token can then be used to authenticate the user.\n\n> [!IMPORTANT]\n> For this endpoint to succeed, the org must be configured to:\n> 1. Allow the issuer `https:"
+        },
+        {
+          "info": {
+            "name": "Initiate login via Sign-in With Ethereum (SIWE).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/siwe",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate login via Sign-in With Ethereum (SIWE).\n\nThis endpoint generates a challenge which can be answered (via the corresponding PATCH endpoint)\nto obtain an OIDC token. The OIDC token can then be exchanged for a user session via the standard\nOIDC auth route.\n\n> [!IMPORTANT]\n> For this endpoint to succeed, the org must be configured to:\n> Allow the issuer `https://shim.oauth2.cubist.dev/siwe` with the Org ID as the client ID"
+        },
+        {
+          "info": {
+            "name": "Complete login via Sign-in With Ethereum (SIWE)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/siwe",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Complete login via Sign-in With Ethereum (SIWE)\n\nIf the challenge (issued by the corresponding POST endpoint) is answered correctly, this endpoint\ngenerates an OIDC token that can then be exchanged for a user session via the standard OIDC auth route.\n\n> [!IMPORTANT]\n> For this endpoint to succeed, the org must be configured to:\n> Allow the issuer `https://shim.oauth2.cubist.dev/siwe` with the Org ID as the client ID"
+        },
+        {
+          "info": {
+            "name": "Initiate login via Sign-in With Solana (SIWS).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/siws",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate login via Sign-in With Solana (SIWS).\n\nThis endpoint generates a challenge which can be answered (via the corresponding PATCH endpoint)\nto obtain an OIDC token. The OIDC token can then be exchanged for a user session via the standard\nOIDC auth route.\n\n> [!IMPORTANT]\n> For this endpoint to succeed, the org must be configured to:\n> Allow the issuer `https://shim.oauth2.cubist.dev/siws` with the Org ID as the client ID"
+        },
+        {
+          "info": {
+            "name": "Complete login via Sign-in With Solana (SIWS)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/siws",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Complete login via Sign-in With Solana (SIWS)\n\nIf the challenge (issued by the corresponding POST endpoint) is answered correctly, this endpoint\ngenerates an OIDC token that can then be exchanged for a user session via the standard OIDC auth route.\n\n> [!IMPORTANT]\n> For this endpoint to succeed, the org must be configured to:\n> Allow the issuer `https://shim.oauth2.cubist.dev/siws` with the Org ID as the client ID"
+        },
+        {
+          "info": {
+            "name": "Allows a user to authenticate with the telegram API using the tgWebAppData value",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/oidc/telegram",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows a user to authenticate with the telegram API using the tgWebAppData value\nThe token has the following properties:\n- The `sub` field is the telegram user ID\n- The `iss` field depends on the chosen environment:\n- `https://shim.oauth2.cubist.dev/telegram/production` for the production environment\n- `https://shim.oauth2.cubist.dev/telegram/test` for the test environment\n- The `aud` field is the provided telegram bot ID\n- The `exp` field is derived from the `auth_date` field in the telegram da"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

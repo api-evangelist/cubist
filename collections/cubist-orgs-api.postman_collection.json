@@ -1,0 +1,915 @@
+{
+  "item": [
+    {
+      "id": "47202681-3e0f-46e4-b1ab-243a10b9f165",
+      "name": "Orgs",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fa562304-6a86-446f-b652-dc9294b44ca7",
+          "name": "List accessible organizations.",
+          "request": {
+            "name": "List accessible organizations.",
+            "description": {
+              "content": "List accessible organizations.\n\nUnauthenticated endpoint for retrieving all organizations accessible to a user.\nThis information is emailed to the provided email address.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "email",
+                "orgs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<string>",
+                  "description": "(Required) The email of the user"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "id": "2449660a-f3ce-49d7-a0d1-6ccda956a083",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "email",
+                    "orgs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "email",
+                      "value": "alice@example.com"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b40921b2-ce8c-4087-bf67-58c1b23cd3ed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "email",
+                    "orgs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "email",
+                      "value": "alice@example.com"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"StatusCodeWithMessage\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "62037e8d-76e4-407b-9104-a9c37e583e96",
+          "name": "Get Org",
+          "request": {
+            "name": "Get Org",
+            "description": {
+              "content": "Get Org\n\nRetrieves information about an organization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2d030741-3c46-404e-9ccf-722199793188",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"org_id\": \"Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a\",\n  \"access_model\": \"Org\",\n  \"enabled\": true,\n  \"last_unstake\": \"TODO\",\n  \"last_unstake_day_count\": 1971,\n  \"kwk_id\": \"mrk-fce09525e81587d23520f11e07e2e9d9\",\n  \"user_export_delay\": 82,\n  \"user_export_window\": 8656,\n  \"totp_failure_limit\": 6244,\n  \"alien_login_requirement\": \"required\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"EmailOtp#27267722\",\n      \"CubeSigner\"\n    ]\n  },\n  \"key_export_requirement\": \"none\",\n  \"member_login_requirement\": \"if_registered\",\n  \"created\": 6810,\n  \"last_modified\": 3271,\n  \"version\": 8655,\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"All\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": 1490\n  },\n  \"metadata\": {},\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"symbol\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"decimals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"Sso\",\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"string\",\n      \"string\"\n    ],\n    \"subscribed_alerts\": [\n      \"BabylonEotsConcurrentSigning\",\n      \"PolicyChanges\"\n    ],\n    \"login_notifications\": false,\n    \"new_device\": false,\n    \"pending_approvals\": true\n  },\n  \"ext_data\": {\n    \"alien_key_count_threshold\": 8536,\n    \"aliens_can_update_key_policy\": false,\n    \"created\": 6479,\n    \"last_modified\": 4007,\n    \"version\": 6837\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": 6568\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": 8700,\n      \"window\": 840\n    },\n    \"users\": [\n      \"Alien\",\n      \"Owner\"\n    ]\n  },\n  \"key_import_key\": \"string\",\n  \"metrics_enabled\": false,\n  \"name\": \"my_org_name\",\n  \"notification_endpoints\": [\n    {\n      \"arn\": \"arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000001\",\n      \"config\": {\n        \"url\": \"https://example.com/endpoint1\"\n      },\n      \"status\": \"Confirmed\"\n    },\n    {\n      \"arn\": \"arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000002\",\n      \"config\": {\n        \"filter\": {\n          \"OneOf\": [\n            \"Eth2ConcurrentAttestationSigning\",\n            \"Eth2ConcurrentBlockSigning\"\n          ]\n        },\n        \"url\": \"https://example.com/endpoint2\"\n      },\n      \"status\": \"Pending\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"Member\",\n      \"Owner\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ],\n    \"org_secrets_limit\": 2212\n  },\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": \"0x0000000000000000000000000000000000000000\"\n    }\n  ],\n  \"user_export_disabled\": true,\n  \"webapp_enabled\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d44cd66d-3a1e-430a-9e73-f565d2b557d7",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0c958322-bd7c-40b1-92cf-7473fc3f9067",
+          "name": "Update Org",
+          "request": {
+            "name": "Update Org",
+            "description": {
+              "content": "Update Org\n\nUpdate organization attributes (enabled flag, name, and policies).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ],\n    \"key_1\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"<string>\",\n        \"rpc_url\": \"<string>\",\n        \"name\": \"<string>\",\n        \"native_currency\": {\n          \"name\": \"<string>\",\n          \"symbol\": \"<string>\",\n          \"decimals\": \"<integer>\"\n        }\n      },\n      {\n        \"chain_id\": \"<string>\",\n        \"rpc_url\": \"<string>\",\n        \"name\": \"<string>\",\n        \"native_currency\": {\n          \"name\": \"<string>\",\n          \"symbol\": \"<string>\",\n          \"decimals\": \"<integer>\"\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"allowed_mfa_types\": [\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\",\n        \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n      ],\n      \"count\": \"<integer>\",\n      \"lifetime\": \"<long>\",\n      \"num_auth_factors\": \"<integer>\",\n      \"request_comparer\": \"<string>\",\n      \"restricted_operations\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"time_delay\": \"<long>\"\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"ext_props\": {\n    \"alien_key_count_threshold\": \"<integer>\",\n    \"aliens_can_update_key_policy\": \"<boolean>\",\n    \"version\": \"<long>\"\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"notification_endpoints\": [\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    },\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"require_scope_ceiling\": \"<boolean>\",\n  \"totp_failure_limit\": \"<integer>\",\n  \"user_export_delay\": \"<long>\",\n  \"user_export_disabled\": \"<boolean>\",\n  \"user_export_window\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9dfb9c61-ef5b-4ef4-a475-115e0f99ab26",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": \"Ether\",\n          \"symbol\": \"ETH\",\n          \"decimals\": \"<integer>\"\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"ext_props\": {\n    \"alien_key_count_threshold\": \"<integer>\",\n    \"aliens_can_update_key_policy\": \"<boolean>\",\n    \"version\": \"<long>\"\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"notification_endpoints\": [\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    },\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    },\n    {\n      \"OriginAllowlist\": [\n        \"https://example.com\"\n      ]\n    },\n    {\n      \"SourceIpAllowlist\": [\n        \"10.1.2.3/8\",\n        \"169.254.17.1/16\"\n      ]\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ]\n  },\n  \"require_scope_ceiling\": \"<boolean>\",\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": [\n        \"0x0000000000000000000000000000000000000000\"\n      ]\n    }\n  ],\n  \"totp_failure_limit\": \"<integer>\",\n  \"user_export_delay\": \"<long>\",\n  \"user_export_disabled\": \"<boolean>\",\n  \"user_export_window\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"org_id\": \"Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a\",\n  \"version\": 2146,\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ],\n    \"key_1\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ],\n    \"key_2\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": \"Ether\",\n          \"symbol\": \"ETH\",\n          \"decimals\": \"<integer>\"\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"enabled\": false,\n  \"ext_data\": {\n    \"alien_key_count_threshold\": 9574,\n    \"aliens_can_update_key_policy\": true,\n    \"created\": \"<long>\",\n    \"last_modified\": \"<long>\",\n    \"version\": 3789\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"name\": \"my_org_name\",\n  \"notification_endpoints\": [\n    {\n      \"url\": \"https://example.com/endpoint\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    },\n    {\n      \"OriginAllowlist\": [\n        \"https://example.com\"\n      ]\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ],\n    \"org_secrets_limit\": 5970\n  },\n  \"require_scope_ceiling\": false,\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": \"0x0000000000000000000000000000000000000000\"\n    }\n  ],\n  \"totp_failure_limit\": 7627,\n  \"user_export_delay\": 4327,\n  \"user_export_disabled\": false,\n  \"user_export_window\": 6325\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d856ddf3-d180-4aac-9a0d-cf8c230d3c4e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": \"Ether\",\n          \"symbol\": \"ETH\",\n          \"decimals\": \"<integer>\"\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"ext_props\": {\n    \"alien_key_count_threshold\": \"<integer>\",\n    \"aliens_can_update_key_policy\": \"<boolean>\",\n    \"version\": \"<long>\"\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"notification_endpoints\": [\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    },\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    },\n    {\n      \"OriginAllowlist\": [\n        \"https://example.com\"\n      ]\n    },\n    {\n      \"SourceIpAllowlist\": [\n        \"10.1.2.3/8\",\n        \"169.254.17.1/16\"\n      ]\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ]\n  },\n  \"require_scope_ceiling\": \"<boolean>\",\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": [\n        \"0x0000000000000000000000000000000000000000\"\n      ]\n    }\n  ],\n  \"totp_failure_limit\": \"<integer>\",\n  \"user_export_delay\": \"<long>\",\n  \"user_export_disabled\": \"<boolean>\",\n  \"user_export_window\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"JrpcError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "42072618-2bf2-43da-9321-961c830ac2e3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": \"Ether\",\n          \"symbol\": \"ETH\",\n          \"decimals\": \"<integer>\"\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"ext_props\": {\n    \"alien_key_count_threshold\": \"<integer>\",\n    \"aliens_can_update_key_policy\": \"<boolean>\",\n    \"version\": \"<long>\"\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"notification_endpoints\": [\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    },\n    {\n      \"url\": \"<string>\",\n      \"filter\": \"<string>\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    },\n    {\n      \"OriginAllowlist\": [\n        \"https://example.com\"\n      ]\n    },\n    {\n      \"SourceIpAllowlist\": [\n        \"10.1.2.3/8\",\n        \"169.254.17.1/16\"\n      ]\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ]\n  },\n  \"require_scope_ceiling\": \"<boolean>\",\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": [\n        \"0x0000000000000000000000000000000000000000\"\n      ]\n    }\n  ],\n  \"totp_failure_limit\": \"<integer>\",\n  \"user_export_delay\": \"<long>\",\n  \"user_export_disabled\": \"<boolean>\",\n  \"user_export_window\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c8e3f03d-4576-464f-a17b-e5ca1b5e258a",
+          "name": "Public Org Info",
+          "request": {
+            "name": "Public Org Info",
+            "description": {
+              "content": "Public Org Info\n\nUnauthenticated endpoint that returns publicly-available information about an organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "info"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "id": "409ba038-9352-40c5-ae0a-729c72dffb09",
+              "name": "Public information about an organization.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"org_id\": \"Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a\",\n  \"passkey_login_enabled\": true,\n  \"oidc_issuers\": [\n    {\n      \"issuer\": \"string\",\n      \"audiences\": [\n        \"string\",\n        \"string\"\n      ],\n      \"users\": [\n        \"<string>\"\n      ],\n      \"nickname\": \"string\"\n    },\n    {\n      \"issuer\": \"string\",\n      \"audiences\": [\n        \"string\",\n        \"string\"\n      ],\n      \"users\": [\n        \"<string>\"\n      ],\n      \"nickname\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "622a2556-db22-4e77-937e-f43b0cb4a685",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a8849624-46f4-4913-ba9d-c475473f0242",
+          "name": "Create Org",
+          "request": {
+            "name": "Create Org",
+            "description": {
+              "content": "Create Org\n\nCreates a new organization. The new org is a child of the\ncurrent org and inherits its key-export policy. The new org\nis created with one owner, the caller of this API.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "orgs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"metrics_enabled\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e4b9ca96-640d-4206-8d4a-0af575533ea2",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "orgs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"My Cool Org\",\n  \"metrics_enabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"org_id\": \"Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a\",\n  \"access_model\": \"User\",\n  \"enabled\": true,\n  \"last_unstake\": \"TODO\",\n  \"last_unstake_day_count\": 3974,\n  \"kwk_id\": \"mrk-fce09525e81587d23520f11e07e2e9d9\",\n  \"user_export_delay\": 1967,\n  \"user_export_window\": 2093,\n  \"totp_failure_limit\": 6727,\n  \"alien_login_requirement\": \"<string>\",\n  \"allowed_mfa_types\": {\n    \"key_0\": [\n      \"<'CubeSigner' | 'Fido' | `FidoKey#${string}` | 'Totp' | 'EmailOtp' | `EmailOtp#${number}`>\"\n    ]\n  },\n  \"key_export_requirement\": \"<string>\",\n  \"member_login_requirement\": \"<string>\",\n  \"created\": \"<long>\",\n  \"last_modified\": \"<long>\",\n  \"version\": 5211,\n  \"edit_policy\": {\n    \"applies_to_scopes\": \"<string>\",\n    \"mfa\": {\n      \"allowed_approvers\": [\n        \"User#fabc3f88-04e0-471b-9657-0ae12a3cd73e\",\n        \"User#d796c369-9974-473b-ab9e-e4a2418d2d07\"\n      ],\n      \"count\": 2,\n      \"lifetime\": 900\n    },\n    \"time_lock_until\": \"<long>\"\n  },\n  \"metadata\": {},\n  \"custom_chains\": {\n    \"evm\": [\n      {\n        \"chain_id\": \"0x01\",\n        \"rpc_url\": \"https://ethereum-rpc.publicnode.com\",\n        \"name\": \"Ethereum Mainnet\",\n        \"native_currency\": {\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"symbol\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"decimals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ]\n  },\n  \"default_invite_kind\": \"<string>\",\n  \"email_preferences\": {\n    \"alert_recipients\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"subscribed_alerts\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"login_notifications\": \"<boolean>\",\n    \"new_device\": \"<boolean>\",\n    \"pending_approvals\": \"<boolean>\"\n  },\n  \"ext_data\": {\n    \"alien_key_count_threshold\": 5211,\n    \"aliens_can_update_key_policy\": false,\n    \"created\": \"<long>\",\n    \"last_modified\": \"<long>\",\n    \"version\": 8954\n  },\n  \"historical_data_configuration\": {\n    \"tx\": {\n      \"lifetime\": \"<long>\"\n    }\n  },\n  \"idp_configuration\": {\n    \"throttle\": {\n      \"threshold\": \"<integer>\",\n      \"window\": \"<long>\"\n    },\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"key_import_key\": \"string\",\n  \"metrics_enabled\": false,\n  \"name\": \"my_org_name\",\n  \"notification_endpoints\": [\n    {\n      \"arn\": \"arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000001\",\n      \"config\": {\n        \"url\": \"https://example.com/endpoint1\"\n      },\n      \"status\": \"Confirmed\"\n    },\n    {\n      \"arn\": \"arn:aws:sns:us-east-1:012345678901:OrgEventsTopic:12345678-0000-0000-0000-000000000002\",\n      \"config\": {\n        \"filter\": {\n          \"OneOf\": [\n            \"Eth2ConcurrentAttestationSigning\",\n            \"Eth2ConcurrentBlockSigning\"\n          ]\n        },\n        \"url\": \"https://example.com/endpoint2\"\n      },\n      \"status\": \"Pending\"\n    }\n  ],\n  \"passkey_configuration\": {\n    \"users\": [\n      \"<string>\"\n    ]\n  },\n  \"policy\": [\n    {\n      \"MaxDailyUnstake\": 5\n    }\n  ],\n  \"policy_engine_configuration\": {\n    \"allowed_http_authorities\": [\n      \"cubist.dev:443\"\n    ],\n    \"org_secrets_limit\": 6063\n  },\n  \"sign_policy\": [\n    {\n      \"TxReceiver\": \"0x0000000000000000000000000000000000000000\"\n    }\n  ],\n  \"user_export_disabled\": true,\n  \"webapp_enabled\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "02386d17-e5db-48bb-9756-e1f5caff957d",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "orgs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"My Cool Org\",\n  \"metrics_enabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"UnhandledError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gamma.signer.cubist.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3d4346a7-8518-4485-b838-1dc4538b1802",
+    "name": "CubeSigner Account Orgs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The CubeSigner management and signing service.\n\nContact Support:\n Name: Cubist Inc.\n Email: hello@cubist.dev",
+      "type": "text/plain"
+    }
+  }
+}

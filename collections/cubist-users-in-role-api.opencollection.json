@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Users In Role API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users In Role",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add User",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/add_user/:user_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "user_id",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired User"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Add User\n\nAdds an existing user to an existing role.\n\nOnly users in the role or org owners can add users to a role.\nAdditionally, the role's edit policy (if set) must permit the update."
+        },
+        {
+          "info": {
+            "name": "Remove User",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/roles/:role_id/users/:user_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role_id",
+                "value": "Role#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Role"
+              },
+              {
+                "name": "user_id",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired User"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Remove User\n\nRemoves an existing user from an existing role.\n\nOnly users in the role or org owners can remove users from a role.\nAdditionally, the role's edit policy (if set) must permit the update."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,180 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Identity API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Identity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List associated OIDC identities with the current user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List associated OIDC identities with the current user.\n"
+        },
+        {
+          "info": {
+            "name": "Associate an OIDC identity with the current user in org <session.org>.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Associate an OIDC identity with the current user in org <session.org>.\n\nAlien users are allowed to call this endpoint, but for them MFA is required\n(unless they are registering an email-otp identity matching their current email);\nadditionally, limits may apply to how many identities that may register.\n"
+        },
+        {
+          "info": {
+            "name": "Remove an OIDC identity from the current user's account in org <session.org>.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Remove an OIDC identity from the current user's account in org <session.org>.\n"
+        },
+        {
+          "info": {
+            "name": "Create [IdentityProof] from CubeSigner user session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity/prove",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create [IdentityProof] from CubeSigner user session\n\nThis route can be used to prove to another party that a user has a\nvalid CubeSigner session.\n\nClients are intended to call this route and pass the returned evidence\nto another service which will verify it by making a request to `/v0/org/<org_id>/identity/verify`."
+        },
+        {
+          "info": {
+            "name": "Create [IdentityProof] from OIDC token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity/prove/oidc",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create [IdentityProof] from OIDC token\n\nExchange an OIDC ID token (passed via the `Authorization` header) for a proof of authentication.\n\nThis route can be used to prove to another party that a user has met the\nauthentication requirements (allowed issuers & audiences) for CubeSigner\nwithout leaking their credentials.\n\nClients are intended to call this route and pass the returned evidence to another service\nwhich will verify it by making a request to `/v0/org/<org_id>/identity/verify`."
+        },
+        {
+          "info": {
+            "name": "Verify identity proof",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/identity/verify",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Verify identity proof\n\nAllows a third-party to validate proof of authentication.\n\nWhen a third-party is provided an [IdentityProof] object, they must check its\nveracity by calling this endpoint"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

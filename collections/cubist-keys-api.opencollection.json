@@ -1,0 +1,505 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Keys API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Derive Key From Long-Lived Mnemonic",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/derive_key",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Derive Key From Long-Lived Mnemonic\n\nDerives a key of a specified type using a supplied derivation path and an\nexisting long-lived mnemonic."
+        },
+        {
+          "info": {
+            "name": "Derive Key From New Or Existing Long-Lived Mnemonic",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/derive_keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Derive Key From New Or Existing Long-Lived Mnemonic\n\nUses either a new or existing long-lived mnemonic to derive keys of\none or more specified types via specified derivation paths."
+        },
+        {
+          "info": {
+            "name": "Get an Org-Export Ciphertext",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/export/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get an Org-Export Ciphertext\n\nReturns the export ciphertext associated with the provided key-id.\nIn order to use this API, you must be an org owner and your org must\nbe configured for org export and for API-based export delivery."
+        },
+        {
+          "info": {
+            "name": "Create Key-Import Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/import_key",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Key-Import Key\n\nGenerate an ephemeral key that a client can use for key-import encryption."
+        },
+        {
+          "info": {
+            "name": "Import Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/import_key",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Import Key\n\nSecurely imports an existing key using a previously generated key-import key."
+        },
+        {
+          "info": {
+            "name": "List Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "key_type",
+                "value": "SecpEthAddr",
+                "type": "query",
+                "description": "Filter by key type"
+              },
+              {
+                "name": "key_owner",
+                "value": "User#5269c579-b4f9-4620-9e90-e46a5a0ffb4d",
+                "type": "query",
+                "description": "Filter by key owner"
+              },
+              {
+                "name": "search",
+                "value": "some value",
+                "type": "query",
+                "description": "Search key metadata"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Keys\n\nGets the list of accessible keys in a given org (to org owner, all org keys\nare accessible; to members, only their own keys are accessible).\n\nIf a search condition is, the result will contain only the keys whose either\nmaterial ID or metadata contain the search condition string.\n\nNOTE that if pagination is used and a page limit is set, the returned result\nset may contain either FEWER or MORE elements than the requested page limit."
+        },
+        {
+          "info": {
+            "name": "Create Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Key\n\nCreates one or more new keys of the specified type."
+        },
+        {
+          "info": {
+            "name": "Get Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Key\n\nReturns the properties of a key."
+        },
+        {
+          "info": {
+            "name": "Update Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Key\n\nEnable or disable a key.  The user must be the owner of the key or\norganization to perform this action.\n\nFor each requested update, the session must have the corresponding 'manage:key:update:_' scope;\nif no updates are requested, the session must have 'manage:key:get'."
+        },
+        {
+          "info": {
+            "name": "Delete Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete Key\n\nDeletes a key specified by its ID.\n\nOnly the key owner and org owners are allowed to delete keys.\nAdditionally, the role's edit policy (if set) must permit the update."
+        },
+        {
+          "info": {
+            "name": "Attest to Key Properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id/attest",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              },
+              {
+                "name": "include_roles",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Attest to Key Properties\n\nThe response is a JWT whose claims are the key properties."
+        },
+        {
+          "info": {
+            "name": "List Key Roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id/roles",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Key Roles\n\nGet all roles the key is in"
+        },
+        {
+          "info": {
+            "name": "List Historical Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_id/tx",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Key"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Historical Transactions\n\nReturns a sorted, paginated list of transactions signed by a given key,\nordered from most recent first."
+        },
+        {
+          "info": {
+            "name": "Get Key by Material ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/keys/:key_type/:material_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_type",
+                "value": "",
+                "type": "path",
+                "description": "Type of the key to look up"
+              },
+              {
+                "name": "material_id",
+                "value": "",
+                "type": "path",
+                "description": "Material ID of the key to look up"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Key by Material ID\n\nReturns the properties of a key."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

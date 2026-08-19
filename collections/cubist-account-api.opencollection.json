@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Request Password Reset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/idp/password_reset",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Request Password Reset\n\nThis endpoint generates an OIDC token without a signature (of the form `{header}.{payload}.`),\nand sends the signature to the user's email. Client applications can reconstruct the token\nby concatenating the `{header}.{payload}.` with the signature, producing a valid OIDC token of\nthe form `{header}.{payload}.{signature}`. The token can then be used to authenticate the user\nwhen performing the `idp_password_reset_confirm` request."
+        },
+        {
+          "info": {
+            "name": "Confirm Password Reset",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/idp/password_reset",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirm Password Reset\n\nThis endpoint allows IDP users to reset their password\nusing a token they have received in their email."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

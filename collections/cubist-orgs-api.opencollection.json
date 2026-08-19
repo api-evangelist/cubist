@@ -1,0 +1,139 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Orgs API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orgs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List accessible organizations.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/email/orgs",
+            "params": [
+              {
+                "name": "email",
+                "value": "alice@example.com",
+                "type": "query",
+                "description": "The email of the user"
+              }
+            ]
+          },
+          "docs": "List accessible organizations.\n\nUnauthenticated endpoint for retrieving all organizations accessible to a user.\nThis information is emailed to the provided email address.\n"
+        },
+        {
+          "info": {
+            "name": "Get Org",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Org\n\nRetrieves information about an organization."
+        },
+        {
+          "info": {
+            "name": "Update Org",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Org\n\nUpdate organization attributes (enabled flag, name, and policies)."
+        },
+        {
+          "info": {
+            "name": "Public Org Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/info",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ]
+          },
+          "docs": "Public Org Info\n\nUnauthenticated endpoint that returns publicly-available information about an organization.\n"
+        },
+        {
+          "info": {
+            "name": "Create Org",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/orgs",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Org\n\nCreates a new organization. The new org is a child of the\ncurrent org and inherits its key-export policy. The new org\nis created with one owner, the caller of this API."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

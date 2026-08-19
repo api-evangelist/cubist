@@ -1,0 +1,304 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account MFA API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MFA",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Pending MFA Requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Pending MFA Requests\n\nRetrieves and returns all pending MFA requests that are accessible to the current session,\ni.e., those created by the current session identity plus those in which the current user\nis listed as an approver\n\nNOTE that if pagination is used and a page limit is set, the returned result\nset may contain either FEWER or MORE elements than the requested page limit."
+        },
+        {
+          "info": {
+            "name": "Get Pending MFA Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Pending MFA Request\n\nRetrieves and returns a pending MFA request by its id."
+        },
+        {
+          "info": {
+            "name": "Approve or Reject MFA Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              },
+              {
+                "name": "mfa_vote",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Approve or Reject MFA Request\n\nApprove or reject request after logging in with CubeSigner.\n\nIf approving, adds the currently-logged user as an approver\nof a pending MFA request of the [Status::RequiredApprovers] kind. If the required number of\napprovers is reached, the MFA request is approved; the confirmation receipt can be used to\nresume the original HTTP request.\n\nIf rejecting, immediately deletes the pending MFA request."
+        },
+        {
+          "info": {
+            "name": "Initiate an Email OTP MFA Approval/Rejection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id/email",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              },
+              {
+                "name": "mfa_vote",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate an Email OTP MFA Approval/Rejection\n\nInitiates the approval/rejection process of an MFA Request using Email OTP."
+        },
+        {
+          "info": {
+            "name": "Finalize a Email OTP MFA Approval/Rejection.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id/email",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize a Email OTP MFA Approval/Rejection.\n\nThe request should contain the full JWT obtained by concatenating the\npartial token returned by the `mfa_email_init` endpoint and the signature\nemailed to the user issuing the request.\n\nIf approving, adds an approver to a pending MFA request.\nIf the required number of approvers is reached, the MFA request is approved;\nthe confirmation receipt can be used to resume the original HTTP request.\n\nIf rejecting, immediately deletes the pending MFA request."
+        },
+        {
+          "info": {
+            "name": "Initiate a FIDO MFA Approval/Rejection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id/fido",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate a FIDO MFA Approval/Rejection\n\nInitiates the approval/rejection process of an MFA Request using FIDO."
+        },
+        {
+          "info": {
+            "name": "Finalize a FIDO MFA Approval/Rejection",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id/fido",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              },
+              {
+                "name": "mfa_vote",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize a FIDO MFA Approval/Rejection\n\nIf approving, adds an approver to a pending MFA request.\nIf the required number of approvers is reached, the MFA request is approved;\nthe confirmation receipt can be used to resume the original HTTP request.\n\nIf rejecting, immediately deletes the pending MFA request."
+        },
+        {
+          "info": {
+            "name": "Approve/Reject a TOTP MFA Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mfa/:mfa_id/totp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "mfa_id",
+                "value": "MfaRequest#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired MfaRequest"
+              },
+              {
+                "name": "mfa_vote",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Approve/Reject a TOTP MFA Request\n\nIf approving, adds the current user as approver to a pending MFA request by\nproviding TOTP code. If the required number of approvers is reached, the MFA request is\napproved; the confirmation receipt can be used to resume the original HTTP request.\n\nIf rejecting, immediately deletes the pending MFA request."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

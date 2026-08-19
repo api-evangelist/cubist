@@ -1,0 +1,1357 @@
+{
+  "item": [
+    {
+      "id": "7ba3a8a2-30bb-4f9c-af22-9412371b4bd5",
+      "name": "MMI",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "89946894-a1db-4e3f-ab3e-20e5fd0599e8",
+          "name": "JWKS endpoint for MMI",
+          "request": {
+            "name": "JWKS endpoint for MMI",
+            "description": {
+              "content": "JWKS endpoint for MMI\n\nReturns the public key used to sign JSON Web Tokens for MMI.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "mmi",
+                "v3",
+                ".well-known",
+                "jwks.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "id": "6d878c0d-9e6b-45b4-b874-bde3b975c914",
+              "name": "A JSON Web Key set describing the key used to sign JSON Web Tokens",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "mmi",
+                    "v3",
+                    ".well-known",
+                    "jwks.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"keys\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4bd1d0d7-2f61-4f3a-8ff0-5c43ecfe5042",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "mmi",
+                    "v3",
+                    ".well-known",
+                    "jwks.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"StatusCodeWithMessage\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7b7fd3d-9ce1-4063-8b1c-327035cb02aa",
+          "name": "MMI JSON-RPC endpoint",
+          "request": {
+            "name": "MMI JSON-RPC endpoint",
+            "description": {
+              "content": "MMI JSON-RPC endpoint\n\nHandler for all [MMI JSON-RPC](https://docs.metamask-institutional.io/custodian-integration/integration-docs/api/methods)\nrequests.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "mmi",
+                "v3",
+                "json-rpc"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": {},\n  \"params\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "339ad379-4cfd-4592-b219-ac53fc03f909",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "mmi",
+                    "v3",
+                    "json-rpc"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": {},\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"string\",\n  \"error\": {\n    \"code\": 2502,\n    \"message\": \"string\",\n    \"data\": {}\n  },\n  \"id\": {},\n  \"result\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7806fe7-d40d-44a1-803b-251a0d2acec9",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "mmi",
+                    "v3",
+                    "json-rpc"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": {},\n  \"params\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "20638895-8281-4b68-a4a7-4e9ed13e11fd",
+          "name": "List pending MMI requests",
+          "request": {
+            "name": "List pending MMI requests",
+            "description": {
+              "content": "List pending MMI requests\n\nRetrieves and returns all pending MMI messages accessible to the current session identity, i.e.,\n- a role session can access only the messages created by that role\n- a user session can access the messages created by either that user or any role which the user is a member of",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "mmi",
+                "v3",
+                "messages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "85e577f9-6885-4f73-a428-e078d7c2ff91",
+              "name": "All pending MMI requests created by the current user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pending_messages\": [\n    {\n      \"created_at\": 3167,\n      \"expires_at\": 7090,\n      \"id\": \"string\",\n      \"identity\": \"string\",\n      \"metadata\": {\n        \"chainId\": \"string\",\n        \"custodianPublishesTransaction\": false,\n        \"note\": \"string\",\n        \"originUrl\": \"string\",\n        \"rpcUrl\": \"string\",\n        \"transactionCategory\": \"string\"\n      },\n      \"signedMessage\": {\n        \"id\": \"string\",\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"signatureVersion\": \"eip_712_v4\",\n        \"status\": {\n          \"finished\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"signed\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"success\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"displayText\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"reason\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"submitted\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"signature\": \"string\"\n      },\n      \"transaction\": {\n        \"id\": \"string\",\n        \"status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"hash\": \"string\",\n        \"nonce\": \"string\",\n        \"signedRawTransaction\": \"string\"\n      },\n      \"message_eip191\": {\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"message\": \"string\"\n      },\n      \"message_eip712\": {\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"data\": {\n          \"domain\": {\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"salt\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"primaryType\": \"string\",\n          \"message\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"types\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_1\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"version\": \"v4\"\n      },\n      \"message_tx\": {\n        \"data\": \"0x01\",\n        \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n        \"gas\": \"0x1\",\n        \"gasPrice\": \"0x1\",\n        \"nonce\": \"0x1\",\n        \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n        \"type\": \"0x00\",\n        \"value\": \"0x1\"\n      }\n    },\n    {\n      \"created_at\": 3451,\n      \"expires_at\": 5332,\n      \"id\": \"string\",\n      \"identity\": \"string\",\n      \"metadata\": {\n        \"chainId\": \"string\",\n        \"custodianPublishesTransaction\": true,\n        \"note\": \"string\",\n        \"originUrl\": \"string\",\n        \"rpcUrl\": \"string\",\n        \"transactionCategory\": \"string\"\n      },\n      \"signedMessage\": {\n        \"id\": \"string\",\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"signatureVersion\": \"eip_712_v3\",\n        \"status\": {\n          \"finished\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"signed\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"success\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"displayText\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"reason\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"submitted\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"signature\": \"string\"\n      },\n      \"transaction\": {\n        \"id\": \"string\",\n        \"status\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"hash\": \"string\",\n        \"nonce\": \"string\",\n        \"signedRawTransaction\": \"string\"\n      },\n      \"message_eip191\": {\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"message\": \"string\"\n      },\n      \"message_eip712\": {\n        \"address\": \"0x0123456789012345678901234567890123456789\",\n        \"data\": {\n          \"domain\": {\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"salt\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"primaryType\": \"string\",\n          \"message\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"types\": {\n            \"key_0\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_1\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"key_2\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"version\": \"v3\"\n      },\n      \"message_tx\": {\n        \"data\": \"0x01\",\n        \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n        \"gas\": \"0x1\",\n        \"gasPrice\": \"0x1\",\n        \"nonce\": \"0x1\",\n        \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n        \"type\": \"0x00\",\n        \"value\": \"0x1\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b96720ef-f26f-4597-8010-30af468603ce",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "24ef2959-f563-4fd4-a574-68e812627d0d",
+          "name": "Get an MMI request",
+          "request": {
+            "name": "Get an MMI request",
+            "description": {
+              "content": "Get an MMI request\n\nRetrieves a pending MMI request by its ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "mmi",
+                "v3",
+                "messages",
+                ":msg_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "msg_id",
+                  "description": "(Required) Name or ID of the desired PendingMessage"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f57af904-5ed8-4edb-994c-9e8c4d2c7b53",
+              "name": "Extended information about an existing MMI request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"created_at\": 8653,\n  \"expires_at\": 6478,\n  \"id\": \"string\",\n  \"identity\": \"string\",\n  \"metadata\": {\n    \"chainId\": \"string\",\n    \"custodianPublishesTransaction\": false,\n    \"note\": \"string\",\n    \"originUrl\": \"string\",\n    \"rpcUrl\": \"string\",\n    \"transactionCategory\": \"string\"\n  },\n  \"signedMessage\": {\n    \"id\": \"string\",\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"signatureVersion\": \"eip_712_v4\",\n    \"status\": {\n      \"finished\": false,\n      \"signed\": false,\n      \"success\": false,\n      \"displayText\": \"string\",\n      \"reason\": \"string\",\n      \"submitted\": false\n    },\n    \"signature\": \"string\"\n  },\n  \"transaction\": {\n    \"id\": \"string\",\n    \"status\": {\n      \"finished\": false,\n      \"signed\": true,\n      \"success\": false,\n      \"displayText\": \"string\",\n      \"reason\": \"string\",\n      \"submitted\": false\n    },\n    \"type\": \"0x00\",\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"value\": \"0x1\",\n    \"hash\": \"string\",\n    \"signedRawTransaction\": \"string\"\n  },\n  \"message_eip191\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"message\": \"string\"\n  },\n  \"message_eip712\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"0x1\",\n        \"name\": \"Ether Mail\",\n        \"salt\": \"0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5\",\n        \"verifyingContract\": \"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\n        \"version\": \"1\"\n      },\n      \"primaryType\": \"string\",\n      \"message\": {\n        \"key_0\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ]\n      }\n    },\n    \"version\": \"v3\"\n  },\n  \"message_tx\": {\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"type\": \"0x00\",\n    \"value\": \"0x1\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbda8a6e-e01c-49e7-b535-d7def0eebcc3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "932d360c-97a3-4441-9b7f-84d55eb4f91a",
+          "name": "Delete an MMI request",
+          "request": {
+            "name": "Delete an MMI request",
+            "description": {
+              "content": "Delete an MMI request\n\nRejects an existing MMI request and then deletes it from the database.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "mmi",
+                "v3",
+                "messages",
+                ":msg_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "msg_id",
+                  "description": "(Required) Name or ID of the desired PendingMessage"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0646a1b0-3343-4a83-b5ca-d4d5c0da4ea3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ac747a7-d282-4974-b456-90e31461b4a9",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8125d3ab-6de9-4b63-9ded-3d1066674ebe",
+          "name": "Reject an MMI request",
+          "request": {
+            "name": "Reject an MMI request",
+            "description": {
+              "content": "Reject an MMI request\n\nRejects a pending MMI request. The record of the MMI request is kept in\nthe database until it expires or is explicitly deleted.\n\nReturns the updated request information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "mmi",
+                "v3",
+                "messages",
+                ":msg_id",
+                "reject"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "msg_id",
+                  "description": "(Required) Name or ID of the desired PendingMessage"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f7606684-9627-4144-a3b9-6d8d7bc05345",
+              "name": "Extended information about an existing MMI request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id",
+                    "reject"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"created_at\": 8082,\n  \"expires_at\": 5776,\n  \"id\": \"string\",\n  \"identity\": \"string\",\n  \"metadata\": {\n    \"chainId\": \"string\",\n    \"custodianPublishesTransaction\": false,\n    \"note\": \"string\",\n    \"originUrl\": \"string\",\n    \"rpcUrl\": \"string\",\n    \"transactionCategory\": \"string\"\n  },\n  \"signedMessage\": {\n    \"id\": \"string\",\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"signatureVersion\": \"eip_712_v4\",\n    \"status\": {\n      \"finished\": false,\n      \"signed\": true,\n      \"success\": false,\n      \"displayText\": \"string\",\n      \"reason\": \"string\",\n      \"submitted\": true\n    },\n    \"signature\": \"string\"\n  },\n  \"transaction\": {\n    \"id\": \"string\",\n    \"status\": {\n      \"finished\": true,\n      \"signed\": true,\n      \"success\": false,\n      \"displayText\": \"string\",\n      \"reason\": \"string\",\n      \"submitted\": false\n    },\n    \"type\": \"0x00\",\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"value\": \"0x1\",\n    \"hash\": \"string\",\n    \"signedRawTransaction\": \"string\"\n  },\n  \"message_eip191\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"message\": \"string\"\n  },\n  \"message_eip712\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"0x1\",\n        \"name\": \"Ether Mail\",\n        \"salt\": \"0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5\",\n        \"verifyingContract\": \"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\n        \"version\": \"1\"\n      },\n      \"primaryType\": \"string\",\n      \"message\": {\n        \"key_0\": {},\n        \"key_1\": {},\n        \"key_2\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ]\n      }\n    },\n    \"version\": \"v4\"\n  },\n  \"message_tx\": {\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"type\": \"0x00\",\n    \"value\": \"0x1\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1218ea7-ff17-4f7e-994d-ad30857d8d59",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id",
+                    "reject"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6619deda-b799-42c2-94b3-1ed6809332cf",
+          "name": "Approve and sign an MMI request",
+          "request": {
+            "name": "Approve and sign an MMI request",
+            "description": {
+              "content": "Approve and sign an MMI request\n\nSigns a pending request that was generated through the MMI JSON RPC endpoint.\nThe signature is stored with the pending message and the updated request info is returned.\n\nThe message should be associated with the organization this is called from,\nand the user should be the owner of the corresponding message's key.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "org",
+                ":org_id",
+                "mmi",
+                "v3",
+                "messages",
+                ":msg_id",
+                "sign"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Name or ID of the desired Org"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "msg_id",
+                  "description": "(Required) Name or ID of the desired PendingMessage"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"created_at\": \"<long>\",\n  \"expires_at\": \"<long>\",\n  \"id\": \"<string>\",\n  \"identity\": \"<string>\",\n  \"metadata\": {\n    \"chainId\": \"<string>\",\n    \"custodianPublishesTransaction\": \"<boolean>\",\n    \"note\": \"<string>\",\n    \"originUrl\": \"<string>\",\n    \"rpcUrl\": \"<string>\",\n    \"transactionCategory\": \"<string>\"\n  },\n  \"signedMessage\": {\n    \"id\": \"<string>\",\n    \"address\": \"<string>\",\n    \"signatureVersion\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"signature\": \"<string>\"\n  },\n  \"transaction\": {\n    \"id\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"type\": \"<string>\",\n    \"data\": \"<string>\",\n    \"from\": \"<string>\",\n    \"gas\": \"<string>\",\n    \"gasPrice\": \"<string>\",\n    \"nonce\": \"<string>\",\n    \"to\": \"<string>\",\n    \"value\": \"<string>\",\n    \"hash\": \"<string>\",\n    \"signedRawTransaction\": \"<string>\"\n  },\n  \"message_eip191\": {\n    \"address\": \"<string>\",\n    \"message\": \"<string>\"\n  },\n  \"message_eip712\": {\n    \"address\": \"<string>\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"<string>\",\n        \"name\": \"<string>\",\n        \"salt\": \"<string>\",\n        \"verifyingContract\": \"<string>\",\n        \"version\": \"<string>\"\n      },\n      \"primaryType\": \"<string>\",\n      \"message\": {\n        \"key_0\": {},\n        \"key_1\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"<string>\",\n            \"type\": \"<string>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"type\": \"<string>\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"name\": \"<string>\",\n            \"type\": \"<string>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"type\": \"<string>\"\n          }\n        ]\n      }\n    },\n    \"version\": \"<string>\"\n  },\n  \"message_tx\": {\n    \"type\": \"<string>\",\n    \"data\": \"<string>\",\n    \"from\": \"<string>\",\n    \"gas\": \"<string>\",\n    \"gasPrice\": \"<string>\",\n    \"nonce\": \"<string>\",\n    \"to\": \"<string>\",\n    \"value\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0c058547-fbf3-4d73-adca-18f0626ffba7",
+              "name": "Extended information about an existing MMI message, including the signature.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id",
+                    "sign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"created_at\": \"<long>\",\n  \"expires_at\": \"<long>\",\n  \"id\": \"<string>\",\n  \"identity\": \"<string>\",\n  \"metadata\": {\n    \"chainId\": \"<string>\",\n    \"custodianPublishesTransaction\": \"<boolean>\",\n    \"note\": \"<string>\",\n    \"originUrl\": \"<string>\",\n    \"rpcUrl\": \"<string>\",\n    \"transactionCategory\": \"<string>\"\n  },\n  \"signedMessage\": {\n    \"id\": \"<string>\",\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"signatureVersion\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"signature\": \"<string>\"\n  },\n  \"transaction\": {\n    \"id\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"type\": \"0x00\",\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"value\": \"0x1\",\n    \"hash\": \"<string>\",\n    \"signedRawTransaction\": \"<string>\"\n  },\n  \"message_eip191\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"message\": \"<string>\"\n  },\n  \"message_eip712\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"0x1\",\n        \"name\": \"Ether Mail\",\n        \"salt\": \"0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5\",\n        \"verifyingContract\": \"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\n        \"version\": \"1\"\n      },\n      \"primaryType\": \"<string>\",\n      \"message\": {\n        \"key_0\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ]\n      }\n    },\n    \"version\": \"<string>\"\n  },\n  \"message_tx\": {\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"type\": \"0x00\",\n    \"value\": \"0x1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"created_at\": \"<long>\",\n  \"expires_at\": \"<long>\",\n  \"id\": \"string\",\n  \"identity\": \"string\",\n  \"metadata\": {\n    \"chainId\": \"<string>\",\n    \"custodianPublishesTransaction\": \"<boolean>\",\n    \"note\": \"<string>\",\n    \"originUrl\": \"<string>\",\n    \"rpcUrl\": \"<string>\",\n    \"transactionCategory\": \"<string>\"\n  },\n  \"signedMessage\": {\n    \"id\": \"<string>\",\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"signatureVersion\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"signature\": \"<string>\"\n  },\n  \"transaction\": {\n    \"id\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"type\": \"0x00\",\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"value\": \"0x1\",\n    \"hash\": \"<string>\",\n    \"signedRawTransaction\": \"<string>\"\n  },\n  \"message_eip191\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"message\": \"string\"\n  },\n  \"message_eip712\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"0x1\",\n        \"name\": \"Ether Mail\",\n        \"salt\": \"0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5\",\n        \"verifyingContract\": \"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\n        \"version\": \"1\"\n      },\n      \"primaryType\": \"<string>\",\n      \"message\": {\n        \"key_0\": {},\n        \"key_1\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ]\n      }\n    },\n    \"version\": \"v4\"\n  },\n  \"message_tx\": {\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"type\": \"0x00\",\n    \"value\": \"0x1\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ec92e01d-5777-470d-8a80-60bb9eff059d",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "org",
+                    ":org_id",
+                    "mmi",
+                    "v3",
+                    "messages",
+                    ":msg_id",
+                    "sign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Name or ID of the desired Org"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "msg_id",
+                      "description": "(Required) Name or ID of the desired PendingMessage"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"created_at\": \"<long>\",\n  \"expires_at\": \"<long>\",\n  \"id\": \"<string>\",\n  \"identity\": \"<string>\",\n  \"metadata\": {\n    \"chainId\": \"<string>\",\n    \"custodianPublishesTransaction\": \"<boolean>\",\n    \"note\": \"<string>\",\n    \"originUrl\": \"<string>\",\n    \"rpcUrl\": \"<string>\",\n    \"transactionCategory\": \"<string>\"\n  },\n  \"signedMessage\": {\n    \"id\": \"<string>\",\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"signatureVersion\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"signature\": \"<string>\"\n  },\n  \"transaction\": {\n    \"id\": \"<string>\",\n    \"status\": {\n      \"finished\": \"<boolean>\",\n      \"signed\": \"<boolean>\",\n      \"success\": \"<boolean>\",\n      \"displayText\": \"<string>\",\n      \"reason\": \"<string>\",\n      \"submitted\": \"<boolean>\"\n    },\n    \"type\": \"0x00\",\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"value\": \"0x1\",\n    \"hash\": \"<string>\",\n    \"signedRawTransaction\": \"<string>\"\n  },\n  \"message_eip191\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"message\": \"<string>\"\n  },\n  \"message_eip712\": {\n    \"address\": \"0x0123456789012345678901234567890123456789\",\n    \"data\": {\n      \"domain\": {\n        \"chainId\": \"0x1\",\n        \"name\": \"Ether Mail\",\n        \"salt\": \"0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5\",\n        \"verifyingContract\": \"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\n        \"version\": \"1\"\n      },\n      \"primaryType\": \"<string>\",\n      \"message\": {\n        \"key_0\": {}\n      },\n      \"types\": {\n        \"key_0\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ],\n        \"key_1\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          },\n          {\n            \"name\": \"name\",\n            \"type\": \"type\"\n          }\n        ]\n      }\n    },\n    \"version\": \"<string>\"\n  },\n  \"message_tx\": {\n    \"data\": \"0x01\",\n    \"from\": \"0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07\",\n    \"gas\": \"0x1\",\n    \"gasPrice\": \"0x1\",\n    \"nonce\": \"0x1\",\n    \"to\": \"0x068bd529426f4f27e248baf36e4558e440738fbb\",\n    \"type\": \"0x00\",\n    \"value\": \"0x1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"error_code\": \"ProxyStartError\",\n  \"accepted\": {\n    \"SignDryRun\": {\n      \"mfa_requests\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"expires_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"request\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"provenance\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"created_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"not_valid_until\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"receipt\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"region\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"related_ids\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"policy_eval_tree\": {}\n    }\n  },\n  \"policy_eval_tree\": {},\n  \"request_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gamma.signer.cubist.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "2d721012-9919-4bd2-b9a9-42b520fcfebb",
+    "name": "CubeSigner Account MMI API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The CubeSigner management and signing service.\n\nContact Support:\n Name: Cubist Inc.\n Email: hello@cubist.dev",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Sessions API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "role",
+                "value": "my-role",
+                "type": "query",
+                "description": "If provided, the name or ID of a role to operate on.\nCannot be specified together with `user`, but may be combined with `role_created_by`\nto operate on the role sessions created by a given user for this specific role."
+              },
+              {
+                "name": "user",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "query",
+                "description": "If provided, the ID of a user to operate on.\nCannot be specified together with other selectors."
+              },
+              {
+                "name": "role_created_by",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "query",
+                "description": "If provided, the ID of the user whose created role sessions to operate on.\nSelects all *role* sessions created by that user (user sessions are not affected).\nCannot be specified together with `user`. When combined with `role`, the selection is\nfurther restricted to the sessions created by that user for the given role."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List sessions\n\nIf no query parameters are provided, all active sessions for the current user are returned.\n\nIf a `role` query parameter is provided, all active sessions for the selected role are returned\n(asserting first that the current user has permissions to read sessions for that role).\n\nIf a `role_created_by` query parameter is provided, all active **role** sessions created by that\nuser are returned (gated by the same permissions as listing that user's own sessions: the\ncurrent user must be"
+        },
+        {
+          "info": {
+            "name": "Create new user session (management and/or signing)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create new user session (management and/or signing)\n\nCreates a new user session, silently truncating requested session and auth lifetimes to be at\nmost requestor's session and auth lifetime, respectively. To extend the requested lifetimes past\nthe requestor's, set the `extend_lifetimes` flag in the request body (in which case MFA will\nbe required).\n"
+        },
+        {
+          "info": {
+            "name": "Revoke ALL existing user or role session(s)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "role",
+                "value": "my-role",
+                "type": "query",
+                "description": "If provided, the name or ID of a role to operate on.\nCannot be specified together with `user`, but may be combined with `role_created_by`\nto operate on the role sessions created by a given user for this specific role."
+              },
+              {
+                "name": "user",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "query",
+                "description": "If provided, the ID of a user to operate on.\nCannot be specified together with other selectors."
+              },
+              {
+                "name": "role_created_by",
+                "value": "User#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "query",
+                "description": "If provided, the ID of the user whose created role sessions to operate on.\nSelects all *role* sessions created by that user (user sessions are not affected).\nCannot be specified together with `user`. When combined with `role`, the selection is\nfurther restricted to the sessions created by that user for the given role."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Revoke ALL existing user or role session(s)\n\nImmediately revokes existing sessions, preventing them from being used or refreshed.\n\nIf no query params are provided, **ALL** sessions for the **CURRENT USER** are revoked\n(to revoke just the current user session, use `DELETE /v0/org/<org_id>/session/self`)\n\nIf a `role` query parameter is provided, **ALL** session for **THAT ROLE** are revoked\n(if the current user has permissions to revoke sessions for the role).\n\nIf a `role_created_by` query paramet"
+        },
+        {
+          "info": {
+            "name": "Revoke current session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session/self",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Revoke current session\n\nImmediately revokes the current session, preventing it from being used or refreshed"
+        },
+        {
+          "info": {
+            "name": "Get session information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session/:session_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "session_id",
+                "value": "1c0d853d-c15f-42dc-a82c-9874e589bc75",
+                "type": "path",
+                "description": "The ID of the session to get or 'self' for current session"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get session information"
+        },
+        {
+          "info": {
+            "name": "Revoke a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/session/:session_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "session_id",
+                "value": "77aad2100c361f497635dd005c4d15781e2e5df4b9f45d8e74f37425cbc30b9e",
+                "type": "path",
+                "description": "The ID of the session to revoke"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Revoke a session\n\nImmediately revokes an existing session, preventing it from being used or refreshed"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

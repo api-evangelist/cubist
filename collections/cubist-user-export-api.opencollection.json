@@ -1,0 +1,162 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account User Export API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "User Export",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List outstanding user-export requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/export",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "user_id",
+                "value": "User#806c9544-f1fa-4bad-8d4d-1097a1844726",
+                "type": "query",
+                "description": "If provided, the user-id whose user-export requests to list. Defaults to the\ncurrent user.  Only the org owner may list requests for another user."
+              },
+              {
+                "name": "key_id",
+                "value": "Key#0x3c4d90Cc5Af1644C3A3B013Baa5488997381D7C8",
+                "type": "query",
+                "description": "If provided, the key-id for which to list an existing user-export request."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List outstanding user-export requests"
+        },
+        {
+          "info": {
+            "name": "Initiate a user-export request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/export",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate a user-export request\n\nThis starts a delay (whose length is determined by Org-wide settings)\nbefore export can be completed, and returns a ticket that can be used\nto complete the export once the timer has expired.\n\nOnly one user-export request can be active for a given key. If there\nis already an active export, this endpoint will return an error. To\ncreate a new request, first delete the existing one."
+        },
+        {
+          "info": {
+            "name": "Complete a user-export request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/export",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Complete a user-export request\n\nThis endpoint can be called only after initiating a user-export request via\nthe `user_export_init` API, and only within the subsequent export window\n(i.e., after the export delay has passed and before the request has expired).\n\nTo check on the status of an export request, see the `user_export_list` API."
+        },
+        {
+          "info": {
+            "name": "Delete an existing user-export request",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/export",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "key_id",
+                "value": "Key#0x3c4d90Cc5Af1644C3A3B013Baa5488997381D7C8",
+                "type": "query",
+                "description": "The key-id whose export request should be deleted"
+              },
+              {
+                "name": "user_id",
+                "value": "User#806c9544-f1fa-4bad-8d4d-1097a1844726",
+                "type": "query",
+                "description": "The user-id who owns this request. If omitted, defaults to the current user.\nOnly the org owner may delete user-export requests for another user."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete an existing user-export request"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

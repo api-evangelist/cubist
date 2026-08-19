@@ -1,0 +1,449 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account User API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "User Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/about_me",
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "User Info\n\nRetrieves information about the current user.\n\nPREFER `GET /v0/orgs/{org_id}/user/me`"
+        },
+        {
+          "info": {
+            "name": "User Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "User Info\n\nRetrieves information about the current user."
+        },
+        {
+          "info": {
+            "name": "Initiate Reset Verified Email Flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/email",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate Reset Verified Email Flow\n"
+        },
+        {
+          "info": {
+            "name": "Finalize a Reset Verified Email Flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/email",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize a Reset Verified Email Flow"
+        },
+        {
+          "info": {
+            "name": "Initiate registration of a FIDO key.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/fido",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate registration of a FIDO key.\n\nIf a discoverable key is requested, user verification (PIN) is required.\n\nGenerates a challenge that must be answered to prove ownership of a key."
+        },
+        {
+          "info": {
+            "name": "Finalize registration of a FIDO key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/fido",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize registration of a FIDO key\n\nAccepts the response to the challenge generated by the POST to this endpoint."
+        },
+        {
+          "info": {
+            "name": "Delete FIDO key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/fido/:fido_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "fido_id",
+                "value": "FidoKey#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired FidoKey"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete FIDO key\n\nDeletes a FIDO key from the user's account (if the key is not the sole MFA factor). MFA is always required."
+        },
+        {
+          "info": {
+            "name": "Initialize TOTP Reset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/totp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initialize TOTP Reset\n\nCreates a new TOTP challenge that must be answered to prove that the new TOTP\nwas successfully imported into an authenticator app.\n\nThis operation is allowed if EITHER\n- the user account is not yet initialized and no TOTP is already set, OR\n- the user has not configured any auth factors;\notherwise, MFA is required."
+        },
+        {
+          "info": {
+            "name": "Finalize resetting TOTP",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/totp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize resetting TOTP\n\nChecks if the response contains the correct TOTP code corresponding to the\nchallenge generated by the POST method of this endpoint."
+        },
+        {
+          "info": {
+            "name": "Delete TOTP",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/totp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete TOTP\n\nDeletes TOTP from the user's account (if TOTP is not the sole MFA factor). MFA is always required.\n"
+        },
+        {
+          "info": {
+            "name": "Verify TOTP",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/user/me/totp/verify",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Verify TOTP\n\nChecks if a given code matches the current TOTP code for the current user.\nErrors with 403 if the current user has not set up TOTP or the code fails verification."
+        },
+        {
+          "info": {
+            "name": "Initiate registration of a FIDO key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/user/me/fido",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiate registration of a FIDO key\n\nDEPRECATED. Use `POST /v0/org/{org_id}/user/me/fido` instead.\n\nGenerates a challenge that must be answered to prove ownership of a key"
+        },
+        {
+          "info": {
+            "name": "Finalize registration of a FIDO key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/user/me/fido",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize registration of a FIDO key\n\nDEPRECATED. Use `PATCH /v0/org/{org_id}/user/me/fido` instead.\n\nAccepts the response to the challenge generated by the POST to this endpoint."
+        },
+        {
+          "info": {
+            "name": "Initialize TOTP Reset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/user/me/totp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initialize TOTP Reset\n\nDEPRECATED. Use `POST /v0/org/{org_id}/user/me/totp` instead.\n\nCreates a new TOTP challenge that must be answered to prove that the new TOTP\nwas successfully imported into an authenticator app.\n\nThis operation is allowed if EITHER\n- the user account is not yet initialized and no TOTP is already set, OR\n- the user has not configured any auth factors;\notherwise, MFA is required."
+        },
+        {
+          "info": {
+            "name": "Finalize resetting TOTP",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/user/me/totp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finalize resetting TOTP\n\nDEPRECATED. Use `PATCH /v0/org/{org_id}/user/me/totp` instead.\n\nChecks if the response contains the correct TOTP code corresponding to the\nchallenge generated by the POST method of this endpoint."
+        },
+        {
+          "info": {
+            "name": "Verify TOTP",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/user/me/totp/verify",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Verify TOTP\n\nDEPRECATED. Use `POST /v0/org/{org_id}/user/me/totp/verify` instead.\n\nChecks if a given code matches the current TOTP code for the current user.\nErrors with 403 if the current user has not set up TOTP or the code fails verification."
+        },
+        {
+          "info": {
+            "name": "Retrieves all the orgs the user is a part of",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/user/orgs",
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all the orgs the user is a part of"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,207 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account MMI API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MMI",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "JWKS endpoint for MMI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/mmi/v3/.well-known/jwks.json"
+          },
+          "docs": "JWKS endpoint for MMI\n\nReturns the public key used to sign JSON Web Tokens for MMI."
+        },
+        {
+          "info": {
+            "name": "MMI JSON-RPC endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/mmi/v3/json-rpc",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "MMI JSON-RPC endpoint\n\nHandler for all [MMI JSON-RPC](https://docs.metamask-institutional.io/custodian-integration/integration-docs/api/methods)\nrequests."
+        },
+        {
+          "info": {
+            "name": "List pending MMI requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mmi/v3/messages",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List pending MMI requests\n\nRetrieves and returns all pending MMI messages accessible to the current session identity, i.e.,\n- a role session can access only the messages created by that role\n- a user session can access the messages created by either that user or any role which the user is a member of"
+        },
+        {
+          "info": {
+            "name": "Get an MMI request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mmi/v3/messages/:msg_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "msg_id",
+                "value": "PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired PendingMessage"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get an MMI request\n\nRetrieves a pending MMI request by its ID."
+        },
+        {
+          "info": {
+            "name": "Delete an MMI request",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mmi/v3/messages/:msg_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "msg_id",
+                "value": "PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired PendingMessage"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete an MMI request\n\nRejects an existing MMI request and then deletes it from the database."
+        },
+        {
+          "info": {
+            "name": "Reject an MMI request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mmi/v3/messages/:msg_id/reject",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "msg_id",
+                "value": "PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired PendingMessage"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reject an MMI request\n\nRejects a pending MMI request. The record of the MMI request is kept in\nthe database until it expires or is explicitly deleted.\n\nReturns the updated request information."
+        },
+        {
+          "info": {
+            "name": "Approve and sign an MMI request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/mmi/v3/messages/:msg_id/sign",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "msg_id",
+                "value": "PendingMessage#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired PendingMessage"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Approve and sign an MMI request\n\nSigns a pending request that was generated through the MMI JSON RPC endpoint.\nThe signature is stored with the pending message and the updated request info is returned.\n\nThe message should be associated with the organization this is called from,\nand the user should be the owner of the corresponding message's key."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

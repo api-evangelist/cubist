@@ -1,0 +1,220 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CubeSigner Account Contact API",
+    "version": "v0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contact",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "page.size",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to return per page.\n\nIf the actual number of returned items may be less that this, even if there exist more\ndata in the result set. To reliably determine if more data is left in the result set,\ninspect the [UnencryptedLastEvalKey] value in the response object."
+              },
+              {
+                "name": "page.start",
+                "value": "",
+                "type": "query",
+                "description": "The start of the page.  Omit to start from the beginning; otherwise, only specify a\nthe exact value previously returned as 'last_evaluated_key' from the same endpoint."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Either 'label:...', which lists contacts with the label provided after the ':'. Or, an entire address, or prefix of an address, that returned contacts must have. When searching by address, it must be at least 3 characters."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List Contacts\n\nList all contacts in the org.\nAny org member is allowed to list all contacts in the org.\n\n## Search Condition\nThe search condition is optional.\n\n- If the search condition starts with \"label:...\", this list will only hold contacts with\nthe label provided after the \":\". For example, \"label:cubist:erc20_token\" would return contacts that\nhold the label \"cubist:erc20_token\".\n\n- Otherwise, the result will contain only the contacts who have an address starting with, or\nequaling, the give"
+        },
+        {
+          "info": {
+            "name": "Create Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create Contact\n\nCreates a new contact in the organization-wide address book. The\nuser making the request is the owner of the contact, giving them edit access\nto the contact along with the org owners."
+        },
+        {
+          "info": {
+            "name": "Lookup Contacts by Address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts/by-address",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lookup Contacts by Address\n\nReturns all contacts in the org that have the given address.\n\nWhen querying with an EVM address without a chain, this endpoint returns\ncontacts with that address on *any* chain, including those without a chain\ndefined."
+        },
+        {
+          "info": {
+            "name": "Get Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts/:contact_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "contact_id",
+                "value": "Contact#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Contact"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get Contact\n\nReturns the properties of a Contact."
+        },
+        {
+          "info": {
+            "name": "Update Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts/:contact_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "contact_id",
+                "value": "Contact#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Contact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Contact\n\nUpdates an existing contact in the organization-wide address book. Only\nthe contact owner or an org owner can update contacts.\n\n*Updates will overwrite the existing value of the field.*\n"
+        },
+        {
+          "info": {
+            "name": "Delete Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gamma.signer.cubist.dev/v0/org/:org_id/contacts/:contact_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "Org#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "Name or ID of the desired Org"
+              },
+              {
+                "name": "contact_id",
+                "value": "Contact#124dfe3e-3bbd-487d-80c0-53c55e8ab87a",
+                "type": "path",
+                "description": "ID of the desired Contact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete Contact\n\nDelete a contact, specified by its ID.\n\nOnly the contact owner and org owners are allowed to delete contacts.\nAdditionally, the contact's edit policy (if set) must permit the deletion."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
