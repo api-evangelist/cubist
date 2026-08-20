@@ -64,6 +64,8 @@ apis:
   humanURL: https://cubist.dev/product-suite
   baseURL: https://prod.signer.cubist.dev
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -219,7 +221,8 @@ apis:
   description: The Misc API from Cubist — 1 operation(s) for misc.
   humanURL: https://cubist.dev/product-suite
   baseURL: https://prod.signer.cubist.dev
-  tags:
+  tags: []
+  tags_raw:
   - Misc
   properties:
   - type: OpenAPI
@@ -244,6 +247,8 @@ apis:
   humanURL: https://cubist.dev/product-suite
   baseURL: https://prod.signer.cubist.dev
   tags:
+  - Authentication
+  tags_raw:
   - OAuth2
   properties:
   - type: OpenAPI
@@ -268,6 +273,8 @@ apis:
   humanURL: https://cubist.dev/product-suite
   baseURL: https://prod.signer.cubist.dev
   tags:
+  - Organization
+  tags_raw:
   - Orgs
   properties:
   - type: OpenAPI
