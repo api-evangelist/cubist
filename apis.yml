@@ -12,6 +12,18 @@ description: >-
   OIDC-to-session-token exchange with least-privilege scopes and step-up MFA.
   Cubist is backed by Amplify Partners and Polychain and is SOC 2 compliant.
 url: https://raw.githubusercontent.com/api-evangelist/cubist/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: unknown
