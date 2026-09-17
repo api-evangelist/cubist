@@ -253,20 +253,6 @@ apis:
     url: openapi/cubist-mmi-api-openapi.yml
   - type: Documentation
     url: https://cubist.dev/product-suite
-- aid: cubist:cubist-oauth2-api
-  name: Cubist OAuth2 API
-  description: The OAuth2 API from Cubist — 7 operation(s) for oauth2.
-  humanURL: https://cubist.dev/product-suite
-  baseURL: https://prod.signer.cubist.dev
-  tags:
-  - Authentication
-  tags_raw:
-  - OAuth2
-  properties:
-  - type: OpenAPI
-    url: openapi/cubist-oauth2-api-openapi.yml
-  - type: Documentation
-    url: https://cubist.dev/product-suite
 - aid: cubist:cubist-org-api
   name: Cubist Org API
   description: The Org API from Cubist — 1 operation(s) for org.
@@ -423,6 +409,18 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cubist-users-in-role-api-openapi.yml
+  - type: Documentation
+    url: https://cubist.dev/product-suite
+- aid: cubist:cubist-oauth2-api
+  name: Cubist O Auth2 API
+  description: The OAuth2 API from Cubist — 7 operation(s) for oauth2.
+  humanURL: https://cubist.dev/product-suite
+  baseURL: https://prod.signer.cubist.dev
+  tags:
+  - OAuth2
+  properties:
+  - type: OpenAPI
+    url: openapi/cubist-oauth2-api-openapi.yml
   - type: Documentation
     url: https://cubist.dev/product-suite
 maintainers:
