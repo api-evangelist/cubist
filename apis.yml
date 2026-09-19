@@ -52,6 +52,16 @@ tags:
 - Developer Tools
 - Key Management
 - Wallets
+- Digital Signature
+- Security
+- Blockchain
+- Web3
+- Custody
+tags_raw:
+- Company
+- Developer Tools
+- Key Management
+- Wallets
 - Digital Signatures
 - Security
 - Blockchain
@@ -417,6 +427,8 @@ apis:
   humanURL: https://cubist.dev/product-suite
   baseURL: https://prod.signer.cubist.dev
   tags:
+  - Authentication
+  tags_raw:
   - OAuth2
   properties:
   - type: OpenAPI
