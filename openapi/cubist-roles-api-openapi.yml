@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: CubeSigner Account Roles API
+  title: CubeSigner Roles API
   description: The CubeSigner management and signing service.
   contact:
     name: Cubist Inc.
@@ -59,16 +59,18 @@ paths:
           the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
         required: false
         schema:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         style: form
       - name: summarize
         in: query
         description: Don't include keys and users for each role
         required: false
         schema:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
         style: form
       responses:
         '200':
@@ -108,7 +110,6 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/CreateRoleRequest'
-              nullable: true
         required: false
       responses:
         '200':
@@ -151,8 +152,9 @@ paths:
         in: query
         required: false
         schema:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
       responses:
         '200':
           $ref: '#/components/responses/RoleInfo'
@@ -319,7 +321,6 @@ paths:
         schema:
           allOf:
           - $ref: '#/components/schemas/Id'
-          nullable: true
       responses:
         '200':
           $ref: '#/components/responses/RoleInfoJwt'
@@ -382,8 +383,9 @@ paths:
           the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
         required: false
         schema:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         style: form
       responses:
         '200':
@@ -436,8 +438,9 @@ paths:
         description: Whether to include detailed key information
         required: false
         schema:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
         style: form
         example: 'true'
       responses:
@@ -504,8 +507,9 @@ paths:
           the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
         required: false
         schema:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         style: form
       responses:
         '200':
@@ -523,7 +527,7 @@ paths:
     get:
       tags:
       - Roles
-      summary: List Role Users.
+      summary: List Role Users
       description: 'List Role Users.
 
 
@@ -569,8 +573,9 @@ paths:
           the exact value previously returned as ''last_evaluated_key'' from the same endpoint.'
         required: false
         schema:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         style: form
       responses:
         '200':
@@ -585,498 +590,559 @@ paths:
       - SignerAuth:
         - manage:role:get:users
 components:
+  responses:
+    RoleInfoJwt:
+      description: Response returned when requesting a role attestation.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Response returned when requesting a role attestation.
+            required:
+            - jwt
+            properties:
+              jwt:
+                type: string
+                description: A JSON Web Token whose claims contain the `RoleInfo` structure.
+    CreateRoleResponse:
+      description: The newly created role information
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The newly created role information
+            required:
+            - role_id
+            properties:
+              name:
+                type:
+                - string
+                - 'null'
+                description: A human-readable name for the role.
+                example: my_role
+                pattern: ^[a-zA-Z0-9_]{3,30}$
+              role_id:
+                type: string
+                description: The id of the newly created role
+                example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
+    PaginatedListHistoricalTxResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              required:
+              - txs
+              properties:
+                txs:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/HistoricalTx'
+                  description: Historical transactions signed with the requested key, sorted from most to least recent.
+            - type: object
+              properties:
+                last_evaluated_key:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'If set, the content of `response` does not contain the entire result set.
+
+                    To fetch the next page of the result set, call the same endpoint
+
+                    but specify this value as the ''page.start'' query parameter.'
+            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+
+              value (which can the user pass back to use as a url query parameter to continue pagination).'
+    KeyInRoleInfo:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - role_id
+            - key_id
+            properties:
+              key_id:
+                type: string
+                description: Key ID
+                example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
+              key_info:
+                allOf:
+                - $ref: '#/components/schemas/KeyInfo'
+              policy:
+                type: array
+                items:
+                  type: object
+                description: Policies that are checked before this key is used on behalf of this role
+                example:
+                - TxReceiver: '0x8c594691c0e592ffa21f153a16ae41db5befcaaa'
+                - TxDeposit:
+                    kind: Canonical
+              role_id:
+                type: string
+                description: Role ID
+                example: Role#e427c28a-9c5b-49cc-a257-878aea58a22c
+    PaginatedListRoleKeysResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              required:
+              - keys
+              properties:
+                keys:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/KeyInRoleInfo'
+                  description: All keys in a role
+            - type: object
+              properties:
+                last_evaluated_key:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'If set, the content of `response` does not contain the entire result set.
+
+                    To fetch the next page of the result set, call the same endpoint
+
+                    but specify this value as the ''page.start'' query parameter.'
+            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+
+              value (which can the user pass back to use as a url query parameter to continue pagination).'
+    RoleInfo:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/CommonFields'
+            - type: object
+              required:
+              - role_id
+              - enabled
+              - restricted_actions
+              - member
+              properties:
+                enabled:
+                  type: boolean
+                  description: Whether the role is enabled
+                  example: 'true'
+                keys:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/KeyInRoleInfo'
+                  description: Deprecated. The CubeSigner IDs of at most 100 keys associated with this role.
+                member:
+                  type: boolean
+                  description: 'Whether the current user is a member of the role. This is always true,
+
+                    except for owners who can see roles they are not members of.'
+                name:
+                  type:
+                  - string
+                  - 'null'
+                  description: The human-readable name for the role (must be alphanumeric)
+                  example: my_role
+                policy:
+                  type: array
+                  items:
+                    type: object
+                  description: Policy that is checked whenever a key is accessed for signing via this role.
+                  example:
+                  - SourceIpAllowlist:
+                    - 123.456.78.9/16
+                  - RequireMfa:
+                      count: 1
+                restricted_actions:
+                  $ref: '#/components/schemas/RestrictedActionsMap'
+                role_id:
+                  type: string
+                  description: The ID of the role
+                  example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
+                users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  description: Deprecated. The list of at most 100 users with access to the role.
+    PaginatedListRoleUsersResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              required:
+              - users
+              properties:
+                users:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserInRoleInfo'
+                  description: All users in a role
+            - type: object
+              properties:
+                last_evaluated_key:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'If set, the content of `response` does not contain the entire result set.
+
+                    To fetch the next page of the result set, call the same endpoint
+
+                    but specify this value as the ''page.start'' query parameter.'
+            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+
+              value (which can the user pass back to use as a url query parameter to continue pagination).'
+    PaginatedListRolesResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              required:
+              - roles
+              properties:
+                roles:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RoleInfo'
+                  description: All roles in an organization.
+            - type: object
+              properties:
+                last_evaluated_key:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'If set, the content of `response` does not contain the entire result set.
+
+                    To fetch the next page of the result set, call the same endpoint
+
+                    but specify this value as the ''page.start'' query parameter.'
+            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+
+              value (which can the user pass back to use as a url query parameter to continue pagination).'
+    EmptyImpl:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
   schemas:
-    EpochDateTime:
-      type: integer
-      format: int64
-      description: 'DateTime measured in seconds since unix epoch.
-
-        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
-
-        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
-      minimum: 0
-    Empty:
-      default: null
-      nullable: true
-    MfaRequiredArgs:
-      type: object
-      required:
-      - id
-      - ids
-      - org_id
-      properties:
-        id:
-          type: string
-          description: Always set to first MFA id from `Self::ids`
-        ids:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: Non-empty MFA request IDs
-        org_id:
-          type: string
-          description: Organization id
-        policy_eval_tree:
-          description: Optional policy evaluation tree (included in signer responses, when requested)
-          nullable: true
-        session:
-          allOf:
-          - $ref: '#/components/schemas/NewSessionResponse'
-          nullable: true
-    B32:
+    BadRequestErrorCode:
       type: string
-      description: Wrapper around a zeroizing 32-byte fixed-size array
-    KeyDerivationInfo:
+      enum:
+      - GenericBadRequest
+      - DisallowedAllowRuleReference
+      - InvalidPaginationToken
+      - InvalidEmail
+      - InvalidEmailTemplate
+      - QueryMetricsError
+      - InvalidTelegramData
+      - ValidationError
+      - WebhookPolicyTimeoutOutOfBounds
+      - WebhookPolicyDisallowedUrlScheme
+      - WebhookPolicyDisallowedUrlHost
+      - WebhookPolicyDisallowedHeaders
+      - ReservedName
+      - UserEmailNotConfigured
+      - EmailPasswordNotFound
+      - PasswordAuthNotAllowedByInvitation
+      - OneTimeCodeExpired
+      - InvalidBody
+      - InvalidJwt
+      - InvitationNoLongerValid
+      - TokenRequestError
+      - InvalidMfaReceipt
+      - InvalidMfaPolicyCount
+      - InvalidMfaPolicyNumAuthFactors
+      - InvalidMfaPolicyNumAllowedApprovers
+      - InvalidMfaPolicyGracePeriodTooLong
+      - InvalidBabylonStakingPolicyParams
+      - InvalidSuiTxReceiversEmptyAllowlist
+      - InvalidBtcTxReceiversEmptyAllowlist
+      - InvalidRequireRoleSessionAllowlist
+      - InvalidCreateKeyCount
+      - InvalidDiffieHellmanCount
+      - OrgInviteExistingUser
+      - OrgUserAlreadyExists
+      - OrgNameTaken
+      - KwkNotFoundInRegion
+      - OrgIsNotOrgExport
+      - RoleNameTaken
+      - PolicyNameTaken
+      - NameTaken
+      - ContactNameInvalid
+      - ContactAddressesInvalid
+      - ContactLabelInvalid
+      - ContactModified
+      - PolicyNotFound
+      - PolicyVersionNotFound
+      - PolicyRuleDisallowedByType
+      - PolicyTypeDisallowed
+      - PolicyDuplicateError
+      - PolicyStillAttached
+      - PolicyModified
+      - PolicyNotAttached
+      - AddKeyToRoleCountTooHigh
+      - InvalidKeyId
+      - InvalidTimeLockAlreadyInThePast
+      - InvalidRestrictedScopes
+      - InvalidUpdate
+      - InvalidMetadataLength
+      - InvalidLength
+      - InvalidKeyMaterialId
+      - KeyNotFound
+      - SiweChallengeNotFound
+      - SiweInvalidRequest
+      - SiwsChallengeNotFound
+      - SiwsInvalidRequest
+      - UserExportDerivedKey
+      - UserExportPublicKeyInvalid
+      - NistP256PublicKeyInvalid
+      - UnableToAccessSmtpRelay
+      - UserExportInProgress
+      - RoleNotFound
+      - InvalidRoleNameOrId
+      - InvalidMfaReceiptOrgIdMissing
+      - InvalidMfaReceiptInvalidOrgId
+      - MfaRequestNotFound
+      - InvalidKeyType
+      - InvalidPropertiesForKeyType
+      - MismatchedKeyPropertiesPatch
+      - MissingBinanceApiKey
+      - MissingBybitApiKey
+      - MissingCoinbaseApiKey
+      - BinanceKeyMasterMismatch
+      - BybitAccountMismatch
+      - InvalidKeyMaterial
+      - InvalidHexValue
+      - InvalidBase32Value
+      - InvalidBase58Value
+      - InvalidBase64Value
+      - InvalidSs58Value
+      - InvalidForkVersionLength
+      - InvalidEthAddress
+      - InvalidStellarAddress
+      - InvalidOrgNameOrId
+      - InvalidUpdateOrgRequestDisallowedMfaType
+      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
+      - EmailOtpDelayTooShortForRegisterMfa
+      - InvalidStakeDeposit
+      - InvalidBlobSignRequest
+      - InvalidDiffieHellmanRequest
+      - InvalidSolanaSignRequest
+      - InvalidEip712SignRequest
+      - InvalidEip7702SignRequest
+      - OnlySpecifyOne
+      - IncompatibleParams
+      - NoOidcDataInProof
+      - InvalidEvmSignRequest
+      - InvalidEth2SignRequest
+      - InvalidDeriveKeyRequest
+      - InvalidStakingAmount
+      - CustomStakingAmountNotAllowedForWrapperContract
+      - InvalidUnstakeRequest
+      - InvalidCreateUserRequest
+      - UserAlreadyExists
+      - IdpUserAlreadyExists
+      - CognitoUserAlreadyOrgMember
+      - UserNotFound
+      - UserWithEmailNotFound
+      - PolicyKeyMismatch
+      - EmptyScopes
+      - InvalidScopesForRoleSession
+      - InvalidLifetime
+      - NoSingleKeyForUser
+      - InvalidOrgPolicyRule
+      - SourceIpAllowlistEmpty
+      - LimitWindowTooLong
+      - Erc20ContractDisallowed
+      - EmptyRuleError
+      - PolicyFieldValidationError
+      - OptionalListEmpty
+      - MultipleExclusiveFieldsProvided
+      - DuplicateFieldEntry
+      - InvalidRange
+      - InvalidOrgPolicyRepeatedRule
+      - InvalidSuiTransaction
+      - SuiSenderMismatch
+      - AvaSignHashError
+      - AvaSignError
+      - BtcSegwitHashError
+      - BtcTaprootHashError
+      - BtcSignError
+      - TaprootSignError
+      - Eip712SignError
+      - InvalidMemberRoleInUserAdd
+      - InvalidMemberRoleInRecipientAdd
+      - ThirdPartyUserAlreadyExists
+      - OidcIdentityAlreadyExists
+      - UserAlreadyHasIdentity
+      - ThirdPartyUserNotFound
+      - DeleteOidcUserError
+      - DeleteUserError
+      - SessionRoleMismatch
+      - InvalidOidcToken
+      - InvalidOidcIdentity
+      - OidcIssuerUnsupported
+      - OidcIssuerNotAllowed
+      - OidcIssuerNoApplicableJwk
+      - FidoKeyAlreadyRegistered
+      - FidoKeySignCountTooLow
+      - FidoVerificationFailed
+      - FidoChallengeMfaMismatch
+      - UnsupportedLegacyCognitoSession
+      - InvalidIdentityProof
+      - PaginationDataExpired
+      - ExistingKeysViolateExclusiveKeyAccess
+      - ExportDelayTooShort
+      - ExportWindowTooLong
+      - InvalidTotpFailureLimit
+      - InvalidEip191SignRequest
+      - CannotResendUserInvitation
+      - InvalidNotificationEndpointCount
+      - CannotDeletePendingSubscription
+      - InvalidNotificationUrlProtocol
+      - EmptyOneOfOrgEventFilter
+      - EmptyAllExceptOrgEventFilter
+      - InvalidTapNodeHash
+      - InvalidOneTimeCode
+      - MessageNotFound
+      - MessageAlreadySigned
+      - MessageRejected
+      - MessageReplaced
+      - InvalidMessageType
+      - EmptyAddress
+      - InvalidEth2SigningPolicySlotRange
+      - InvalidEth2SigningPolicyEpochRange
+      - InvalidEth2SigningPolicyTimestampRange
+      - InvalidEth2SigningPolicyOverlappingRule
+      - RpcUrlMissing
+      - MmiChainIdMissing
+      - EthersInvalidRpcUrl
+      - EthersGetTransactionCountError
+      - InvalidPassword
+      - BabylonStakingFeePlusDustOverflow
+      - BabylonStaking
+      - BabylonStakingIncorrectKey
+      - BabylonStakingSegwitNonDeposit
+      - BabylonStakingRegistrationRequiresTaproot
+      - PsbtSigning
+      - TooManyResets
+      - TooManyRequests
+      - TooManyFailedLogins
+      - BadBtcMessageSignP2shFlag
+      - InvalidTendermintRequest
+      - PolicyVersionMaxReached
+      - PolicyVersionInvalid
+      - PolicySecretLimitReached
+      - PolicySecretTooLarge
+      - InvalidImportKey
+      - AlienOwnerInvalid
+      - EmptyUpdateRequest
+      - InvalidPolicyReference
+      - PolicyEngineDisabled
+      - InvalidWasmPolicy
+      - CelProgramTooLarge
+      - InvalidPolicy
+      - RedundantDerivationPath
+      - ImportKeyMissing
+      - InvalidAbiMethods
+      - BabylonCovSign
+      - InvalidPolicyLogsRequest
+      - UserProfileMigrationMultipleEntries
+      - UserProfileMigrationTooManyItems
+      - InputTooShort
+      - InvalidTweakLength
+      - InvalidCustomChains
+      - InvalidRpcRequest
+    ClientSessionInfo:
       type: object
-      description: Derivation-related metadata for keys derived from a long-lived mnemonic
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
       required:
-      - mnemonic_id
-      - derivation_path
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
       properties:
-        derivation_path:
+        auth_token:
           type: string
-          description: The derivation path used to derive this key
-        mnemonic_id:
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
           type: string
-          description: The mnemonic-id of the key's parent mnemonic
-    CoinbaseApiPropertiesPatch:
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    UpdateRoleRequest:
       type: object
-      description: 'Wire-format patch payload for [`KeyProperties::CoinbaseApi`].
-
-
-        Every field follows the same per-field PATCH semantics: a missing field
-
-        leaves the existing value alone, a JSON `null` clears it, and a value sets it.'
       properties:
-        api_key_id:
-          type: string
-          description: 'Identifier of the Coinbase API key this key authenticates as. Plain
+        edit_policy:
+          allOf:
+          - $ref: '#/components/schemas/EditPolicy'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: 'If set, updates the role''s `enabled` property to this value.
 
-            (non-secret) value; appears in JWT `kid`/`sub` claims.'
-          nullable: true
-        portfolio_name:
-          type: string
-          description: Coinbase portfolio name.
-          nullable: true
-        portfolio_uuid:
-          type: string
-          description: Coinbase portfolio UUID.
-          nullable: true
-    ScopeSet:
-      oneOf:
-      - type: string
-        description: All scopes
-        enum:
-        - All
-      - type: object
-        required:
-        - AllExcept
-        properties:
-          AllExcept:
+            Once disabled, a role cannot be used; and it''s tokens cannot be used for signing.'
+        policy:
+          type:
+          - array
+          - 'null'
+          items: {}
+          description: 'If set, update this role''s key policies (old policies will be overwritten!).
+
+            Only "deny" style policies may be set.'
+          example:
+          - SourceIpAllowlist:
+            - 123.456.78.9/16
+        restricted_actions:
+          type:
+          - object
+          - 'null'
+          description: 'If set, update this role''s settings for restricting which member roles are allowed to
+
+            perform actions on this role.'
+          additionalProperties:
             type: array
             items:
-              $ref: '#/components/schemas/Scope'
-            description: All scopes except these (including those transitively implied).
-      - type: object
-        required:
-        - AllOf
-        properties:
-          AllOf:
-            type: array
-            items:
-              $ref: '#/components/schemas/Scope'
-            description: All of these scopes (including those transitively implied).
-      description: A set of scopes.
-    CommonFields:
-      allOf:
-      - type: object
-        description: 'Versioning fields (e.g., version number, creation time, and last modified times)
-
-          that are common to different types of resources.'
-        properties:
-          created:
-            allOf:
-            - $ref: '#/components/schemas/EpochDateTime'
-            nullable: true
-          last_modified:
-            allOf:
-            - $ref: '#/components/schemas/EpochDateTime'
-            nullable: true
-          version:
-            type: integer
-            format: int64
-            description: Version of this object
-            minimum: 0
-      - type: object
-        properties:
-          edit_policy:
-            $ref: '#/components/schemas/EditPolicy'
-          metadata:
-            description: 'User-defined metadata. When rendering (e.g., in the browser) you should treat
-
-              it as untrusted user data (and avoid injecting metadata into HTML directly) if
-
-              untrusted users can create/update keys (or their metadata).'
-      description: 'Fields that are common to different types of resources such as keys, roles, etc.
-
-        Includes versioning fields plus metadata, edit policy, etc.'
-    AcceptedValue:
-      oneOf:
-      - type: object
-        required:
-        - SignDryRun
-        properties:
-          SignDryRun:
-            $ref: '#/components/schemas/SignDryRunArgs'
-      - type: object
-        required:
-        - BinanceDryRun
-        properties:
-          BinanceDryRun:
-            $ref: '#/components/schemas/BinanceDryRunArgs'
-      - type: object
-        required:
-        - BybitDryRun
-        properties:
-          BybitDryRun:
-            $ref: '#/components/schemas/BybitDryRunArgs'
-      - type: object
-        required:
-        - CoinbaseDryRun
-        properties:
-          CoinbaseDryRun:
-            $ref: '#/components/schemas/CoinbaseDryRunArgs'
-      - type: object
-        required:
-        - MfaRequired
-        properties:
-          MfaRequired:
-            $ref: '#/components/schemas/MfaRequiredArgs'
-      description: Different responses we return for success status codes.
-    NotFoundErrorCode:
-      type: string
-      enum:
-      - UriSegmentMissing
-      - UriSegmentInvalid
-      - TotpNotConfigured
-      - FidoKeyNotFound
-      - FidoChallengeNotFound
-      - TotpChallengeNotFound
-      - UserExportRequestNotFound
-      - UserExportCiphertextNotFound
-      - OrgExportCiphertextNotFound
-      - UploadObjectNotFound
-      - PolicySecretNotFound
-      - BucketMetaNotFound
-      - TimestreamDisabled
-      - CustomChainNotFound
-      - InvitationNotFound
-      - TransactionNotFound
-      - EmailConfigNotFound
-    HttpRequestCmp:
-      oneOf:
-      - type: string
-        description: The requests must match exactly. Any given MFA receipt can be used at most once.
-        enum:
-        - Eq
-      - type: object
-        required:
-        - EvmTx
-        properties:
-          EvmTx:
-            $ref: '#/components/schemas/EvmTxCmp'
-      - type: object
-        required:
-        - SolanaTx
-        properties:
-          SolanaTx:
-            $ref: '#/components/schemas/SolanaTxCmp'
-      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
-    SolanaTxCmp:
-      type: object
-      properties:
-        ignore_blockhash:
-          type: boolean
-          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
-    BadGatewayErrorCode:
-      type: string
-      enum:
-      - Generic
-      - CustomChainRpcError
-      - EsploraApiError
-      - SentryApiError
-      - CallWebhookError
-      - OAuthProviderError
-      - OidcDisoveryFailed
-      - OidcIssuerJwkEndpointUnavailable
-      - SmtpServerUnavailable
-    InternalErrorCode:
-      type: string
-      enum:
-      - NoMaterialId
-      - InvalidAuditLogEntry
-      - UnexpectedCheckerRule
-      - UnresolvedPolicyReference
-      - UnexpectedAclAction
-      - FidoKeyAssociatedWithMultipleUsers
-      - ClaimsParseError
-      - InvalidThrottleId
-      - InvalidEmailAddress
-      - EmailTemplateRender
-      - OidcIdentityHeaderMissing
-      - OidcIdentityParseError
-      - SystemTimeError
-      - PasswordHashParseError
-      - SendMailError
-      - ReqwestError
-      - EmailConstructionError
-      - TsWriteError
-      - TsQueryError
-      - DbQueryError
-      - DbGetError
-      - DbDeleteError
-      - DbPutError
-      - DbUpdateError
-      - SerdeError
-      - TestAndSetError
-      - DbGetItemsError
-      - DbWriteError
-      - CubistSignerError
-      - CwListMetricsError
-      - CwPutMetricDataError
-      - GetAwsSecretError
-      - SecretNotFound
-      - KmsGenerateRandomError
-      - MalformedTotpBytes
-      - KmsGenerateRandomNoResponseError
-      - CreateKeyError
-      - ParseDerivationPathError
-      - SplitSignerError
-      - CreateImportKeyError
-      - CreateEotsNoncesError
-      - EotsSignError
-      - BabylonCovSignError
-      - CognitoDeleteUserError
-      - CognitoListUsersError
-      - CognitoGetUserError
-      - MissingUserEmail
-      - CognitoResendUserInvitation
-      - CognitoSetUserPasswordError
-      - GenericInternalError
-      - AssumeRoleWithoutEvidence
-      - OidcAuthWithoutOrg
-      - MissingKeyMetadata
-      - KmsEnableKeyError
-      - KmsDisableKeyError
-      - LambdaInvokeError
-      - LambdaNoResponseError
-      - LambdaFailure
-      - LambdaUnparsableResponse
-      - SerializeEncryptedExportKeyError
-      - DeserializeEncryptedExportKeyError
-      - ReEncryptUserExport
-      - S3UploadError
-      - S3DownloadError
-      - S3CopyError
-      - S3ListObjectsError
-      - S3DeleteObjectsError
-      - S3BuildError
-      - S3PresignedUrlError
-      - ManagedStateMissing
-      - InternalHeaderMissing
-      - InvalidInternalHeaderValue
-      - RequestLocalStateAlreadySet
-      - OidcOrgMismatch
-      - OidcIssuerInvalidJwk
-      - InvalidPkForMaterialId
-      - SegwitTweakFailed
-      - UncheckedOrg
-      - SessionOrgIdMissing
-      - AvaSignCredsMissing
-      - AvaSignSignatureMissing
-      - ExpectedRoleSession
-      - InvalidThirdPartyIdentity
-      - CognitoGetUser
-      - SnsSubscribeError
-      - SnsUnsubscribeError
-      - SnsGetSubscriptionAttributesError
-      - SnsSubscriptionAttributesMissing
-      - SnsSetSubscriptionAttributesError
-      - SnsPublishBatchError
-      - InconsistentMultiValueTestAndSet
-      - MaterialIdError
-      - InvalidBtcAddress
-      - HistoricalTxBodyMissing
-      - InvalidOperation
-      - ParentOrgNotFound
-      - OrgParentLoop
-      - ResolvedParentOrgWithNoScopeCeiling
-      - InvalidUploadObjectId
-      - PolicyEngineNotFound
-      - PolicyEngineError
-      - PolicySecretsEncryptionError
-      - CreatePolicyImportKeyError
-      - InvalidAlias
-      - EmptyUpdateModifiedObject
-      - EmptyUpdateModifiedActions
-      - DbContactAddressesInvalid
-      - InvalidEvmSigedRlp
-      - InvalidErc20Data
-      - InvalidRpcUrl
-    RestrictedActionsMap:
-      type: object
-      description: A map of actions to sets of membership roles
-      additionalProperties:
-        type: array
-        items:
-          $ref: '#/components/schemas/MemberRole'
-        uniqueItems: true
-    SignerErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/SignerErrorOwnCodes'
-      - $ref: '#/components/schemas/AcceptedValueCode'
-      - $ref: '#/components/schemas/BadRequestErrorCode'
-      - $ref: '#/components/schemas/BadGatewayErrorCode'
-      - $ref: '#/components/schemas/NotFoundErrorCode'
-      - $ref: '#/components/schemas/ForbiddenErrorCode'
-      - $ref: '#/components/schemas/UnauthorizedErrorCode'
-      - $ref: '#/components/schemas/PreconditionErrorCode'
-      - $ref: '#/components/schemas/TimeoutErrorCode'
-      - $ref: '#/components/schemas/ConflictErrorCode'
-      - $ref: '#/components/schemas/InternalErrorCode'
-    RoleAttestationVerbosity:
-      type: string
-      description: Specifies which role properties to include in an attestation
-      enum:
-      - Summary
-      - WithKeys
-      - Full
-    EvmTxDepositErrorCode:
-      type: string
-      enum:
-      - EvmTxDepositReceiverMismatch
-      - EvmTxDepositEmptyData
-      - EvmTxDepositEmptyChainId
-      - EvmTxDepositEmptyReceiver
-      - EvmTxDepositUnexpectedValue
-      - EvmTxDepositUnexpectedDataLength
-      - EvmTxDepositNoAbi
-      - EvmTxDepositNoDepositFunction
-      - EvmTxDepositUnexpectedFunctionName
-      - EvmTxDepositUnexpectedValidatorKey
-      - EvmTxDepositInvalidValidatorKey
-      - EvmTxDepositMissingDepositArg
-      - EvmTxDepositWrongDepositArgType
-      - EvmTxDepositValidatorKeyNotInRole
-      - EvmTxDepositUnexpectedWithdrawalCredentials
-      - EvmTxDepositUnresolvedRole
-      - EvmTxDepositInvalidDepositEncoding
-    KeyInfo:
-      allOf:
-      - $ref: '#/components/schemas/CommonFields'
-      - type: object
-        required:
-        - key_type
-        - key_id
-        - material_id
-        - purpose
-        - enabled
-        - owner
-        - public_key
-        - policy
-        properties:
-          derivation_info:
-            allOf:
-            - $ref: '#/components/schemas/KeyDerivationInfo'
-            nullable: true
-          enabled:
-            type: boolean
-            description: Whether the key is enabled (only enabled keys may be used for signing)
-          key_id:
-            type: string
-            description: 'The id of the key: "Key#" followed by a unique identifier specific to
-
-              the type of key (such as a public key for BLS or an ethereum address for Secp)'
-            example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
-          key_type:
-            $ref: '#/components/schemas/KeyType'
-          material_id:
-            type: string
-            description: A unique identifier specific to the type of key, such as a public key or an ethereum address
-            example: '0x8e3484687e66cdd26cf04c3647633ab4f3570148'
-          owner:
-            type: string
-            description: Owner of the key
-            example: User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f
-          policy:
-            type: array
-            items: {}
-            description: Key policy
-            example:
-            - AllowRawBlobSigning
-            - RequireMfa:
-                count: 1
-          properties:
-            allOf:
-            - $ref: '#/components/schemas/KeyPropertiesPatch'
-            nullable: true
-          provenance:
-            type: string
-            description: The key provenance.
-            nullable: true
-          public_key:
-            type: string
-            description: 'Hex-encoded, serialized public key. The format used depends on the key type:
-
-              - Secp256k1 keys use 65-byte uncompressed SECG format;
-
-              - Stark keys use 33-byte compressed SECG format;
-
-              - BLS keys use 48-byte compressed BLS12-381 (ZCash) format;
-
-              - Ed25519 keys use the canonical 32-byte encoding specified in RFC 8032.'
-            example: '0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431'
-          purpose:
-            type: string
-            description: The purpose for which the key can be used (e.g., chain id for which the key is allowed to sign messages)
-            example: Eth2Validator(1)
-          region:
-            type: string
-            description: The region affinity for this key
-    EditPolicy:
-      type: object
-      description: 'A policy which governs when and who is allowed to update the entity this policy is
-
-        attached to (e.g., a role or a key).
-
-
-        When attached to a role, by default, this policy applies to role deletion and all
-
-        role updates (including adding/removing keys and users); in terms of scopes,
-
-        it applies to `manage:role:update:*` and `manage:role:delete`.
-
-
-        When attached to a key, by default, this policy applies to key deletion, all
-
-        key updates, and adding/removing that key to/from a role; in terms of scopes,
-
-        it applies to `manage:key:update:*`, `manage:key:delete`, `manage:role:update:key:*`.
-
-
-        This default can be changed by setting the `applies_to_scopes` property.'
-      properties:
-        applies_to_scopes:
-          $ref: '#/components/schemas/ScopeSet'
-        mfa:
-          allOf:
-          - $ref: '#/components/schemas/MfaPolicy'
-          nullable: true
-        time_lock_until:
-          allOf:
-          - $ref: '#/components/schemas/EpochDateTime'
-          nullable: true
+              $ref: '#/components/schemas/MemberRole'
+            uniqueItems: true
+          example:
+            CreateToken:
+            - Owner
     OperationKind:
       type: string
       description: All different kinds of sensitive operations
@@ -1128,48 +1194,26 @@ components:
       - SuiSign
       - TendermintSign
       - RoleUpdate
-    ErrorResponse:
+    CoinbaseDryRunArgs:
       type: object
-      description: The structure of ErrorResponse must match the response template that AWS uses
       required:
-      - message
-      - error_code
+      - method
+      - url
       properties:
-        accepted:
-          allOf:
-          - $ref: '#/components/schemas/AcceptedValue'
-          nullable: true
-        error_code:
-          $ref: '#/components/schemas/SignerErrorCode'
-        message:
+        method:
           type: string
-          description: Error message
-        policy_eval_tree:
-          description: Optional policy evaluation tree (included in signer responses, when requested)
-          nullable: true
-        request_id:
+          description: The Coinbase API method that would have been used
+        url:
           type: string
-          description: Optional request identifier
-    PreconditionErrorOwnCodes:
-      type: string
-      enum:
-      - FailOnMfaRequired
-      - KeyRegionLocked
-      - KeyRegionChangedRecently
-      - MfaRegionLocked
-      - Eth2ProposerSlotTooLow
-      - Eth2AttestationSourceEpochTooLow
-      - Eth2AttestationTargetEpochTooLow
-      - Eth2ConcurrentBlockSigning
-      - Eth2ConcurrentAttestationSigning
-      - Eth2MultiDepositToNonGeneratedKey
-      - Eth2MultiDepositUnknownInitialDeposit
-      - Eth2MultiDepositWithdrawalAddressMismatch
-      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
-      - BabylonEotsConcurrentSigning
-      - TendermintStateError
-      - TendermintConcurrentSigning
-      - MfaApprovalsNotYetValid
+          description: The Coinbase API url method that would have been called
+    Scope:
+      oneOf:
+      - $ref: '#/components/schemas/ExplicitScope'
+      - type: string
+        title: OtherScopes
+        description: Scopes including wildcard fragments for accessing CubeSigner APIs
+        pattern: ^(orgAccess:child)(:[^:]+)?$
+      description: All scopes for accessing CubeSigner APIs
     ExplicitScope:
       type: string
       title: ExplicitScope
@@ -1441,6 +1485,198 @@ components:
       - rpc:binance
       - rpc:bybit
       - rpc:coinbase
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+        request_id:
+          type: string
+          description: Optional request identifier
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    Empty:
+      default: null
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    BybitApiPropertiesPatch:
+      type: object
+      description: 'Wire-format patch payload for [`KeyProperties::BybitApi`].
+
+
+        Every field follows the same per-field PATCH semantics: a missing field
+
+        leaves the existing value alone, a JSON `null` clears it, and a value sets it.'
+      properties:
+        api_key:
+          type:
+          - string
+          - 'null'
+          description: The Bybit-issued API key string. Encrypted server-side before storage.
+        label:
+          type:
+          - string
+          - 'null'
+          description: Arbitrary label. Useful for storing the corresponding API key label on the Bybit side.
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    MemberRole:
+      type: string
+      description: Describes whether a user in an org is an Owner or just a regular member
+      enum:
+      - Alien
+      - Member
+      - Owner
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
     PolicyErrorOwnCodes:
       type: string
       enum:
@@ -1521,48 +1757,18 @@ components:
       - WebhookPoliciesDisabled
       - DeniedByWebhook
       - ExplicitlyDenied
-    ClientSessionInfo:
-      type: object
-      description: 'Session information sent to the client.
-
-        This struct works in tandem with its server-side counterpart [`SessionData`].'
-      required:
-      - session_id
-      - auth_token
-      - refresh_token
-      - epoch
-      - epoch_token
-      - auth_token_exp
-      - refresh_token_exp
-      properties:
-        auth_token:
-          type: string
-          description: Token to use for authorization.
-        auth_token_exp:
-          $ref: '#/components/schemas/EpochDateTime'
-        epoch:
-          type: integer
-          format: int32
-          description: Epoch at which the token was last refreshed
-          minimum: 0
-        epoch_token:
-          $ref: '#/components/schemas/B32'
-        refresh_token:
-          type: string
-          description: Token to use for refreshing the `(auth, refresh)` token pair
-        refresh_token_exp:
-          $ref: '#/components/schemas/EpochDateTime'
-        session_id:
-          type: string
-          description: Session ID
-    AcceptedValueCode:
+    BadGatewayErrorCode:
       type: string
       enum:
-      - SignDryRun
-      - BinanceDryRun
-      - BybitDryRun
-      - CoinbaseDryRun
-      - MfaRequired
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
     BinanceDryRunArgs:
       type: object
       required:
@@ -1575,514 +1781,272 @@ components:
         url:
           type: string
           description: The Binance API url method that would have been called
-    BybitDryRunArgs:
+    RoleAttestationVerbosity:
+      type: string
+      description: Specifies which role properties to include in an attestation
+      enum:
+      - Summary
+      - WithKeys
+      - Full
+    AcceptedResponse:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      - type: object
+    Seconds:
+      type: integer
+      format: int64
+      description: 'Duration measured in seconds
+
+        A wrapper type for serialization that encodes a `Duration` as a `u64` representing the number of seconds.'
+      minimum: 0
+    HistoricalTx:
       type: object
+      description: A recently signed transaction that we store in the DB.
       required:
-      - method
-      - url
-      - payload
+      - key_id
+      - historical_tx_org_id
+      - operation
+      - request
+      - result
+      - date
+      - exp_epoch
       properties:
-        method:
-          type: string
-          description: The Bybit API method that would have been used
-        payload:
-          type: string
-          description: The request body (for POST endpoints) or query string (for GET endpoints).
-        url:
-          type: string
-          description: The Bybit API url that would have been called
-    CreateRoleRequest:
-      type: object
-      description: Optional create role request body
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: A human-readable name for the role.
-          example: my_role
-          pattern: ^[_a-zA-Z0-9]{3,30}$
-    CoinbaseDryRunArgs:
-      type: object
-      required:
-      - method
-      - url
-      properties:
-        method:
-          type: string
-          description: The Coinbase API method that would have been used
-        url:
-          type: string
-          description: The Coinbase API url method that would have been called
-    SignDryRunArgs:
-      type: object
-      required:
-      - mfa_requests
-      properties:
-        mfa_requests:
-          type: array
-          items:
-            $ref: '#/components/schemas/MfaRequestInfo'
-          description: Whether MFA is required
-        policy_eval_tree:
-          description: Optional policy evaluation tree, if requested
-          nullable: true
-    ConflictErrorCode:
+        date:
+          $ref: '#/components/schemas/EpochDateTime'
+        exp_epoch:
+          $ref: '#/components/schemas/EpochDateTime'
+        historical_tx_org_id:
+          $ref: '#/components/schemas/Id'
+        key_id:
+          $ref: '#/components/schemas/Id'
+        mfa_status:
+          allOf:
+          - $ref: '#/components/schemas/Status'
+        operation:
+          $ref: '#/components/schemas/OperationKind'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        request_id:
+          type:
+          - string
+          - 'null'
+          description: Original request id
+        result:
+          description: Operation-specific result
+        role_id:
+          allOf:
+          - $ref: '#/components/schemas/Id'
+        user_id:
+          allOf:
+          - $ref: '#/components/schemas/Id'
+    InternalErrorCode:
       type: string
       enum:
-      - ConcurrentRequestDisallowed
-      - ConcurrentLockCreation
-    Id:
-      type: string
-    BinanceApiPropertiesPatch:
+      - NoMaterialId
+      - InvalidAuditLogEntry
+      - UnexpectedCheckerRule
+      - UnresolvedPolicyReference
+      - UnexpectedAclAction
+      - FidoKeyAssociatedWithMultipleUsers
+      - ClaimsParseError
+      - InvalidThrottleId
+      - InvalidEmailAddress
+      - EmailTemplateRender
+      - OidcIdentityHeaderMissing
+      - OidcIdentityParseError
+      - SystemTimeError
+      - PasswordHashParseError
+      - SendMailError
+      - ReqwestError
+      - EmailConstructionError
+      - TsWriteError
+      - TsQueryError
+      - DbQueryError
+      - DbGetError
+      - DbDeleteError
+      - DbPutError
+      - DbUpdateError
+      - SerdeError
+      - TestAndSetError
+      - DbGetItemsError
+      - DbWriteError
+      - CubistSignerError
+      - CwListMetricsError
+      - CwPutMetricDataError
+      - GetAwsSecretError
+      - SecretNotFound
+      - KmsGenerateRandomError
+      - MalformedTotpBytes
+      - KmsGenerateRandomNoResponseError
+      - CreateKeyError
+      - ParseDerivationPathError
+      - SplitSignerError
+      - CreateImportKeyError
+      - CreateEotsNoncesError
+      - EotsSignError
+      - BabylonCovSignError
+      - CognitoDeleteUserError
+      - CognitoListUsersError
+      - CognitoGetUserError
+      - MissingUserEmail
+      - CognitoResendUserInvitation
+      - CognitoSetUserPasswordError
+      - GenericInternalError
+      - AssumeRoleWithoutEvidence
+      - OidcAuthWithoutOrg
+      - MissingKeyMetadata
+      - KmsEnableKeyError
+      - KmsDisableKeyError
+      - LambdaInvokeError
+      - LambdaNoResponseError
+      - LambdaFailure
+      - LambdaUnparsableResponse
+      - SerializeEncryptedExportKeyError
+      - DeserializeEncryptedExportKeyError
+      - ReEncryptUserExport
+      - S3UploadError
+      - S3DownloadError
+      - S3CopyError
+      - S3ListObjectsError
+      - S3DeleteObjectsError
+      - S3BuildError
+      - S3PresignedUrlError
+      - ManagedStateMissing
+      - InternalHeaderMissing
+      - InvalidInternalHeaderValue
+      - RequestLocalStateAlreadySet
+      - OidcOrgMismatch
+      - OidcIssuerInvalidJwk
+      - InvalidPkForMaterialId
+      - SegwitTweakFailed
+      - UncheckedOrg
+      - SessionOrgIdMissing
+      - AvaSignCredsMissing
+      - AvaSignSignatureMissing
+      - ExpectedRoleSession
+      - InvalidThirdPartyIdentity
+      - CognitoGetUser
+      - SnsSubscribeError
+      - SnsUnsubscribeError
+      - SnsGetSubscriptionAttributesError
+      - SnsSubscriptionAttributesMissing
+      - SnsSetSubscriptionAttributesError
+      - SnsPublishBatchError
+      - InconsistentMultiValueTestAndSet
+      - MaterialIdError
+      - InvalidBtcAddress
+      - HistoricalTxBodyMissing
+      - InvalidOperation
+      - ParentOrgNotFound
+      - OrgParentLoop
+      - ResolvedParentOrgWithNoScopeCeiling
+      - InvalidUploadObjectId
+      - PolicyEngineNotFound
+      - PolicyEngineError
+      - PolicySecretsEncryptionError
+      - CreatePolicyImportKeyError
+      - InvalidAlias
+      - EmptyUpdateModifiedObject
+      - EmptyUpdateModifiedActions
+      - DbContactAddressesInvalid
+      - InvalidEvmSigedRlp
+      - InvalidErc20Data
+      - InvalidRpcUrl
+    EditPolicy:
       type: object
-      properties:
-        api_key:
-          type: string
-          description: The Binance-issued API key string. Encrypted server-side before storage.
-          nullable: true
-        email:
-          type: string
-          description: Email address of the Binance (master or sub) account this key authenticates as.
-          nullable: true
-        is_master:
-          type: boolean
-          description: Whether this corresponds to a master (as opposed to a sub) account on Binance.
-          nullable: true
-        label:
-          type: string
-          description: Arbitrary label. Useful for storing the corresponding API key label on the Binance side.
-          nullable: true
-        sub_of:
-          type: string
-          description: 'If this is a sub-account, this field can be used to link it to its master account
+      description: 'A policy which governs when and who is allowed to update the entity this policy is
 
-            (by providing the master account email, which Binance uses as an account identifier).'
-          nullable: true
-    UpdateRoleRequest:
-      type: object
+        attached to (e.g., a role or a key).
+
+
+        When attached to a role, by default, this policy applies to role deletion and all
+
+        role updates (including adding/removing keys and users); in terms of scopes,
+
+        it applies to `manage:role:update:*` and `manage:role:delete`.
+
+
+        When attached to a key, by default, this policy applies to key deletion, all
+
+        key updates, and adding/removing that key to/from a role; in terms of scopes,
+
+        it applies to `manage:key:update:*`, `manage:key:delete`, `manage:role:update:key:*`.
+
+
+        This default can be changed by setting the `applies_to_scopes` property.'
       properties:
-        edit_policy:
+        applies_to_scopes:
+          $ref: '#/components/schemas/ScopeSet'
+        mfa:
           allOf:
-          - $ref: '#/components/schemas/EditPolicy'
-          nullable: true
-        enabled:
-          type: boolean
-          description: 'If set, updates the role''s `enabled` property to this value.
-
-            Once disabled, a role cannot be used; and it''s tokens cannot be used for signing.'
-          nullable: true
-        policy:
-          type: array
-          items: {}
-          description: 'If set, update this role''s key policies (old policies will be overwritten!).
-
-            Only "deny" style policies may be set.'
-          example:
-          - SourceIpAllowlist:
-            - 123.456.78.9/16
-          nullable: true
-        restricted_actions:
-          type: object
-          description: 'If set, update this role''s settings for restricting which member roles are allowed to
-
-            perform actions on this role.'
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/MemberRole'
-            uniqueItems: true
-          example:
-            CreateToken:
-            - Owner
-          nullable: true
-    MfaType:
-      type: string
-      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
-      description: Different types that can be used to approve an MFA request
-      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
-    PolicyErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
-      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
-    BybitApiPropertiesPatch:
+          - $ref: '#/components/schemas/MfaPolicy'
+        time_lock_until:
+          allOf:
+          - $ref: '#/components/schemas/EpochDateTime'
+    CoinbaseApiPropertiesPatch:
       type: object
-      description: 'Wire-format patch payload for [`KeyProperties::BybitApi`].
+      description: 'Wire-format patch payload for [`KeyProperties::CoinbaseApi`].
 
 
         Every field follows the same per-field PATCH semantics: a missing field
 
         leaves the existing value alone, a JSON `null` clears it, and a value sets it.'
       properties:
-        api_key:
-          type: string
-          description: The Bybit-issued API key string. Encrypted server-side before storage.
-          nullable: true
-        label:
-          type: string
-          description: Arbitrary label. Useful for storing the corresponding API key label on the Bybit side.
-          nullable: true
-    MfaRequestInfo:
+        api_key_id:
+          type:
+          - string
+          - 'null'
+          description: 'Identifier of the Coinbase API key this key authenticates as. Plain
+
+            (non-secret) value; appears in JWT `kid`/`sub` claims.'
+        portfolio_name:
+          type:
+          - string
+          - 'null'
+          description: Coinbase portfolio name.
+        portfolio_uuid:
+          type:
+          - string
+          - 'null'
+          description: Coinbase portfolio UUID.
+    AcceptedValueCode:
+      type: string
+      enum:
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    NewSessionResponse:
       type: object
-      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
       required:
-      - id
-      - expires_at
-      - request
-      - status
-      - created_by
-      - provenance
+      - org_id
+      - token
+      - refresh_token
+      - session_info
       properties:
-        created_at:
-          $ref: '#/components/schemas/EpochDateTime'
-        created_by:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
           type: string
-          description: The session identity (user or role) that created this request.
-        expires_at:
-          $ref: '#/components/schemas/EpochDateTime'
-        id:
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
           type: string
-          description: Approval request ID.
-        not_valid_until:
-          $ref: '#/components/schemas/EpochDateTime'
-        provenance:
-          type: string
-          description: MFA policy provenance
-          enum:
-          - Org
-          - Key
-          - KeyInRole
-          - Role
-          - User
-          - EditPolicy
-        receipt:
-          allOf:
-          - $ref: '#/components/schemas/Receipt'
-          nullable: true
-        region:
-          type: string
-          description: The region this MFA request was created in.  It can only be redeemed from the same region.
-        related_ids:
-          type: array
-          items:
-            type: string
-          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+          description: 'New token to be used for authentication. Requests to signing endpoints
 
-            were generated at once for the same CubeSigner operation.
-
-
-            If not set, it means that this was the lone MFA request generated for `request`.
-
-
-            This is useful so that a client can discover all the MFAs whose receipts must
-
-            be submitted together to carry out the original CubeSigner operation.'
-        request:
-          $ref: '#/components/schemas/HttpRequest'
-        status:
-          $ref: '#/components/schemas/Status'
-    BadRequestErrorCode:
-      type: string
-      enum:
-      - GenericBadRequest
-      - DisallowedAllowRuleReference
-      - InvalidPaginationToken
-      - InvalidEmail
-      - InvalidEmailTemplate
-      - QueryMetricsError
-      - InvalidTelegramData
-      - ValidationError
-      - WebhookPolicyTimeoutOutOfBounds
-      - WebhookPolicyDisallowedUrlScheme
-      - WebhookPolicyDisallowedUrlHost
-      - WebhookPolicyDisallowedHeaders
-      - ReservedName
-      - UserEmailNotConfigured
-      - EmailPasswordNotFound
-      - PasswordAuthNotAllowedByInvitation
-      - OneTimeCodeExpired
-      - InvalidBody
-      - InvalidJwt
-      - InvitationNoLongerValid
-      - TokenRequestError
-      - InvalidMfaReceipt
-      - InvalidMfaPolicyCount
-      - InvalidMfaPolicyNumAuthFactors
-      - InvalidMfaPolicyNumAllowedApprovers
-      - InvalidMfaPolicyGracePeriodTooLong
-      - InvalidBabylonStakingPolicyParams
-      - InvalidSuiTxReceiversEmptyAllowlist
-      - InvalidBtcTxReceiversEmptyAllowlist
-      - InvalidRequireRoleSessionAllowlist
-      - InvalidCreateKeyCount
-      - InvalidDiffieHellmanCount
-      - OrgInviteExistingUser
-      - OrgUserAlreadyExists
-      - OrgNameTaken
-      - KwkNotFoundInRegion
-      - OrgIsNotOrgExport
-      - RoleNameTaken
-      - PolicyNameTaken
-      - NameTaken
-      - ContactNameInvalid
-      - ContactAddressesInvalid
-      - ContactLabelInvalid
-      - ContactModified
-      - PolicyNotFound
-      - PolicyVersionNotFound
-      - PolicyRuleDisallowedByType
-      - PolicyTypeDisallowed
-      - PolicyDuplicateError
-      - PolicyStillAttached
-      - PolicyModified
-      - PolicyNotAttached
-      - AddKeyToRoleCountTooHigh
-      - InvalidKeyId
-      - InvalidTimeLockAlreadyInThePast
-      - InvalidRestrictedScopes
-      - InvalidUpdate
-      - InvalidMetadataLength
-      - InvalidLength
-      - InvalidKeyMaterialId
-      - KeyNotFound
-      - SiweChallengeNotFound
-      - SiweInvalidRequest
-      - SiwsChallengeNotFound
-      - SiwsInvalidRequest
-      - UserExportDerivedKey
-      - UserExportPublicKeyInvalid
-      - NistP256PublicKeyInvalid
-      - UnableToAccessSmtpRelay
-      - UserExportInProgress
-      - RoleNotFound
-      - InvalidRoleNameOrId
-      - InvalidMfaReceiptOrgIdMissing
-      - InvalidMfaReceiptInvalidOrgId
-      - MfaRequestNotFound
-      - InvalidKeyType
-      - InvalidPropertiesForKeyType
-      - MismatchedKeyPropertiesPatch
-      - MissingBinanceApiKey
-      - MissingBybitApiKey
-      - MissingCoinbaseApiKey
-      - BinanceKeyMasterMismatch
-      - BybitAccountMismatch
-      - InvalidKeyMaterial
-      - InvalidHexValue
-      - InvalidBase32Value
-      - InvalidBase58Value
-      - InvalidBase64Value
-      - InvalidSs58Value
-      - InvalidForkVersionLength
-      - InvalidEthAddress
-      - InvalidStellarAddress
-      - InvalidOrgNameOrId
-      - InvalidUpdateOrgRequestDisallowedMfaType
-      - InvalidUpdateOrgRequestEmptyAllowedMfaTypes
-      - EmailOtpDelayTooShortForRegisterMfa
-      - InvalidStakeDeposit
-      - InvalidBlobSignRequest
-      - InvalidDiffieHellmanRequest
-      - InvalidSolanaSignRequest
-      - InvalidEip712SignRequest
-      - InvalidEip7702SignRequest
-      - OnlySpecifyOne
-      - IncompatibleParams
-      - NoOidcDataInProof
-      - InvalidEvmSignRequest
-      - InvalidEth2SignRequest
-      - InvalidDeriveKeyRequest
-      - InvalidStakingAmount
-      - CustomStakingAmountNotAllowedForWrapperContract
-      - InvalidUnstakeRequest
-      - InvalidCreateUserRequest
-      - UserAlreadyExists
-      - IdpUserAlreadyExists
-      - CognitoUserAlreadyOrgMember
-      - UserNotFound
-      - UserWithEmailNotFound
-      - PolicyKeyMismatch
-      - EmptyScopes
-      - InvalidScopesForRoleSession
-      - InvalidLifetime
-      - NoSingleKeyForUser
-      - InvalidOrgPolicyRule
-      - SourceIpAllowlistEmpty
-      - LimitWindowTooLong
-      - Erc20ContractDisallowed
-      - EmptyRuleError
-      - PolicyFieldValidationError
-      - OptionalListEmpty
-      - MultipleExclusiveFieldsProvided
-      - DuplicateFieldEntry
-      - InvalidRange
-      - InvalidOrgPolicyRepeatedRule
-      - InvalidSuiTransaction
-      - SuiSenderMismatch
-      - AvaSignHashError
-      - AvaSignError
-      - BtcSegwitHashError
-      - BtcTaprootHashError
-      - BtcSignError
-      - TaprootSignError
-      - Eip712SignError
-      - InvalidMemberRoleInUserAdd
-      - InvalidMemberRoleInRecipientAdd
-      - ThirdPartyUserAlreadyExists
-      - OidcIdentityAlreadyExists
-      - UserAlreadyHasIdentity
-      - ThirdPartyUserNotFound
-      - DeleteOidcUserError
-      - DeleteUserError
-      - SessionRoleMismatch
-      - InvalidOidcToken
-      - InvalidOidcIdentity
-      - OidcIssuerUnsupported
-      - OidcIssuerNotAllowed
-      - OidcIssuerNoApplicableJwk
-      - FidoKeyAlreadyRegistered
-      - FidoKeySignCountTooLow
-      - FidoVerificationFailed
-      - FidoChallengeMfaMismatch
-      - UnsupportedLegacyCognitoSession
-      - InvalidIdentityProof
-      - PaginationDataExpired
-      - ExistingKeysViolateExclusiveKeyAccess
-      - ExportDelayTooShort
-      - ExportWindowTooLong
-      - InvalidTotpFailureLimit
-      - InvalidEip191SignRequest
-      - CannotResendUserInvitation
-      - InvalidNotificationEndpointCount
-      - CannotDeletePendingSubscription
-      - InvalidNotificationUrlProtocol
-      - EmptyOneOfOrgEventFilter
-      - EmptyAllExceptOrgEventFilter
-      - InvalidTapNodeHash
-      - InvalidOneTimeCode
-      - MessageNotFound
-      - MessageAlreadySigned
-      - MessageRejected
-      - MessageReplaced
-      - InvalidMessageType
-      - EmptyAddress
-      - InvalidEth2SigningPolicySlotRange
-      - InvalidEth2SigningPolicyEpochRange
-      - InvalidEth2SigningPolicyTimestampRange
-      - InvalidEth2SigningPolicyOverlappingRule
-      - RpcUrlMissing
-      - MmiChainIdMissing
-      - EthersInvalidRpcUrl
-      - EthersGetTransactionCountError
-      - InvalidPassword
-      - BabylonStakingFeePlusDustOverflow
-      - BabylonStaking
-      - BabylonStakingIncorrectKey
-      - BabylonStakingSegwitNonDeposit
-      - BabylonStakingRegistrationRequiresTaproot
-      - PsbtSigning
-      - TooManyResets
-      - TooManyRequests
-      - TooManyFailedLogins
-      - BadBtcMessageSignP2shFlag
-      - InvalidTendermintRequest
-      - PolicyVersionMaxReached
-      - PolicyVersionInvalid
-      - PolicySecretLimitReached
-      - PolicySecretTooLarge
-      - InvalidImportKey
-      - AlienOwnerInvalid
-      - EmptyUpdateRequest
-      - InvalidPolicyReference
-      - PolicyEngineDisabled
-      - InvalidWasmPolicy
-      - CelProgramTooLarge
-      - InvalidPolicy
-      - RedundantDerivationPath
-      - ImportKeyMissing
-      - InvalidAbiMethods
-      - BabylonCovSign
-      - InvalidPolicyLogsRequest
-      - UserProfileMigrationMultipleEntries
-      - UserProfileMigrationTooManyItems
-      - InputTooShort
-      - InvalidTweakLength
-      - InvalidCustomChains
-      - InvalidRpcRequest
-    SignerErrorOwnCodes:
-      type: string
-      enum:
-      - PreComputed
-      - StatusCodeWithMessage
-      - JrpcError
-      - UnhandledError
-      - ProxyStartError
-      - EnclaveError
-      - PolicyErrorWithEvalTree
-      - RpcApi
-    KeyType:
-      type: string
-      enum:
-      - SecpEthAddr
-      - SecpBtc
-      - SecpBtcTest
-      - SecpBtcLegacy
-      - SecpBtcLegacyTest
-      - SecpAvaAddr
-      - SecpAvaTestAddr
-      - BlsPub
-      - BlsInactive
-      - BlsAvaIcm
-      - Ed25519SolanaAddr
-      - Ed25519SuiAddr
-      - Ed25519AptosAddr
-      - Ed25519CardanoAddrVk
-      - Ed25519StellarAddr
-      - Ed25519SubstrateAddr
-      - Ed25519CantonAddr
-      - Ed25519BinanceApi
-      - Ed25519CoinbaseApi
-      - Mnemonic
-      - Stark
-      - BabylonEots
-      - BabylonCov
-      - TaprootBtc
-      - TaprootBtcTest
-      - SecpCosmosAddr
-      - P256CosmosAddr
-      - P256OntologyAddr
-      - P256Neo3Addr
-      - Ed25519TendermintAddr
-      - SecpTronAddr
-      - Ed25519TonAddr
-      - SecpDogeAddr
-      - SecpDogeTestAddr
-      - SecpKaspaAddr
-      - SecpKaspaTestAddr
-      - SchnorrKaspaAddr
-      - SchnorrKaspaTestAddr
-      - SecpLtc
-      - SecpLtcTest
-      - SecpXrpAddr
-      - Ed25519XrpAddr
-      - BabyJubjub
-      - HmacSha256
-      - HmacSha256Bybit
-    Scope:
-      oneOf:
-      - $ref: '#/components/schemas/ExplicitScope'
-      - type: string
-        title: OtherScopes
-        description: Scopes including wildcard fragments for accessing CubeSigner APIs
-        pattern: ^(orgAccess:child)(:[^:]+)?$
-      description: All scopes for accessing CubeSigner APIs
-    UserInRoleInfo:
-      type: object
-      required:
-      - user_id
-      properties:
-        user_id:
-          type: string
+            should include this value in the `Authorization` header.'
     KeyPropertiesPatch:
       oneOf:
       - allOf:
@@ -2127,279 +2091,6 @@ components:
         - **On read**: each field is omitted when the stored property is unset; secret
 
         fields are emitted with the redacted marker (e.g. "[REDACTED]").'
-    Seconds:
-      type: integer
-      format: int64
-      description: 'Duration measured in seconds
-
-        A wrapper type for serialization that encodes a `Duration` as a `u64` representing the number of seconds.'
-      minimum: 0
-    KeyInRoleInfo:
-      type: object
-      required:
-      - role_id
-      - key_id
-      properties:
-        key_id:
-          type: string
-          description: Key ID
-          example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
-        key_info:
-          allOf:
-          - $ref: '#/components/schemas/KeyInfo'
-          nullable: true
-        policy:
-          type: array
-          items:
-            type: object
-          description: Policies that are checked before this key is used on behalf of this role
-          example:
-          - TxReceiver: '0x8c594691c0e592ffa21f153a16ae41db5befcaaa'
-          - TxDeposit:
-              kind: Canonical
-        role_id:
-          type: string
-          description: Role ID
-          example: Role#e427c28a-9c5b-49cc-a257-878aea58a22c
-    RoleInfo:
-      allOf:
-      - $ref: '#/components/schemas/CommonFields'
-      - type: object
-        required:
-        - role_id
-        - enabled
-        - restricted_actions
-        - member
-        properties:
-          enabled:
-            type: boolean
-            description: Whether the role is enabled
-            example: 'true'
-          keys:
-            type: array
-            items:
-              $ref: '#/components/schemas/KeyInRoleInfo'
-            description: Deprecated. The CubeSigner IDs of at most 100 keys associated with this role.
-            nullable: true
-          member:
-            type: boolean
-            description: 'Whether the current user is a member of the role. This is always true,
-
-              except for owners who can see roles they are not members of.'
-          name:
-            type: string
-            description: The human-readable name for the role (must be alphanumeric)
-            example: my_role
-            nullable: true
-          policy:
-            type: array
-            items:
-              type: object
-            description: Policy that is checked whenever a key is accessed for signing via this role.
-            example:
-            - SourceIpAllowlist:
-              - 123.456.78.9/16
-            - RequireMfa:
-                count: 1
-          restricted_actions:
-            $ref: '#/components/schemas/RestrictedActionsMap'
-          role_id:
-            type: string
-            description: The ID of the role
-            example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
-          users:
-            type: array
-            items:
-              type: string
-            description: Deprecated. The list of at most 100 users with access to the role.
-            nullable: true
-    HistoricalTx:
-      type: object
-      description: A recently signed transaction that we store in the DB.
-      required:
-      - key_id
-      - historical_tx_org_id
-      - operation
-      - request
-      - result
-      - date
-      - exp_epoch
-      properties:
-        date:
-          $ref: '#/components/schemas/EpochDateTime'
-        exp_epoch:
-          $ref: '#/components/schemas/EpochDateTime'
-        historical_tx_org_id:
-          $ref: '#/components/schemas/Id'
-        key_id:
-          $ref: '#/components/schemas/Id'
-        mfa_status:
-          allOf:
-          - $ref: '#/components/schemas/Status'
-          nullable: true
-        operation:
-          $ref: '#/components/schemas/OperationKind'
-        request:
-          $ref: '#/components/schemas/HttpRequest'
-        request_id:
-          type: string
-          description: Original request id
-          nullable: true
-        result:
-          description: Operation-specific result
-        role_id:
-          allOf:
-          - $ref: '#/components/schemas/Id'
-          nullable: true
-        user_id:
-          allOf:
-          - $ref: '#/components/schemas/Id'
-          nullable: true
-    PreconditionErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
-      - $ref: '#/components/schemas/PolicyErrorCode'
-    MfaPolicy:
-      type: object
-      properties:
-        allowed_approvers:
-          type: array
-          items:
-            type: string
-          description: Users who are allowed to approve. If empty at creation time, default to the current user.
-        allowed_mfa_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/MfaType'
-          description: Allowed approval types. When omitted, defaults to any.
-          nullable: true
-        count:
-          type: integer
-          format: int32
-          description: How many users to require to approve (defaults to 1).
-          minimum: 0
-        lifetime:
-          $ref: '#/components/schemas/Seconds'
-        num_auth_factors:
-          type: integer
-          format: int32
-          description: How many auth factors to require per user (defaults to 1).
-          minimum: 0
-        request_comparer:
-          $ref: '#/components/schemas/HttpRequestCmp'
-        restricted_operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/OperationKind'
-          description: 'CubeSigner operations to which this policy should apply.
-
-            When omitted, applies to all operations.'
-          nullable: true
-        time_delay:
-          $ref: '#/components/schemas/Seconds'
-      example:
-        allowed_approvers:
-        - User#fabc3f88-04e0-471b-9657-0ae12a3cd73e
-        - User#d796c369-9974-473b-ab9e-e4a2418d2d07
-        count: 2
-        lifetime: 900
-    ApprovalInfo:
-      type: object
-      required:
-      - timestamp
-      properties:
-        timestamp:
-          $ref: '#/components/schemas/EpochDateTime'
-    HttpRequest:
-      type: object
-      description: 'Information about the request.
-
-
-        Captures all the relevant info (including the request body) about requests that require MFA.
-
-        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
-
-        it is exactly the same as it originally was.'
-      required:
-      - method
-      - path
-      properties:
-        body:
-          type: object
-          description: HTTP request body
-          nullable: true
-        method:
-          type: string
-          description: HTTP method of the request
-        path:
-          type: string
-          description: HTTP path of the request, excluding the host
-    NewSessionResponse:
-      type: object
-      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
-      required:
-      - org_id
-      - token
-      - refresh_token
-      - session_info
-      properties:
-        expiration:
-          type: integer
-          format: int64
-          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
-          example: 1701879640
-          minimum: 0
-        org_id:
-          $ref: '#/components/schemas/Id'
-        refresh_token:
-          type: string
-          description: Token that can be used to refresh this session.
-        session_info:
-          $ref: '#/components/schemas/ClientSessionInfo'
-        token:
-          type: string
-          description: 'New token to be used for authentication. Requests to signing endpoints
-
-            should include this value in the `Authorization` header.'
-    Receipt:
-      type: object
-      description: Receipt that an MFA request was approved.
-      required:
-      - confirmation
-      - final_approver
-      - timestamp
-      properties:
-        confirmation:
-          type: string
-          description: Confirmation code the user needs to present when resuming the original request.
-          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
-        final_approver:
-          type: string
-          description: The ID of the logged-in user whose action created this approval.
-        timestamp:
-          $ref: '#/components/schemas/EpochDateTime'
-    UnauthorizedErrorCode:
-      type: string
-      enum:
-      - AuthorizationHeaderMissing
-      - EndpointRequiresUserSession
-      - RefreshTokenMissing
-    AcceptedResponse:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      - type: object
-    MemberRole:
-      type: string
-      description: Describes whether a user in an org is an Owner or just a regular member
-      enum:
-      - Alien
-      - Member
-      - Owner
-    TimeoutErrorCode:
-      type: string
-      enum:
-      - PolicyEngineTimeout
-      - WasmPolicyExecutionTimeout
     ForbiddenErrorCode:
       type: string
       enum:
@@ -2499,49 +2190,439 @@ components:
       - SiwsDomain
       - SiwsMessageInvalid
       - Acl
-    Status:
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    KeyDerivationInfo:
+      type: object
+      description: Derivation-related metadata for keys derived from a long-lived mnemonic
+      required:
+      - mnemonic_id
+      - derivation_path
+      properties:
+        derivation_path:
+          type: string
+          description: The derivation path used to derive this key
+        mnemonic_id:
+          type: string
+          description: The mnemonic-id of the key's parent mnemonic
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    KeyInfo:
+      allOf:
+      - $ref: '#/components/schemas/CommonFields'
+      - type: object
+        required:
+        - key_type
+        - key_id
+        - material_id
+        - purpose
+        - enabled
+        - owner
+        - public_key
+        - policy
+        properties:
+          derivation_info:
+            allOf:
+            - $ref: '#/components/schemas/KeyDerivationInfo'
+          enabled:
+            type: boolean
+            description: Whether the key is enabled (only enabled keys may be used for signing)
+          key_id:
+            type: string
+            description: 'The id of the key: "Key#" followed by a unique identifier specific to
+
+              the type of key (such as a public key for BLS or an ethereum address for Secp)'
+            example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
+          key_type:
+            $ref: '#/components/schemas/KeyType'
+          material_id:
+            type: string
+            description: A unique identifier specific to the type of key, such as a public key or an ethereum address
+            example: '0x8e3484687e66cdd26cf04c3647633ab4f3570148'
+          owner:
+            type: string
+            description: Owner of the key
+            example: User#c3b9379c-4e8c-4216-bd0a-65ace53cf98f
+          policy:
+            type: array
+            items: {}
+            description: Key policy
+            example:
+            - AllowRawBlobSigning
+            - RequireMfa:
+                count: 1
+          properties:
+            allOf:
+            - $ref: '#/components/schemas/KeyPropertiesPatch'
+          provenance:
+            type:
+            - string
+            - 'null'
+            description: The key provenance.
+          public_key:
+            type: string
+            description: 'Hex-encoded, serialized public key. The format used depends on the key type:
+
+              - Secp256k1 keys use 65-byte uncompressed SECG format;
+
+              - Stark keys use 33-byte compressed SECG format;
+
+              - BLS keys use 48-byte compressed BLS12-381 (ZCash) format;
+
+              - Ed25519 keys use the canonical 32-byte encoding specified in RFC 8032.'
+            example: '0x04d2688b6bc2ce7f9879b9e745f3c4dc177908c5cef0c1b64cff19ae7ff27dee623c64fe9d9c325c7fbbc748bbd5f607ce14dd83e28ebbbb7d3e7f2ffb70a79431'
+          purpose:
+            type: string
+            description: The purpose for which the key can be used (e.g., chain id for which the key is allowed to sign messages)
+            example: Eth2Validator(1)
+          region:
+            type: string
+            description: The region affinity for this key
+    RestrictedActionsMap:
+      type: object
+      description: A map of actions to sets of membership roles
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/MemberRole'
+        uniqueItems: true
+    SignDryRunArgs:
       type: object
       required:
-      - count
-      - num_auth_factors
-      - allowed_approvers
-      - approved_by
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+    KeyType:
+      type: string
+      enum:
+      - SecpEthAddr
+      - SecpBtc
+      - SecpBtcTest
+      - SecpBtcLegacy
+      - SecpBtcLegacyTest
+      - SecpAvaAddr
+      - SecpAvaTestAddr
+      - BlsPub
+      - BlsInactive
+      - BlsAvaIcm
+      - Ed25519SolanaAddr
+      - Ed25519SuiAddr
+      - Ed25519AptosAddr
+      - Ed25519CardanoAddrVk
+      - Ed25519StellarAddr
+      - Ed25519SubstrateAddr
+      - Ed25519CantonAddr
+      - Ed25519BinanceApi
+      - Ed25519CoinbaseApi
+      - Mnemonic
+      - Stark
+      - BabylonEots
+      - BabylonCov
+      - TaprootBtc
+      - TaprootBtcTest
+      - SecpCosmosAddr
+      - P256CosmosAddr
+      - P256OntologyAddr
+      - P256Neo3Addr
+      - Ed25519TendermintAddr
+      - SecpTronAddr
+      - Ed25519TonAddr
+      - SecpDogeAddr
+      - SecpDogeTestAddr
+      - SecpKaspaAddr
+      - SecpKaspaTestAddr
+      - SchnorrKaspaAddr
+      - SchnorrKaspaTestAddr
+      - SecpLtc
+      - SecpLtcTest
+      - SecpXrpAddr
+      - Ed25519XrpAddr
+      - BabyJubjub
+      - HmacSha256
+      - HmacSha256Bybit
+    ScopeSet:
+      oneOf:
+      - type: string
+        description: All scopes
+        enum:
+        - All
+      - type: object
+        required:
+        - AllExcept
+        properties:
+          AllExcept:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: All scopes except these (including those transitively implied).
+      - type: object
+        required:
+        - AllOf
+        properties:
+          AllOf:
+            type: array
+            items:
+              $ref: '#/components/schemas/Scope'
+            description: All of these scopes (including those transitively implied).
+      description: A set of scopes.
+    HttpRequestCmp:
+      oneOf:
+      - type: string
+        description: The requests must match exactly. Any given MFA receipt can be used at most once.
+        enum:
+        - Eq
+      - type: object
+        required:
+        - EvmTx
+        properties:
+          EvmTx:
+            $ref: '#/components/schemas/EvmTxCmp'
+      - type: object
+        required:
+        - SolanaTx
+        properties:
+          SolanaTx:
+            $ref: '#/components/schemas/SolanaTxCmp'
+      description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type:
+          - object
+          - 'null'
+          description: HTTP request body
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    Id:
+      type: string
+    BinanceApiPropertiesPatch:
+      type: object
+      properties:
+        api_key:
+          type:
+          - string
+          - 'null'
+          description: The Binance-issued API key string. Encrypted server-side before storage.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Email address of the Binance (master or sub) account this key authenticates as.
+        is_master:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this corresponds to a master (as opposed to a sub) account on Binance.
+        label:
+          type:
+          - string
+          - 'null'
+          description: Arbitrary label. Useful for storing the corresponding API key label on the Binance side.
+        sub_of:
+          type:
+          - string
+          - 'null'
+          description: 'If this is a sub-account, this field can be used to link it to its master account
+
+            (by providing the master account email, which Binance uses as an account identifier).'
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    KeyInRoleInfo:
+      type: object
+      required:
+      - role_id
+      - key_id
+      properties:
+        key_id:
+          type: string
+          description: Key ID
+          example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
+        key_info:
+          allOf:
+          - $ref: '#/components/schemas/KeyInfo'
+        policy:
+          type: array
+          items:
+            type: object
+          description: Policies that are checked before this key is used on behalf of this role
+          example:
+          - TxReceiver: '0x8c594691c0e592ffa21f153a16ae41db5befcaaa'
+          - TxDeposit:
+              kind: Canonical
+        role_id:
+          type: string
+          description: Role ID
+          example: Role#e427c28a-9c5b-49cc-a257-878aea58a22c
+    UserInRoleInfo:
+      type: object
+      required:
+      - user_id
+      properties:
+        user_id:
+          type: string
+    MfaPolicy:
+      type: object
       properties:
         allowed_approvers:
           type: array
           items:
             type: string
-          description: Users who are allowed to approve. Must be non-empty.
+          description: Users who are allowed to approve. If empty at creation time, default to the current user.
         allowed_mfa_types:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/MfaType'
           description: Allowed approval types. When omitted, defaults to any.
-          nullable: true
-        approved_by:
-          type: object
-          description: Users who have already approved
-          additionalProperties:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/ApprovalInfo'
         count:
           type: integer
           format: int32
-          description: How many users must approve
+          description: How many users to require to approve (defaults to 1).
           minimum: 0
+        lifetime:
+          $ref: '#/components/schemas/Seconds'
         num_auth_factors:
           type: integer
           format: int32
-          description: How many auth factors to require per user
+          description: How many auth factors to require per user (defaults to 1).
           minimum: 0
         request_comparer:
           $ref: '#/components/schemas/HttpRequestCmp'
+        restricted_operations:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OperationKind'
+          description: 'CubeSigner operations to which this policy should apply.
+
+            When omitted, applies to all operations.'
+        time_delay:
+          $ref: '#/components/schemas/Seconds'
+      example:
+        allowed_approvers:
+        - User#fabc3f88-04e0-471b-9657-0ae12a3cd73e
+        - User#d796c369-9974-473b-ab9e-e4a2418d2d07
+        count: 2
+        lifetime: 900
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
     EvmTxCmp:
       type: object
       properties:
         grace:
-          type: integer
+          type:
+          - integer
+          - 'null'
           format: int64
           description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
 
@@ -2568,7 +2649,6 @@ components:
 
 
             The grace period must not be greater than 30 days.'
-          nullable: true
           minimum: 0
         ignore_gas:
           type: boolean
@@ -2576,250 +2656,187 @@ components:
         ignore_nonce:
           type: boolean
           description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
-  responses:
-    PaginatedListRoleKeysResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    CommonFields:
+      allOf:
+      - type: object
+        description: 'Versioning fields (e.g., version number, creation time, and last modified times)
+
+          that are common to different types of resources.'
+        properties:
+          created:
             allOf:
-            - type: object
-              required:
-              - keys
-              properties:
-                keys:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/KeyInRoleInfo'
-                  description: All keys in a role
-            - type: object
-              properties:
-                last_evaluated_key:
-                  type: string
-                  description: 'If set, the content of `response` does not contain the entire result set.
-
-                    To fetch the next page of the result set, call the same endpoint
-
-                    but specify this value as the ''page.start'' query parameter.'
-                  nullable: true
-            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
-
-              value (which can the user pass back to use as a url query parameter to continue pagination).'
-    EmptyImpl:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - status
-            properties:
-              status:
-                type: string
-    RoleInfoJwt:
-      description: Response returned when requesting a role attestation.
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Response returned when requesting a role attestation.
-            required:
-            - jwt
-            properties:
-              jwt:
-                type: string
-                description: A JSON Web Token whose claims contain the `RoleInfo` structure.
-    PaginatedListRolesResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
+            - $ref: '#/components/schemas/EpochDateTime'
+          last_modified:
             allOf:
-            - type: object
-              required:
-              - roles
-              properties:
-                roles:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/RoleInfo'
-                  description: All roles in an organization.
-            - type: object
-              properties:
-                last_evaluated_key:
-                  type: string
-                  description: 'If set, the content of `response` does not contain the entire result set.
+            - $ref: '#/components/schemas/EpochDateTime'
+          version:
+            type: integer
+            format: int64
+            description: Version of this object
+            minimum: 0
+      - type: object
+        properties:
+          edit_policy:
+            $ref: '#/components/schemas/EditPolicy'
+          metadata:
+            description: 'User-defined metadata. When rendering (e.g., in the browser) you should treat
 
-                    To fetch the next page of the result set, call the same endpoint
+              it as untrusted user data (and avoid injecting metadata into HTML directly) if
 
-                    but specify this value as the ''page.start'' query parameter.'
-                  nullable: true
-            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
+              untrusted users can create/update keys (or their metadata).'
+      description: 'Fields that are common to different types of resources such as keys, roles, etc.
 
-              value (which can the user pass back to use as a url query parameter to continue pagination).'
+        Includes versioning fields plus metadata, edit policy, etc.'
+    CreateRoleRequest:
+      type: object
+      description: Optional create role request body
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: A human-readable name for the role.
+          example: my_role
+          pattern: ^[_a-zA-Z0-9]{3,30}$
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
     RoleInfo:
-      description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/CommonFields'
-            - type: object
-              required:
-              - role_id
-              - enabled
-              - restricted_actions
-              - member
-              properties:
-                enabled:
-                  type: boolean
-                  description: Whether the role is enabled
-                  example: 'true'
-                keys:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/KeyInRoleInfo'
-                  description: Deprecated. The CubeSigner IDs of at most 100 keys associated with this role.
-                  nullable: true
-                member:
-                  type: boolean
-                  description: 'Whether the current user is a member of the role. This is always true,
+      allOf:
+      - $ref: '#/components/schemas/CommonFields'
+      - type: object
+        required:
+        - role_id
+        - enabled
+        - restricted_actions
+        - member
+        properties:
+          enabled:
+            type: boolean
+            description: Whether the role is enabled
+            example: 'true'
+          keys:
+            type:
+            - array
+            - 'null'
+            items:
+              $ref: '#/components/schemas/KeyInRoleInfo'
+            description: Deprecated. The CubeSigner IDs of at most 100 keys associated with this role.
+          member:
+            type: boolean
+            description: 'Whether the current user is a member of the role. This is always true,
 
-                    except for owners who can see roles they are not members of.'
-                name:
-                  type: string
-                  description: The human-readable name for the role (must be alphanumeric)
-                  example: my_role
-                  nullable: true
-                policy:
-                  type: array
-                  items:
-                    type: object
-                  description: Policy that is checked whenever a key is accessed for signing via this role.
-                  example:
-                  - SourceIpAllowlist:
-                    - 123.456.78.9/16
-                  - RequireMfa:
-                      count: 1
-                restricted_actions:
-                  $ref: '#/components/schemas/RestrictedActionsMap'
-                role_id:
-                  type: string
-                  description: The ID of the role
-                  example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
-                users:
-                  type: array
-                  items:
-                    type: string
-                  description: Deprecated. The list of at most 100 users with access to the role.
-                  nullable: true
-    KeyInRoleInfo:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - role_id
-            - key_id
-            properties:
-              key_id:
-                type: string
-                description: Key ID
-                example: Key#0x8e3484687e66cdd26cf04c3647633ab4f3570148
-              key_info:
-                allOf:
-                - $ref: '#/components/schemas/KeyInfo'
-                nullable: true
-              policy:
-                type: array
-                items:
-                  type: object
-                description: Policies that are checked before this key is used on behalf of this role
-                example:
-                - TxReceiver: '0x8c594691c0e592ffa21f153a16ae41db5befcaaa'
-                - TxDeposit:
-                    kind: Canonical
-              role_id:
-                type: string
-                description: Role ID
-                example: Role#e427c28a-9c5b-49cc-a257-878aea58a22c
-    CreateRoleResponse:
-      description: The newly created role information
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The newly created role information
-            required:
-            - role_id
-            properties:
-              name:
-                type: string
-                description: A human-readable name for the role.
-                example: my_role
-                nullable: true
-                pattern: ^[a-zA-Z0-9_]{3,30}$
-              role_id:
-                type: string
-                description: The id of the newly created role
-                example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
-    PaginatedListRoleUsersResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              required:
-              - users
-              properties:
-                users:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/UserInRoleInfo'
-                  description: All users in a role
-            - type: object
-              properties:
-                last_evaluated_key:
-                  type: string
-                  description: 'If set, the content of `response` does not contain the entire result set.
-
-                    To fetch the next page of the result set, call the same endpoint
-
-                    but specify this value as the ''page.start'' query parameter.'
-                  nullable: true
-            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
-
-              value (which can the user pass back to use as a url query parameter to continue pagination).'
-    PaginatedListHistoricalTxResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              required:
-              - txs
-              properties:
-                txs:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/HistoricalTx'
-                  description: Historical transactions signed with the requested key, sorted from most to least recent.
-            - type: object
-              properties:
-                last_evaluated_key:
-                  type: string
-                  description: 'If set, the content of `response` does not contain the entire result set.
-
-                    To fetch the next page of the result set, call the same endpoint
-
-                    but specify this value as the ''page.start'' query parameter.'
-                  nullable: true
-            description: 'Response type that wraps another type and adds base64url-encoded encrypted `last_evaluated_key`
-
-              value (which can the user pass back to use as a url query parameter to continue pagination).'
+              except for owners who can see roles they are not members of.'
+          name:
+            type:
+            - string
+            - 'null'
+            description: The human-readable name for the role (must be alphanumeric)
+            example: my_role
+          policy:
+            type: array
+            items:
+              type: object
+            description: Policy that is checked whenever a key is accessed for signing via this role.
+            example:
+            - SourceIpAllowlist:
+              - 123.456.78.9/16
+            - RequireMfa:
+                count: 1
+          restricted_actions:
+            $ref: '#/components/schemas/RestrictedActionsMap'
+          role_id:
+            type: string
+            description: The ID of the role
+            example: Role#bfe3eccb-731e-430d-b1e5-ac1363e6b06b
+          users:
+            type:
+            - array
+            - 'null'
+            items:
+              type: string
+            description: Deprecated. The list of at most 100 users with access to the role.
   securitySchemes:
     Oidc:
       type: apiKey
