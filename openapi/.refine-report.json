@@ -35,9 +35,7 @@
     "cubist-users-in-org-api-openapi.yml",
     "cubist-users-in-role-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -73,8 +71,7 @@
     "cubist-cubesigner-openapi-original.json: declared missing tag: User Export",
     "cubist-cubesigner-openapi-original.json: declared missing tag: Users In Org",
     "cubist-cubesigner-openapi-original.json: declared missing tag: Users In Role",
-    "superseded outputs removed: cubist-o-auth2-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 30 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "cubist-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -93,7 +90,7 @@
     "cubist-mfa-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "cubist-misc-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "cubist-mmi-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "cubist-o-auth2-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cubist-oauth2-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "cubist-org-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "cubist-orgs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "cubist-policies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
