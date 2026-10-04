@@ -44,6 +44,14 @@ paths:
       security: []
 components:
   schemas:
+    AuthSourceKind:
+      type: string
+      description: 'At redemption time, the user must provide a credential they wish to use to authenticate.
+
+        This enum represents the two possible sources of authentication.'
+      enum:
+      - password
+      - oidc
     AuthSource:
       type: object
       description: 'At redemption time, the user must provide a credential they wish to use to authenticate.
@@ -68,14 +76,6 @@ components:
         token:
           type: string
           description: Invitation token
-    AuthSourceKind:
-      type: string
-      description: 'At redemption time, the user must provide a credential they wish to use to authenticate.
-
-        This enum represents the two possible sources of authentication.'
-      enum:
-      - password
-      - oidc
   securitySchemes:
     Oidc:
       type: apiKey

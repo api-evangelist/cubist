@@ -1201,6 +1201,760 @@ paths:
         - sign:eth2:unstake
 components:
   schemas:
+    BadGatewayErrorCode:
+      type: string
+      enum:
+      - Generic
+      - CustomChainRpcError
+      - EsploraApiError
+      - SentryApiError
+      - CallWebhookError
+      - OAuthProviderError
+      - OidcDisoveryFailed
+      - OidcIssuerJwkEndpointUnavailable
+      - SmtpServerUnavailable
+    CoinbaseDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Coinbase API method that would have been used
+        url:
+          type: string
+          description: The Coinbase API url method that would have been called
+    BabylonNetworkId:
+      type: string
+      description: The network-id for Babylon staking
+      enum:
+      - bbt4
+      - bbn1
+      - bbt5
+    Receipt:
+      type: object
+      description: Receipt that an MFA request was approved.
+      required:
+      - confirmation
+      - final_approver
+      - timestamp
+      properties:
+        confirmation:
+          type: string
+          description: Confirmation code the user needs to present when resuming the original request.
+          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
+        final_approver:
+          type: string
+          description: The ID of the logged-in user whose action created this approval.
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    PrevOutputs:
+      oneOf:
+      - type: object
+        required:
+        - One
+        properties:
+          One:
+            type: object
+            description: '`One` variant allows provision of the single previous output needed. It''s useful,
+
+              for example, when modifier `SIGHASH_ANYONECANPAY` is provided, only previous output
+
+              of the current input is needed. The first `index` argument is the input index
+
+              this output is referring to.'
+            required:
+            - index
+            - tx_out
+            properties:
+              index:
+                type: integer
+                minimum: 0
+              tx_out:
+                $ref: '#/components/schemas/BtcTxOut'
+      - type: object
+        required:
+        - All
+        properties:
+          All:
+            type: array
+            items:
+              $ref: '#/components/schemas/BtcTxOut'
+            description: 'When `SIGHASH_ANYONECANPAY` is not provided, or when the caller is giving all
+
+              previous outputs so the same variable can be used for multiple inputs.'
+      description: Contains outputs of previous transactions.
+    AvaSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - tx
+        properties:
+          tx:
+            type: object
+            description: 'Transaction to sign.
+
+
+              Examples:
+
+              - {"P": { "AddPermissionlessValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_permissionless_validator.rs#L14) }}
+
+              - {"P": { "AddSubnetValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_subnet_validator.rs#L29) }}
+
+              - {"P": { "AddValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_validator.rs#L12) }}
+
+              - {"P": { "CreateChain": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/create_chain.rs#L8) }}
+
+              - {"P": { "CreateSubnet": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/create_subnet.rs#L8) }}
+
+              - {"P": { "Export": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/export.rs#L12) }}
+
+              - {"P": { "Import": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/import.rs#L12) }}
+
+              - {"X": { "Base": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/mod.rs#L21) }}
+
+              - {"X": { "Export": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/export.rs#L16) }}
+
+              - {"X": { "Import": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/import.rs#L14) }}'
+      description: Request to sign an Avalanche transaction
+    SignerErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/SignerErrorOwnCodes'
+      - $ref: '#/components/schemas/AcceptedValueCode'
+      - $ref: '#/components/schemas/BadRequestErrorCode'
+      - $ref: '#/components/schemas/BadGatewayErrorCode'
+      - $ref: '#/components/schemas/NotFoundErrorCode'
+      - $ref: '#/components/schemas/ForbiddenErrorCode'
+      - $ref: '#/components/schemas/UnauthorizedErrorCode'
+      - $ref: '#/components/schemas/PreconditionErrorCode'
+      - $ref: '#/components/schemas/TimeoutErrorCode'
+      - $ref: '#/components/schemas/ConflictErrorCode'
+      - $ref: '#/components/schemas/InternalErrorCode'
+    PreconditionErrorOwnCodes:
+      type: string
+      enum:
+      - FailOnMfaRequired
+      - KeyRegionLocked
+      - KeyRegionChangedRecently
+      - MfaRegionLocked
+      - Eth2ProposerSlotTooLow
+      - Eth2AttestationSourceEpochTooLow
+      - Eth2AttestationTargetEpochTooLow
+      - Eth2ConcurrentBlockSigning
+      - Eth2ConcurrentAttestationSigning
+      - Eth2MultiDepositToNonGeneratedKey
+      - Eth2MultiDepositUnknownInitialDeposit
+      - Eth2MultiDepositWithdrawalAddressMismatch
+      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
+      - BabylonEotsConcurrentSigning
+      - TendermintStateError
+      - TendermintConcurrentSigning
+      - MfaApprovalsNotYetValid
+    SolanaTxCmp:
+      type: object
+      properties:
+        ignore_blockhash:
+          type: boolean
+          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
+    Eth1SignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - tx
+        - chain_id
+        properties:
+          chain_id:
+            type: integer
+            format: int64
+            description: The chain id to set in the given transaction.
+            minimum: 1
+          tweak:
+            type:
+            - string
+            - 'null'
+            description: 'An optional tweak value that will be applied to the secret key before signing.
+
+              This field must contain a base-64 string encoding a vector of exactly 32 bytes.
+
+              See the CubeSigner documentation for more information on the tweaking procedure.'
+            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+          tx:
+            $ref: '#/components/schemas/Transaction'
+      description: EVM transaction signing request.
+      example:
+        chain_id: 43113
+        tx:
+          chain_id: '0xa869'
+          gas: '0x61a80'
+          maxFeePerGas: '0x9502F900'
+          maxPriorityFeePerGas: '0x50'
+          nonce: '0xb'
+          to: '0xf00ba12f00000000b4121200000f00c0ffeef00d'
+          type: '0x2'
+          value: '0x10000000000'
+    B32:
+      type: string
+      description: Wrapper around a zeroizing 32-byte fixed-size array
+    BtcSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - tx
+        - sig_kind
+        properties:
+          sig_kind:
+            $ref: '#/components/schemas/BtcSignatureKind'
+          tx:
+            $ref: '#/components/schemas/BtcTx'
+    MfaRequiredArgs:
+      type: object
+      required:
+      - id
+      - ids
+      - org_id
+      properties:
+        id:
+          type: string
+          description: Always set to first MFA id from `Self::ids`
+        ids:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Non-empty MFA request IDs
+        org_id:
+          type: string
+          description: Organization id
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+        session:
+          allOf:
+          - $ref: '#/components/schemas/NewSessionResponse'
+    BabylonCovStakeExpansionRequest:
+      type: object
+      description: Request to expand an active stake with additional funds.
+      required:
+      - previous_active_stake_tx
+      - previous_staking_output_idx
+      - previous_active_stake_unbonding_script
+      - other_funding_output
+      properties:
+        other_funding_output:
+          type: string
+          description: 'The transaction output that is being used to fund the stake expansion.
+
+            This is a Bitcoin consensus--encoded hex string.'
+        previous_active_stake_tx:
+          type: string
+          description: 'The active staking transaction that is being expanded with this request.
+
+            This is a Bitcoin consensus--encoded hex string.'
+          example: 954ba118e7133b4bb3a67acc4f40cb9529aabbc01007229f7bfd85706850175d77d5cbe5e4c0ca67238d14afa47c51cc
+        previous_active_stake_unbonding_script:
+          type: string
+          description: 'The unbonding script in the active staking transaction.
+
+            This is a Bitcoin consensus--encoded hex string.'
+          example: e133f5a923a07b9c7f6767cda171005b
+        previous_staking_output_idx:
+          type: integer
+          format: int32
+          description: The index of the active stake output in the active staking transaction.
+          example: 1
+          minimum: 0
+    BabylonStakingParams:
+      type: object
+      description: 'Parameter set for Babylon staking. The latest parameter sets are
+
+        available from <https://github.com/babylonchain/networks>'
+      required:
+      - version
+      - activation_height
+      - covenant_pks
+      - covenant_quorum
+      - unbonding_time
+      - unbonding_fee
+      - max_staking_amount
+      - min_staking_amount
+      - max_staking_time
+      - min_staking_time
+      properties:
+        activation_height:
+          type: integer
+          format: int64
+          description: Block height at which these params will enter use
+          minimum: 0
+        covenant_pks:
+          type: array
+          items:
+            type: string
+          description: Public keys of the covenant signers
+        covenant_quorum:
+          type: integer
+          description: Quorum for covenant signer
+          minimum: 0
+        max_staking_amount:
+          type: integer
+          format: int64
+          description: Max amount that can be staked in a single txn
+          minimum: 0
+        max_staking_time:
+          type: integer
+          format: int32
+          description: Max timelock for staking
+          minimum: 0
+        min_staking_amount:
+          type: integer
+          format: int64
+          description: Min amount that must be staked
+          minimum: 0
+        min_staking_time:
+          type: integer
+          format: int32
+          description: Min timelock for staking
+          minimum: 0
+        slashing_fee:
+          type: integer
+          format: int64
+          description: Minimum fee (in sats) that must be paid as part of the slashing txn
+          minimum: 0
+        slashing_margin:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: 'An extra number of sats to slash in the slashing txn. This can be used
+
+            to ensure that the transaction meets the minimum slashing requirement
+
+            even if the covenant committee members use floats to compute the amount
+
+            that should be slashed. The default is 2; it should not be necessary to
+
+            go higher than this.'
+          minimum: 0
+        slashing_pk_script:
+          type:
+          - string
+          - 'null'
+          description: 'The pk_script value for the 0th output index of a slashing transaction,
+
+            serialized as a hex byte string. This value must be present to create
+
+            slashing signatures.'
+        slashing_rate:
+          type:
+          - string
+          - 'null'
+          description: The fraction of stake slashed if a double-sign is detected
+        tag:
+          type:
+          - string
+          - 'null'
+          description: 'Bitcoin transaction tag for staking metadata. If present, an identifiable
+
+            staking output (i.e., one with an OP_RETURN) will be created.'
+        unbonding_fee:
+          type: integer
+          format: int64
+          description: Fee (in sats) that must be spent as part of the unbonding txn
+          minimum: 0
+        unbonding_time:
+          type: integer
+          format: int32
+          description: Min timelock for an unbonding script
+          minimum: 0
+        version:
+          type: integer
+          format: int32
+          description: Parameter version
+          minimum: 0
+    BabylonStakingWithdrawal:
+      allOf:
+      - type: object
+        description: Data needed to create the Babylon deposit scripts
+        required:
+        - network
+        - staker_pk
+        - finality_provider_pks
+        - lock_time
+        properties:
+          explicit_params:
+            allOf:
+            - $ref: '#/components/schemas/BabylonStakingParams'
+          finality_provider_pks:
+            type: array
+            items:
+              type: string
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
+
+              provider to which the stake is delegated.'
+          lock_time:
+            type: integer
+            format: int32
+            description: The lock time used for the withdrawal output in the staking deposit transaction
+            minimum: 0
+          network:
+            $ref: '#/components/schemas/BabylonNetworkId'
+          staker_pk:
+            type: string
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
+
+              is the key that signs the slashing, withdrawal, and unbonding scripts.'
+          version:
+            type:
+            - integer
+            - 'null'
+            format: int32
+            description: The parameter version to use. If `None`, uses the latest version.
+            minimum: 0
+      - type: object
+        required:
+        - txid
+        - vout
+        - value
+        - fee
+        - fee_type
+        - recipient
+        properties:
+          as_base64:
+            type: boolean
+            description: 'If `true`, the resulting PSBT is encoded as a base64 string.
+
+              Otherwise, it is encoded as a hex string.'
+          fee:
+            type: integer
+            format: int64
+            description: 'The transaction fee value. The `fee_type` field determines whether this
+
+              is a fixed fee in sats or a rate in sats per (estimated) virtual byte of
+
+              transaction weight (i.e., sats per vb).'
+            minimum: 0
+          fee_type:
+            $ref: '#/components/schemas/FeeType'
+          recipient:
+            type: string
+            description: The withdrawal recipient, specified as a Bitcoin spend script
+          txid:
+            type: string
+            description: Transaction-id of the deposit or early unbonding transaction to withdraw from
+          txn_lock_height:
+            type:
+            - integer
+            - 'null'
+            format: int32
+            description: 'An optional lock height (in blocks) for this transaction. The resulting
+
+              transaction cannot be mined before the specified block height.'
+            minimum: 0
+          value:
+            type: integer
+            format: int64
+            description: The value in sats that is staked in the transaction being withdrawn
+            minimum: 0
+          vout:
+            type: integer
+            format: int32
+            description: 'Transaction output index of the staking transaction from which to withdraw.
+
+              For staking transactions generated by CubeSigner, this will always be 0.
+
+              For slashing transactions generated by CubeSigner, this will always be 1.'
+            minimum: 0
+      description: Data needed to create a Babylon withdrawal transaction
+    UnstakeRequest:
+      allOf:
+      - type: object
+        description: Unstake message request.
+        required:
+        - network
+        - fork
+        - validator_index
+        - genesis_data
+        properties:
+          epoch:
+            allOf:
+            - $ref: '#/components/schemas/Epoch'
+          fork:
+            $ref: '#/components/schemas/Fork'
+          genesis_data:
+            $ref: '#/components/schemas/GenesisData'
+          network:
+            $ref: '#/components/schemas/Network'
+          validator_index:
+            type: string
+            description: 'Validator index (`uint64`) to exit. You can get the validator index from the Beacon node''s
+
+              `/eth/v1/beacon/states/head/validators/{pubkey}` end-point. This end point returns an
+
+              object that contains information about the validator (whose public key is `{pubkey}`),
+
+              including the validator index. The schema of this end-point is defined
+
+              [here](https://ethereum.github.io/beacon-APIs/#/Beacon/getStateValidator).'
+            example: '31337'
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+    DepositType:
+      type: string
+      description: The type of deposit to perform
+      enum:
+      - Canonical
+      - Wrapper
+    PolicyErrorOwnCodes:
+      type: string
+      enum:
+      - Inapplicable
+      - SuiTxReceiversDisallowedTransactionKind
+      - SuiTxReceiversDisallowedTransferAddress
+      - SuiTxReceiversDisallowedCommand
+      - BtcTxDisallowedOutputs
+      - BtcSignatureExceededValue
+      - BtcValueOverflow
+      - BtcSighashTypeDisallowed
+      - Eip7702AddressMismatch
+      - EvmTxReceiverMismatch
+      - EvmTxChainIdMismatch
+      - EvmTxSenderMismatch
+      - EvmTxExceededValue
+      - EvmTxExceededGasCost
+      - EvmTxGasCostUndefined
+      - EvmDataDisallowed
+      - Erc20DataInvalid
+      - EvmContractAddressUndefined
+      - EvmContractChainIdUndefined
+      - EvmDataNotDefined
+      - EvmDataInvalid
+      - EvmContractNotInAllowlist
+      - Erc20ExceededTransferLimit
+      - Erc20ReceiverMismatch
+      - Erc20ExceededApproveLimit
+      - Erc20SpenderMismatch
+      - EvmFunctionNotInAllowlist
+      - EvmFunctionCallInvalid
+      - EvmFunctionCallDisallowedArg
+      - PolicyDisjunctionError
+      - PolicyNegationError
+      - Eth2ExceededMaxUnstake
+      - Eth2ConcurrentUnstaking
+      - NotInIpv4Allowlist
+      - NotInOriginAllowlist
+      - NotInOperationAllowlist
+      - InvalidSourceIp
+      - RawSigningNotAllowed
+      - DiffieHellmanExchangeNotAllowed
+      - Eip712SigningNotAllowed
+      - OidcSourceNotAllowed
+      - NoOidcAuthSourcesDefined
+      - AddKeyToRoleDisallowed
+      - KeysAlreadyInRole
+      - KeyInMultipleRoles
+      - KeyAccessError
+      - RequireRoleSessionKeyAccessError
+      - BtcMessageSigningNotAllowed
+      - Eip191SigningNotAllowed
+      - Eip7702SigningNotAllowed
+      - TaprootSigningDisallowed
+      - SegwitSigningDisallowed
+      - PsbtSigningDisallowed
+      - BabylonStakingDisallowed
+      - TimeLocked
+      - CelPolicyDenied
+      - BabylonStakingNetwork
+      - BabylonStakingParamsVersion
+      - BabylonStakingExplicitParams
+      - BabylonStakingStakerPk
+      - BabylonStakingFinalityProviderPk
+      - BabylonStakingLockTime
+      - BabylonStakingValue
+      - BabylonStakingChangeAddress
+      - BabylonStakingFee
+      - BabylonStakingWithdrawalAddress
+      - BabylonStakingBbnAddress
+      - SolanaInstructionCountLow
+      - SolanaInstructionCountHigh
+      - SolanaNotInInstructionAllowlist
+      - SolanaInstructionMismatch
+      - WasmPoliciesDisabled
+      - WasmPolicyDenied
+      - WasmPolicyFailed
+      - WebhookPoliciesDisabled
+      - DeniedByWebhook
+      - ExplicitlyDenied
+    AcceptedValue:
+      oneOf:
+      - type: object
+        required:
+        - SignDryRun
+        properties:
+          SignDryRun:
+            $ref: '#/components/schemas/SignDryRunArgs'
+      - type: object
+        required:
+        - BinanceDryRun
+        properties:
+          BinanceDryRun:
+            $ref: '#/components/schemas/BinanceDryRunArgs'
+      - type: object
+        required:
+        - BybitDryRun
+        properties:
+          BybitDryRun:
+            $ref: '#/components/schemas/BybitDryRunArgs'
+      - type: object
+        required:
+        - CoinbaseDryRun
+        properties:
+          CoinbaseDryRun:
+            $ref: '#/components/schemas/CoinbaseDryRunArgs'
+      - type: object
+        required:
+        - MfaRequired
+        properties:
+          MfaRequired:
+            $ref: '#/components/schemas/MfaRequiredArgs'
+      description: Different responses we return for success status codes.
+    EpochDateTime:
+      type: integer
+      format: int64
+      description: 'DateTime measured in seconds since unix epoch.
+
+        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
+
+        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
+      minimum: 0
+    PolicyErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
+      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
+    DepositTxn:
+      type: object
+      description: Information produced by a successful deposit
+      required:
+      - new_validator_pk
+      - chain_id
+      - deposit_txn
+      properties:
+        chain_id:
+          type: integer
+          format: int64
+          description: Chain ID for which the deposit transaction was created
+          minimum: 1
+        deposit_txn:
+          type: object
+          description: The deposit transaction. Includes only `to`, `value`, and `data` fields.
+        new_validator_pk:
+          type: string
+          description: The hex-encoded compressed form of the new validator BLS public key
+      example:
+        chain_id: 5
+        deposit_txn:
+          data: 0x...
+          to: '0xff50ed3d0ec03ac01d4c79aad74928bff48a7b2b'
+          value: '0x1bc16d674ec800000'
+        new_validator_pk: 9700fbb8c906942442c2a5b3ad7498f27aedda253786a6fbaa8fef47fb7af234e50cf2cce815a553087992ae565d48da
+    VoluntaryExit:
+      type: object
+      description: 'An exit voluntarily submitted a validator who wishes to withdraw.
+
+        The schema for this message is defined
+
+        [here](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#signedvoluntaryexit).'
+      required:
+      - epoch
+      - validator_index
+      properties:
+        epoch:
+          $ref: '#/components/schemas/Epoch'
+        validator_index:
+          type: string
+          description: Index of the exiting validator.
+          example: '256'
     DiffieHellmanRequest:
       allOf:
       - type: object
@@ -1259,78 +2013,11 @@ components:
 
               with the inverse of the masking scalar.'
             example: AkpLT/3dXApJzXSduaPQ7apyT0ADBwqkt1es/aT0iWWf
-    BtcLeafHashCodeSeparator:
-      type: object
-      description: Leaf hash and code, as per BIP341 and https://github.com/rust-bitcoin/rust-bitcoin/blob/464202109d2b2c96e9b4867461bffe420dbd8177/bitcoin/src/crypto/sighash.rs#L691
-      required:
-      - leaf_hash
-      - code_separator
-      properties:
-        code_separator:
-          type: integer
-          format: int32
-          description: Code separator
-          minimum: 0
-        leaf_hash:
-          type: string
-          description: Taproot-tagged hash with tag "TapLeaf".
-    Receipt:
-      type: object
-      description: Receipt that an MFA request was approved.
-      required:
-      - confirmation
-      - final_approver
-      - timestamp
-      properties:
-        confirmation:
-          type: string
-          description: Confirmation code the user needs to present when resuming the original request.
-          example: ba1d75dd-d999-4c1b-944d-25c25440c8af
-        final_approver:
-          type: string
-          description: The ID of the logged-in user whose action created this approval.
-        timestamp:
-          $ref: '#/components/schemas/EpochDateTime'
-    ConflictErrorCode:
-      type: string
-      enum:
-      - ConcurrentRequestDisallowed
-      - ConcurrentLockCreation
-    NotFoundErrorCode:
-      type: string
-      enum:
-      - UriSegmentMissing
-      - UriSegmentInvalid
-      - TotpNotConfigured
-      - FidoKeyNotFound
-      - FidoChallengeNotFound
-      - TotpChallengeNotFound
-      - UserExportRequestNotFound
-      - UserExportCiphertextNotFound
-      - OrgExportCiphertextNotFound
-      - UploadObjectNotFound
-      - PolicySecretNotFound
-      - BucketMetaNotFound
-      - TimestreamDisabled
-      - CustomChainNotFound
-      - InvitationNotFound
-      - TransactionNotFound
-      - EmailConfigNotFound
-    BtcTxOut:
-      type: object
-      required:
-      - value
-      - script_pubkey
-      properties:
-        script_pubkey:
-          type: string
-          description: The script which must be satisfied for the output to be spent.
-        value:
-          type: integer
-          format: int64
-          description: The value of the output, in satoshis.
-          minimum: 0
-    Eip7702SignRequest:
+    AcceptedResponse:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      - type: object
+    Eip191SignRequest:
       allOf:
       - type: object
         properties:
@@ -1355,28 +2042,12 @@ components:
               of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
       - type: object
         required:
-        - address
-        - chain_id
-        - nonce
+        - data
         properties:
-          address:
+          data:
             type: string
-            description: 'The address to delegate to (the target of the authorization), as
-
-              hex-encoded bytes. Must be exactly 20 bytes.'
-            example: '0x1100000000000000000000000000000000000011'
-          chain_id:
-            type: integer
-            format: int64
-            description: 'The chain id for which this authorization is valid. A value of `0` means
-
-              the authorization is valid on any chain that supports EIP-7702.'
-            minimum: 0
-          nonce:
-            type: integer
-            format: int64
-            description: The nonce of the authorizing account.
-            minimum: 0
+            description: EIP-191 data to sign as hex-encoded bytes.
+            example: '0xdeadbeef13c0ffee'
           tweak:
             type:
             - string
@@ -1387,26 +2058,380 @@ components:
 
               See the CubeSigner documentation for more information on the tweaking procedure.'
             example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-    PreconditionErrorOwnCodes:
+    HttpRequest:
+      type: object
+      description: 'Information about the request.
+
+
+        Captures all the relevant info (including the request body) about requests that require MFA.
+
+        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
+
+        it is exactly the same as it originally was.'
+      required:
+      - method
+      - path
+      properties:
+        body:
+          type:
+          - object
+          - 'null'
+          description: HTTP request body
+        method:
+          type: string
+          description: HTTP method of the request
+        path:
+          type: string
+          description: HTTP path of the request, excluding the host
+    NewSessionResponse:
+      type: object
+      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
+      required:
+      - org_id
+      - token
+      - refresh_token
+      - session_info
+      properties:
+        expiration:
+          type: integer
+          format: int64
+          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
+          example: 1701879640
+          minimum: 0
+        org_id:
+          $ref: '#/components/schemas/Id'
+        refresh_token:
+          type: string
+          description: Token that can be used to refresh this session.
+        session_info:
+          $ref: '#/components/schemas/ClientSessionInfo'
+        token:
+          type: string
+          description: 'New token to be used for authentication. Requests to signing endpoints
+
+            should include this value in the `Authorization` header.'
+    BybitDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      - payload
+      properties:
+        method:
+          type: string
+          description: The Bybit API method that would have been used
+        payload:
+          type: string
+          description: The request body (for POST endpoints) or query string (for GET endpoints).
+        url:
+          type: string
+          description: The Bybit API url that would have been called
+    BtcTxOut:
+      type: object
+      required:
+      - value
+      - script_pubkey
+      properties:
+        script_pubkey:
+          type: string
+          description: The script which must be satisfied for the output to be spent.
+        value:
+          type: integer
+          format: int64
+          description: The value of the output, in satoshis.
+          minimum: 0
+    ForbiddenErrorCode:
       type: string
       enum:
-      - FailOnMfaRequired
-      - KeyRegionLocked
-      - KeyRegionChangedRecently
-      - MfaRegionLocked
-      - Eth2ProposerSlotTooLow
-      - Eth2AttestationSourceEpochTooLow
-      - Eth2AttestationTargetEpochTooLow
-      - Eth2ConcurrentBlockSigning
-      - Eth2ConcurrentAttestationSigning
-      - Eth2MultiDepositToNonGeneratedKey
-      - Eth2MultiDepositUnknownInitialDeposit
-      - Eth2MultiDepositWithdrawalAddressMismatch
-      - ConcurrentSigningWhenTimeLimitPolicyIsDefined
-      - BabylonEotsConcurrentSigning
-      - TendermintStateError
-      - TendermintConcurrentSigning
-      - MfaApprovalsNotYetValid
+      - AlienKeyCreate
+      - CannotAssumeIdentity
+      - SentryDisallowed
+      - PasskeyLoginDisabled
+      - PasskeyNotRegistered
+      - CannotCreateOrg
+      - WrongMfaEmailOtpJwt
+      - OrgFlagNotSet
+      - FidoRequiredToRemoveTotp
+      - OidcIdentityLimitReached
+      - OidcScopeCeilingMissing
+      - OidcIssuerNotAllowedForMemberRole
+      - OidcNoMemberRolesAllowed
+      - EmailOtpNotConfigured
+      - MfaChallengeExpired
+      - ChainIdNotAllowed
+      - InvalidOrg
+      - OrgIdMismatch
+      - SessionForWrongOrg
+      - SelfDelete
+      - SelfDisable
+      - SelfMfaReset
+      - InvalidOrgMembershipRoleChange
+      - UserDisabled
+      - OrgDisabled
+      - OrgNotFound
+      - OrgWithoutOwner
+      - OrphanedUser
+      - OidcUserNotFound
+      - UserNotInOrg
+      - UserNotOrgOwner
+      - UserNotKeyOwner
+      - InvalidRole
+      - DisabledRole
+      - KeyDisabled
+      - KeyNotInRole
+      - ContactNotInOrg
+      - UserExportRequestNotInOrg
+      - UserExportRequestInvalid
+      - UserExportDisabled
+      - UserNotOriginalKeyOwner
+      - UserNotInRole
+      - MustBeFullMember
+      - SessionExpired
+      - SessionChanged
+      - SessionRevoked
+      - ExpectedUserSession
+      - SessionRoleChanged
+      - ScopedNameNotFound
+      - SessionInvalidEpochToken
+      - SessionInvalidRefreshToken
+      - SessionRefreshTokenExpired
+      - InvalidAuthHeader
+      - SessionNotFound
+      - InvalidArn
+      - SessionInvalidAuthToken
+      - SessionAuthTokenExpired
+      - SessionPossiblyStolenToken
+      - MfaDisallowedIdentity
+      - MfaDisallowedApprover
+      - MfaTypeNotAllowed
+      - MfaNotApprovedYet
+      - MfaConfirmationCodeMismatch
+      - MfaHttpRequestMismatch
+      - MfaRemoveBelowMin
+      - MfaOrgRequirementNotMet
+      - MfaRegistrationDisallowed
+      - TotpAlreadyConfigured
+      - TotpConfigurationChanged
+      - MfaTotpBadConfiguration
+      - MfaTotpBadCode
+      - MfaTotpRateLimit
+      - ImproperSessionScope
+      - FullSessionRequired
+      - SessionWithoutAnyScopeUnder
+      - UserRoleUnprivileged
+      - MemberRoleForbidden
+      - MfaNotConfigured
+      - RemoveLastOidcIdentity
+      - OperationNotAllowed
+      - OrgExportRetrievalDisabled
+      - ChangingKeyExportRequirementIsDisabled
+      - AutoAddBlsKeyToProtectedRole
+      - UserNotPolicyOwner
+      - UserNotContactOwner
+      - UserNotBucketOwner
+      - LegacySessionCannotHaveScopeCeiling
+      - RoleInParentOrgNotAllowed
+      - RemoveKeyFromRoleUserNotAllowed
+      - SiweChallengeExpired
+      - SiweMessageNotValid
+      - SiweMessageInvalidSignature
+      - SiwsChallengeExpired
+      - SiwsDomain
+      - SiwsMessageInvalid
+      - Acl
+    BtcMessageSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            type: string
+            description: Message to sign as a hex-encoded byte string.
+            example: '0xdeadbeef13c0ffee'
+          is_p2sh:
+            type: boolean
+            description: For segwit, sign the message as p2sh-p2wpkh instead of p2wpkh
+      description: Data to sign
+    SolanaSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - message_base64
+        properties:
+          message_base64:
+            type: string
+            description: Solana base64-encoded serialized Message
+      description: Solana signing request
+      example:
+        message_base64: AQABA8OKVzLEjststN4xXr39kLKHT8d58eQY1QEs6MeXwEFBrxTAlULX1troLbWxuAXQqgbQofGi6z8fJi7KAAIf7YMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJK0tn39k28s+X86W47EvbRRKnYBVQ8Q/l2m1EbfT7+vAQICAAEMAgAAAGQAAAAAAAAA
+    EvmTxCmp:
+      type: object
+      properties:
+        grace:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
+
+
+            In this case, however, because EVM transactions already have a replay prevention mechanism
+
+            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
+
+            indicate how long an MFA receipt should remain valid after its first use.
+
+
+            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
+
+            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
+
+            ensure that any subsequent requests that claim the same receipt must sign for the same
+
+            nonce as the request we signed originally with that receipt.
+
+
+            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
+
+            original expiration date.
+
+
+            The grace period must not be greater than 30 days.'
+          minimum: 0
+        ignore_gas:
+          type: boolean
+          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
+        ignore_nonce:
+          type: boolean
+          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
+    ErrorResponse:
+      type: object
+      description: The structure of ErrorResponse must match the response template that AWS uses
+      required:
+      - message
+      - error_code
+      properties:
+        accepted:
+          allOf:
+          - $ref: '#/components/schemas/AcceptedValue'
+        error_code:
+          $ref: '#/components/schemas/SignerErrorCode'
+        message:
+          type: string
+          description: Error message
+        policy_eval_tree:
+          description: Optional policy evaluation tree (included in signer responses, when requested)
+        request_id:
+          type: string
+          description: Optional request identifier
+    UnauthorizedErrorCode:
+      type: string
+      enum:
+      - AuthorizationHeaderMissing
+      - EndpointRequiresUserSession
+      - RefreshTokenMissing
+    SignerErrorOwnCodes:
+      type: string
+      enum:
+      - PreComputed
+      - StatusCodeWithMessage
+      - JrpcError
+      - UnhandledError
+      - ProxyStartError
+      - EnclaveError
+      - PolicyErrorWithEvalTree
+      - RpcApi
+    SignDryRunArgs:
+      type: object
+      required:
+      - mfa_requests
+      properties:
+        mfa_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaRequestInfo'
+          description: Whether MFA is required
+        policy_eval_tree:
+          description: Optional policy evaluation tree, if requested
+    SuiSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - tx
+        properties:
+          tx:
+            type: string
+            description: 'Base64-encoding of a BCS-serialized SUI transaction.
+
+
+              When using the SUI TypeScript SDK, these bytes
+
+              are returned by the `Transaction.build()` method.'
+      description: Request to sign a serialized SUI transaction
     InternalErrorCode:
       type: string
       enum:
@@ -1520,327 +2545,42 @@ components:
       - InvalidEvmSigedRlp
       - InvalidErc20Data
       - InvalidRpcUrl
-    TaprootSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - sig_kind
-        - tx
-        properties:
-          sig_kind:
-            $ref: '#/components/schemas/TaprootSignatureKind'
-          tx:
-            $ref: '#/components/schemas/BtcTx'
-    Network:
+    AcceptedValueCode:
       type: string
-      description: Network name ('mainnet', 'holesky')
       enum:
-      - mainnet
-      - holesky
-      - hoodi
-      example: holesky
+      - SignDryRun
+      - BinanceDryRun
+      - BybitDryRun
+      - CoinbaseDryRun
+      - MfaRequired
+    GenesisData:
+      type: object
+      description: 'Genesis data as defined in the [Beacon API
+
+        spec](https://ethereum.github.io/beacon-APIs/#/Beacon/getGenesis).
+
+        You can get the genesis data from the Beacon node''s `/eth/v1/beacon/genesis` end-point.
+
+        This struct definition is originally from lighthouse''s eth2.'
+      required:
+      - genesis_time
+      - genesis_validators_root
+      - genesis_fork_version
+      properties:
+        genesis_fork_version:
+          type: string
+          description: Genesis fork version.
+          example: '0x42424242'
+        genesis_time:
+          type: string
+          description: Genesis time
+          example: '1679326449'
+        genesis_validators_root:
+          type: string
+          description: Genesis validators root.
+          example: '0x270d43e74ce340de4bca2b1936beca0f4f5408d9e78aec4850920baf659d5b69'
     Id:
       type: string
-    SolanaTxCmp:
-      type: object
-      properties:
-        ignore_blockhash:
-          type: boolean
-          description: Whether the 'recent_blockhash' property of the Solana transaction is allowed to be different.
-    SignerErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/SignerErrorOwnCodes'
-      - $ref: '#/components/schemas/AcceptedValueCode'
-      - $ref: '#/components/schemas/BadRequestErrorCode'
-      - $ref: '#/components/schemas/BadGatewayErrorCode'
-      - $ref: '#/components/schemas/NotFoundErrorCode'
-      - $ref: '#/components/schemas/ForbiddenErrorCode'
-      - $ref: '#/components/schemas/UnauthorizedErrorCode'
-      - $ref: '#/components/schemas/PreconditionErrorCode'
-      - $ref: '#/components/schemas/TimeoutErrorCode'
-      - $ref: '#/components/schemas/ConflictErrorCode'
-      - $ref: '#/components/schemas/InternalErrorCode'
-    BabylonStakingWithdrawal:
-      allOf:
-      - type: object
-        description: Data needed to create the Babylon deposit scripts
-        required:
-        - network
-        - staker_pk
-        - finality_provider_pks
-        - lock_time
-        properties:
-          explicit_params:
-            allOf:
-            - $ref: '#/components/schemas/BabylonStakingParams'
-          finality_provider_pks:
-            type: array
-            items:
-              type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
-
-              provider to which the stake is delegated.'
-          lock_time:
-            type: integer
-            format: int32
-            description: The lock time used for the withdrawal output in the staking deposit transaction
-            minimum: 0
-          network:
-            $ref: '#/components/schemas/BabylonNetworkId'
-          staker_pk:
-            type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
-
-              is the key that signs the slashing, withdrawal, and unbonding scripts.'
-          version:
-            type:
-            - integer
-            - 'null'
-            format: int32
-            description: The parameter version to use. If `None`, uses the latest version.
-            minimum: 0
-      - type: object
-        required:
-        - txid
-        - vout
-        - value
-        - fee
-        - fee_type
-        - recipient
-        properties:
-          as_base64:
-            type: boolean
-            description: 'If `true`, the resulting PSBT is encoded as a base64 string.
-
-              Otherwise, it is encoded as a hex string.'
-          fee:
-            type: integer
-            format: int64
-            description: 'The transaction fee value. The `fee_type` field determines whether this
-
-              is a fixed fee in sats or a rate in sats per (estimated) virtual byte of
-
-              transaction weight (i.e., sats per vb).'
-            minimum: 0
-          fee_type:
-            $ref: '#/components/schemas/FeeType'
-          recipient:
-            type: string
-            description: The withdrawal recipient, specified as a Bitcoin spend script
-          txid:
-            type: string
-            description: Transaction-id of the deposit or early unbonding transaction to withdraw from
-          txn_lock_height:
-            type:
-            - integer
-            - 'null'
-            format: int32
-            description: 'An optional lock height (in blocks) for this transaction. The resulting
-
-              transaction cannot be mined before the specified block height.'
-            minimum: 0
-          value:
-            type: integer
-            format: int64
-            description: The value in sats that is staked in the transaction being withdrawn
-            minimum: 0
-          vout:
-            type: integer
-            format: int32
-            description: 'Transaction output index of the staking transaction from which to withdraw.
-
-              For staking transactions generated by CubeSigner, this will always be 0.
-
-              For slashing transactions generated by CubeSigner, this will always be 1.'
-            minimum: 0
-      description: Data needed to create a Babylon withdrawal transaction
-    Epoch:
-      type: string
-      description: Epoch is a quoted `uint64`.
-      example: '256'
-    Eip191SignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - data
-        properties:
-          data:
-            type: string
-            description: EIP-191 data to sign as hex-encoded bytes.
-            example: '0xdeadbeef13c0ffee'
-          tweak:
-            type:
-            - string
-            - 'null'
-            description: 'An optional tweak value that will be applied to the secret key before signing.
-
-              This field must contain a base-64 string encoding a vector of exactly 32 bytes.
-
-              See the CubeSigner documentation for more information on the tweaking procedure.'
-            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-    TendermintSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - message_base64
-        properties:
-          message_base64:
-            type: string
-            description: The bytes of the protobuf-encoded message to sign as a BASE64 string.
-      description: The request for using the Tendermint sign endpoint.
-    TaprootSignatureKind:
-      type: object
-      required:
-      - input_index
-      - prevouts
-      - sighash_type
-      properties:
-        annex:
-          type:
-          - string
-          - 'null'
-          description: Optional annex, as per BIP341
-        input_index:
-          type: integer
-          description: Transaction input index
-          example: 0
-          minimum: 0
-        leaf_hash_code_separator:
-          allOf:
-          - $ref: '#/components/schemas/BtcLeafHashCodeSeparator'
-        merkle_root:
-          type:
-          - string
-          - 'null'
-          description: 'If this field is not present or null, no tweak is applied. If the field is an
-
-            empty string, the key is tweaked with an unspendable script path per BIP0341.
-
-            Otherwise, this field must contain a base-64 string encoding 32 bytes that
-
-            represent the Merkle root with which to tweak the key before signing.'
-          example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-        prevouts:
-          $ref: '#/components/schemas/PrevOutputs'
-        sighash_type:
-          type: string
-          description: 'Hash type of an input''s signature, encoded in the last byte of the signature.
-
-            Possible values:
-
-            - SIGHASH_ALL
-
-            - SIGHASH_ALL|SIGHASH_ANYONECANPAY
-
-            - SIGHASH_DEFAULT
-
-            - SIGHASH_NONE
-
-            - SIGHASH_NONE|SIGHASH_ANYONECANPAY
-
-            - SIGHASH_SINGLE
-
-            - SIGHASH_SINGLE|SIGHASH_ANYONECANPAY'
-          example: SIGHASH_ALL
-    PrevOutputs:
-      oneOf:
-      - type: object
-        required:
-        - One
-        properties:
-          One:
-            type: object
-            description: '`One` variant allows provision of the single previous output needed. It''s useful,
-
-              for example, when modifier `SIGHASH_ANYONECANPAY` is provided, only previous output
-
-              of the current input is needed. The first `index` argument is the input index
-
-              this output is referring to.'
-            required:
-            - index
-            - tx_out
-            properties:
-              index:
-                type: integer
-                minimum: 0
-              tx_out:
-                $ref: '#/components/schemas/BtcTxOut'
-      - type: object
-        required:
-        - All
-        properties:
-          All:
-            type: array
-            items:
-              $ref: '#/components/schemas/BtcTxOut'
-            description: 'When `SIGHASH_ANYONECANPAY` is not provided, or when the caller is giving all
-
-              previous outputs so the same variable can be used for multiple inputs.'
-      description: Contains outputs of previous transactions.
     Eip712SignRequest:
       allOf:
       - type: object
@@ -1938,135 +2678,6 @@ components:
               type: string
             - name: wallets
               type: address[]
-    TimeoutErrorCode:
-      type: string
-      enum:
-      - PolicyEngineTimeout
-      - WasmPolicyExecutionTimeout
-    B32:
-      type: string
-      description: Wrapper around a zeroizing 32-byte fixed-size array
-    EpochDateTime:
-      type: integer
-      format: int64
-      description: 'DateTime measured in seconds since unix epoch.
-
-        A wrapper type for serialization that encodes a [`SystemTime`] as a [`u64`]
-
-        representing the number of seconds since [`SystemTime::UNIX_EPOCH`].'
-      minimum: 0
-    ErrorResponse:
-      type: object
-      description: The structure of ErrorResponse must match the response template that AWS uses
-      required:
-      - message
-      - error_code
-      properties:
-        accepted:
-          allOf:
-          - $ref: '#/components/schemas/AcceptedValue'
-        error_code:
-          $ref: '#/components/schemas/SignerErrorCode'
-        message:
-          type: string
-          description: Error message
-        policy_eval_tree:
-          description: Optional policy evaluation tree (included in signer responses, when requested)
-        request_id:
-          type: string
-          description: Optional request identifier
-    SolanaSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - message_base64
-        properties:
-          message_base64:
-            type: string
-            description: Solana base64-encoded serialized Message
-      description: Solana signing request
-      example:
-        message_base64: AQABA8OKVzLEjststN4xXr39kLKHT8d58eQY1QEs6MeXwEFBrxTAlULX1troLbWxuAXQqgbQofGi6z8fJi7KAAIf7YMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJK0tn39k28s+X86W47EvbRRKnYBVQ8Q/l2m1EbfT7+vAQICAAEMAgAAAGQAAAAAAAAA
-    Status:
-      type: object
-      required:
-      - count
-      - num_auth_factors
-      - allowed_approvers
-      - approved_by
-      properties:
-        allowed_approvers:
-          type: array
-          items:
-            type: string
-          description: Users who are allowed to approve. Must be non-empty.
-        allowed_mfa_types:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/MfaType'
-          description: Allowed approval types. When omitted, defaults to any.
-        approved_by:
-          type: object
-          description: Users who have already approved
-          additionalProperties:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/ApprovalInfo'
-        count:
-          type: integer
-          format: int32
-          description: How many users must approve
-          minimum: 0
-        num_auth_factors:
-          type: integer
-          format: int32
-          description: How many auth factors to require per user
-          minimum: 0
-        request_comparer:
-          $ref: '#/components/schemas/HttpRequestCmp'
-    EvmTxDepositErrorCode:
-      type: string
-      enum:
-      - EvmTxDepositReceiverMismatch
-      - EvmTxDepositEmptyData
-      - EvmTxDepositEmptyChainId
-      - EvmTxDepositEmptyReceiver
-      - EvmTxDepositUnexpectedValue
-      - EvmTxDepositUnexpectedDataLength
-      - EvmTxDepositNoAbi
-      - EvmTxDepositNoDepositFunction
-      - EvmTxDepositUnexpectedFunctionName
-      - EvmTxDepositUnexpectedValidatorKey
-      - EvmTxDepositInvalidValidatorKey
-      - EvmTxDepositMissingDepositArg
-      - EvmTxDepositWrongDepositArgType
-      - EvmTxDepositValidatorKeyNotInRole
-      - EvmTxDepositUnexpectedWithdrawalCredentials
-      - EvmTxDepositUnresolvedRole
-      - EvmTxDepositInvalidDepositEncoding
     StakeRequest:
       allOf:
       - type: object
@@ -2128,857 +2739,6 @@ components:
             type: string
             description: The ethereum address to which withdrawn funds go
             example: '0x8e3484687e66cdd26cf04c3647633ab4f3570148'
-    PreconditionErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
-      - $ref: '#/components/schemas/PolicyErrorCode'
-    TypedTransaction:
-      oneOf:
-      - type: object
-        description: Legacy (pre EIP-2718) Ethereum transaction type
-        required:
-        - type
-        properties:
-          data:
-            type: string
-            example: '0x01'
-          from:
-            type: string
-            example: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
-          gas:
-            type: string
-            example: '0x1'
-          gasPrice:
-            type: string
-            example: '0x1'
-          nonce:
-            type: string
-            example: '0x1'
-          to:
-            type: string
-            example: '0x068bd529426f4f27e248baf36e4558e440738fbb'
-          type:
-            type: string
-            example: '0x00'
-          value:
-            type: string
-            example: '0x1'
-        example:
-          data: '0x01'
-          from: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
-          gas: '0x1'
-          gasPrice: '0x1'
-          nonce: '0x1'
-          to: '0x068bd529426f4f27e248baf36e4558e440738fbb'
-          type: '0x00'
-          value: '0x1'
-      - type: object
-        description: EIP-1559 Ethereum transaction type
-        required:
-        - type
-        properties:
-          accessList:
-            type: array
-            items:
-              type: object
-              properties:
-                address:
-                  type: string
-                  example: '0x0000000000000000000000000000000000000000'
-                storageKeys:
-                  type: array
-                  items:
-                    type: string
-                    example: '0x0000000000000000000000000000000000000000000000000000000000000000'
-                  example:
-                  - '0x0000000000000000000000000000000000000000000000000000000000000000'
-              example:
-                address: '0x0000000000000000000000000000000000000000'
-                storageKeys:
-                - '0x0000000000000000000000000000000000000000000000000000000000000000'
-            example:
-            - address: '0x0000000000000000000000000000000000000000'
-              storageKeys:
-              - '0x0000000000000000000000000000000000000000000000000000000000000000'
-          data:
-            type: string
-            example: '0x01'
-          from:
-            type: string
-            example: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
-          gas:
-            type: string
-            example: '0x61a80'
-          maxFeePerGas:
-            type: string
-            example: '0x9502f900'
-          maxPriorityFeePerGas:
-            type: string
-            example: '0x9502f900'
-          nonce:
-            type: string
-            example: '0xb'
-          to:
-            type: string
-            example: '0x068bd539426f4f27e248baf36e4558e440738fbb'
-          type:
-            type: string
-            example: '0x02'
-          value:
-            type: string
-            example: '0x1'
-        example:
-          accessList:
-          - address: '0x0000000000000000000000000000000000000000'
-            storageKeys:
-            - '0x0000000000000000000000000000000000000000000000000000000000000000'
-          data: '0x01'
-          from: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
-          gas: '0x61a80'
-          maxFeePerGas: '0x9502f900'
-          maxPriorityFeePerGas: '0x9502f900'
-          nonce: '0xb'
-          to: '0x068bd539426f4f27e248baf36e4558e440738fbb'
-          type: '0x02'
-          value: '0x1'
-      description: 'EIP-2718 typed transaction, including EIP-1559 transactions (`{ "type": "0x02" ... }`), and legacy transactions (`{ "type": "0x00" ... }`). All values in the transaction are expected to be (0x-prefixed or not) hex strings or byte arrays.'
-    CoinbaseDryRunArgs:
-      type: object
-      required:
-      - method
-      - url
-      properties:
-        method:
-          type: string
-          description: The Coinbase API method that would have been used
-        url:
-          type: string
-          description: The Coinbase API url method that would have been called
-    BlobSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - message_base64
-        properties:
-          adaptor_pk:
-            type:
-            - string
-            - 'null'
-            description: 'An optional base64 string comprising a SEC1-encoded secp256k1 public key.
-
-              This field can be used *only* with Schnorr keys.
-
-
-              If this field is present, the response will be a Schnorr adaptor signature
-
-              in the format specified by Blockstream for use in libsecp256k1-zkp. See
-
-              <https://github.com/ZhePang/Python_Specification_for_Schnorr_Adaptor/>
-
-              for more information.'
-            example: Arny4WoHDNBVXYcynhNl9/y7JttJ2rk0CCRfLR7t3aDg
-          bls_dst:
-            type:
-            - string
-            - 'null'
-            description: 'An optional domain separation tag for use *only* with BLS signing requests.
-
-              This field must not be supplied for requests involving non-BLS key types.
-
-
-              If this field is not present or null, the domain separation tag specified in
-
-              the IETF BLS Signatures draft versions 4 and 5, section 4.2.3 (minimal pubkey
-
-              size variant) is used.
-
-
-              Otherwise, this field must contain a base-64 string encoding a non-empty byte
-
-              vector. When using a custom tag, RFC9380 (Section 3.1) recommends a length of
-
-              at least 16 bytes.'
-            example: EbbLvCxI7gan71iISDsfr46etOv606QkGGDP5PpVl5Q=
-          message_base64:
-            type: string
-            description: 'The blob to sign, encoded as a base64 string.
-
-
-              Note that certain signing keys impose additional requirements on the contents of
-
-              the message. For example, Secp256k1 keys require that the message is 32 bytes long.'
-          segwit_tweak:
-            type:
-            - string
-            - 'null'
-            description: 'An optional tweak value for use only with (some) secp256k1 key types.
-
-              This field must not be supplied for requests involving any other key type.
-
-
-              If this field is not present or null, no tweak is applied. Otherwise, this field
-
-              must contain a base-64 string encoding a vector of exactly 32 bytes. See the
-
-              CubeSigner documentation for more information on the Segwit tweaking procedure.'
-            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-          taproot_tweak:
-            type:
-            - string
-            - 'null'
-            description: 'An optional tweak value for use *only* with Taproot keys. This field must not
-
-              be supplied for requests involving any other key type.
-
-
-              If this field is not present or null, no tweak is applied. If the field is an
-
-              empty string, the key is tweaked with an unspendable script path per BIP0341.
-
-              Otherwise, this field must contain a 32-byte, base-64 string representing the
-
-              Merkle root with which to tweak the key before signing.'
-            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-      example:
-        message_base64: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYK
-    BtcSighashType:
-      type: string
-      enum:
-      - All
-      - None
-      - Single
-      - AllPlusAnyoneCanPay
-      - NonePlusAnyoneCanPay
-      - SinglePlusAnyoneCanPay
-    AvaSerializedTxSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - tx
-        properties:
-          tx:
-            type: string
-            description: Serialized transaction to sign
-      description: Request to sign a serialized Avalanche transaction
-    BtcSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - tx
-        - sig_kind
-        properties:
-          sig_kind:
-            $ref: '#/components/schemas/BtcSignatureKind'
-          tx:
-            $ref: '#/components/schemas/BtcTx'
-    EvmTxCmp:
-      type: object
-      properties:
-        grace:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: 'To prevent replay attacks, any given MFA receipt is normally allowed to be used only once.
-
-
-            In this case, however, because EVM transactions already have a replay prevention mechanism
-
-            (namely the ''nonce'' property), we allow the user to specify a grace period (in seconds) to
-
-            indicate how long an MFA receipt should remain valid after its first use.
-
-
-            Note that we allow both ''grace'' and ''ignore_nonce'' to be set because once an MFA request
-
-            enters its grace period we unconditionally set its ''ignore_nonce'' property to ''false'' to
-
-            ensure that any subsequent requests that claim the same receipt must sign for the same
-
-            nonce as the request we signed originally with that receipt.
-
-
-            Also note that the grace period cannot extend the lifetime of an MFA request beyond its
-
-            original expiration date.
-
-
-            The grace period must not be greater than 30 days.'
-          minimum: 0
-        ignore_gas:
-          type: boolean
-          description: Whether the 'gas' property of the EVM transaction is allowed to be different.
-        ignore_nonce:
-          type: boolean
-          description: Whether the 'nonce' property of the EVM transaction is allowed to be different.
-    SuiSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - tx
-        properties:
-          tx:
-            type: string
-            description: 'Base64-encoding of a BCS-serialized SUI transaction.
-
-
-              When using the SUI TypeScript SDK, these bytes
-
-              are returned by the `Transaction.build()` method.'
-      description: Request to sign a serialized SUI transaction
-    BabylonStakingRequest:
-      oneOf:
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingDeposit'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - deposit
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - early_unbond
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - withdraw_timelock
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - withdraw_early_unbond
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - withdraw_slashing
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - slash_deposit
-      - allOf:
-        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
-        - type: object
-          required:
-          - action
-          properties:
-            action:
-              type: string
-              enum:
-              - slash_early_unbond
-      description: The actions possible via the Babylon Staking endpoint
-      discriminator:
-        propertyName: action
-    Eth1SignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - tx
-        - chain_id
-        properties:
-          chain_id:
-            type: integer
-            format: int64
-            description: The chain id to set in the given transaction.
-            minimum: 1
-          tweak:
-            type:
-            - string
-            - 'null'
-            description: 'An optional tweak value that will be applied to the secret key before signing.
-
-              This field must contain a base-64 string encoding a vector of exactly 32 bytes.
-
-              See the CubeSigner documentation for more information on the tweaking procedure.'
-            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-          tx:
-            $ref: '#/components/schemas/Transaction'
-      description: EVM transaction signing request.
-      example:
-        chain_id: 43113
-        tx:
-          chain_id: '0xa869'
-          gas: '0x61a80'
-          maxFeePerGas: '0x9502F900'
-          maxPriorityFeePerGas: '0x50'
-          nonce: '0xb'
-          to: '0xf00ba12f00000000b4121200000f00c0ffeef00d'
-          type: '0x2'
-          value: '0x10000000000'
-    BabylonStakingDeposit:
-      allOf:
-      - type: object
-        description: Data needed to create the Babylon deposit scripts
-        required:
-        - network
-        - staker_pk
-        - finality_provider_pks
-        - lock_time
-        properties:
-          explicit_params:
-            allOf:
-            - $ref: '#/components/schemas/BabylonStakingParams'
-          finality_provider_pks:
-            type: array
-            items:
-              type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
-
-              provider to which the stake is delegated.'
-          lock_time:
-            type: integer
-            format: int32
-            description: The lock time used for the withdrawal output in the staking deposit transaction
-            minimum: 0
-          network:
-            $ref: '#/components/schemas/BabylonNetworkId'
-          staker_pk:
-            type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
-
-              is the key that signs the slashing, withdrawal, and unbonding scripts.'
-          version:
-            type:
-            - integer
-            - 'null'
-            format: int32
-            description: The parameter version to use. If `None`, uses the latest version.
-            minimum: 0
-      - type: object
-        required:
-        - psbt
-        - value
-        - change
-        - fee
-        - fee_type
-        properties:
-          change:
-            type: string
-            description: The change address, specified as a Bitcoin spend script
-          fee:
-            type: integer
-            format: int64
-            description: 'The transaction fee value. The `fee_type` field determines whether this
-
-              is a fixed fee in sats or a rate in sats per (estimated) virtual byte of
-
-              transaction weight (i.e., sats per vb).'
-            minimum: 0
-          fee_type:
-            $ref: '#/components/schemas/FeeType'
-          ignore_psbt_outputs:
-            type: boolean
-            description: 'By default, the PSBT in this request can only specify transaction inputs:
-
-              PSBTs that specify outputs will result in an error. When this flag is set,
-
-              existing outputs in the PSBT will instead be ignored (i.e., deleted from
-
-              the PSBT) when creating the deposit transaction.'
-          psbt:
-            type: string
-            description: 'A hex-serialized PSBT (version 0) containing the transaction inputs and
-
-              all necessary information for signing (e.g., taproot path and leaf
-
-              information). This PSBT must not have any transaction outputs; they
-
-              will be added to the returned PSBT.'
-          value:
-            type: integer
-            format: int64
-            description: The value to be staked in sats
-            minimum: 0
-      description: Data needed to create a Babylon deposit transaction
-    PolicyErrorCode:
-      oneOf:
-      - $ref: '#/components/schemas/PolicyErrorOwnCodes'
-      - $ref: '#/components/schemas/EvmTxDepositErrorCode'
-    ApprovalInfo:
-      type: object
-      required:
-      - timestamp
-      properties:
-        timestamp:
-          $ref: '#/components/schemas/EpochDateTime'
-    TypedData:
-      type: object
-      description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data object.
-
-
-        Typed data is a JSON object containing type information, domain separator parameters and the
-
-        message object.'
-      required:
-      - domain
-      - primaryType
-      - message
-      - types
-      properties:
-        domain:
-          type: object
-          description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) EIP712Domain object.
-
-
-            EIP712Domain is a JSON object with one or more of the below fields. Protocol designers only need to include the fields that make sense for their signing domain.'
-          properties:
-            chainId:
-              type:
-              - string
-              - 'null'
-              description: 'The EIP-155 chain id. The user-agent should refuse signing if it does not match the
-
-                currently active chain.'
-              example: '0x1'
-            name:
-              type:
-              - string
-              - 'null'
-              description: The user readable name of signing domain, i.e., the name of the DApp or the protocol.
-              example: Ether Mail
-            salt:
-              oneOf:
-              - type: string
-                description: Hex-encoded byte array of length 32
-                example: '0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5'
-              - type: array
-                items:
-                  type: number
-                  example: 165
-                description: Byte array of length 32
-                example:
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-                - 165
-              description: A disambiguating salt for the protocol. This can be used as a domain separator of last resort. Can be either a hex-encoded string or byte array
-            verifyingContract:
-              type:
-              - string
-              - 'null'
-              description: The address of the contract that will verify the signature.
-              example: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
-            version:
-              type:
-              - string
-              - 'null'
-              description: 'The current major version of the signing domain. Signatures from different versions are not
-
-                compatible.'
-              example: '1'
-        message:
-          type: object
-          description: The message to be signed.
-          additionalProperties: {}
-        primaryType:
-          type: string
-          description: The type of the message.
-        types:
-          type: object
-          description: The custom types used by this message.
-          additionalProperties:
-            type: array
-            items:
-              type: object
-              description: Represents the name and type pair
-              required:
-              - name
-              - type
-              properties:
-                name:
-                  type: string
-                  example: name
-                type:
-                  type: string
-                  example: type
-              example:
-                name: name
-                type: type
-    ForbiddenErrorCode:
-      type: string
-      enum:
-      - AlienKeyCreate
-      - CannotAssumeIdentity
-      - SentryDisallowed
-      - PasskeyLoginDisabled
-      - PasskeyNotRegistered
-      - CannotCreateOrg
-      - WrongMfaEmailOtpJwt
-      - OrgFlagNotSet
-      - FidoRequiredToRemoveTotp
-      - OidcIdentityLimitReached
-      - OidcScopeCeilingMissing
-      - OidcIssuerNotAllowedForMemberRole
-      - OidcNoMemberRolesAllowed
-      - EmailOtpNotConfigured
-      - MfaChallengeExpired
-      - ChainIdNotAllowed
-      - InvalidOrg
-      - OrgIdMismatch
-      - SessionForWrongOrg
-      - SelfDelete
-      - SelfDisable
-      - SelfMfaReset
-      - InvalidOrgMembershipRoleChange
-      - UserDisabled
-      - OrgDisabled
-      - OrgNotFound
-      - OrgWithoutOwner
-      - OrphanedUser
-      - OidcUserNotFound
-      - UserNotInOrg
-      - UserNotOrgOwner
-      - UserNotKeyOwner
-      - InvalidRole
-      - DisabledRole
-      - KeyDisabled
-      - KeyNotInRole
-      - ContactNotInOrg
-      - UserExportRequestNotInOrg
-      - UserExportRequestInvalid
-      - UserExportDisabled
-      - UserNotOriginalKeyOwner
-      - UserNotInRole
-      - MustBeFullMember
-      - SessionExpired
-      - SessionChanged
-      - SessionRevoked
-      - ExpectedUserSession
-      - SessionRoleChanged
-      - ScopedNameNotFound
-      - SessionInvalidEpochToken
-      - SessionInvalidRefreshToken
-      - SessionRefreshTokenExpired
-      - InvalidAuthHeader
-      - SessionNotFound
-      - InvalidArn
-      - SessionInvalidAuthToken
-      - SessionAuthTokenExpired
-      - SessionPossiblyStolenToken
-      - MfaDisallowedIdentity
-      - MfaDisallowedApprover
-      - MfaTypeNotAllowed
-      - MfaNotApprovedYet
-      - MfaConfirmationCodeMismatch
-      - MfaHttpRequestMismatch
-      - MfaRemoveBelowMin
-      - MfaOrgRequirementNotMet
-      - MfaRegistrationDisallowed
-      - TotpAlreadyConfigured
-      - TotpConfigurationChanged
-      - MfaTotpBadConfiguration
-      - MfaTotpBadCode
-      - MfaTotpRateLimit
-      - ImproperSessionScope
-      - FullSessionRequired
-      - SessionWithoutAnyScopeUnder
-      - UserRoleUnprivileged
-      - MemberRoleForbidden
-      - MfaNotConfigured
-      - RemoveLastOidcIdentity
-      - OperationNotAllowed
-      - OrgExportRetrievalDisabled
-      - ChangingKeyExportRequirementIsDisabled
-      - AutoAddBlsKeyToProtectedRole
-      - UserNotPolicyOwner
-      - UserNotContactOwner
-      - UserNotBucketOwner
-      - LegacySessionCannotHaveScopeCeiling
-      - RoleInParentOrgNotAllowed
-      - RemoveKeyFromRoleUserNotAllowed
-      - SiweChallengeExpired
-      - SiweMessageNotValid
-      - SiweMessageInvalidSignature
-      - SiwsChallengeExpired
-      - SiwsDomain
-      - SiwsMessageInvalid
-      - Acl
-    BybitDryRunArgs:
-      type: object
-      required:
-      - method
-      - url
-      - payload
-      properties:
-        method:
-          type: string
-          description: The Bybit API method that would have been used
-        payload:
-          type: string
-          description: The request body (for POST endpoints) or query string (for GET endpoints).
-        url:
-          type: string
-          description: The Bybit API url that would have been called
-    MfaType:
-      type: string
-      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
-      description: Different types that can be used to approve an MFA request
-      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
     UnsafeConf:
       type: object
       description: Options that should be set only for local devnet testing.
@@ -2995,795 +2755,6 @@ components:
           - 'null'
           description: The hex-encoded 4-byte fork version
           example: '0x00001020'
-    AcceptedValueCode:
-      type: string
-      enum:
-      - SignDryRun
-      - BinanceDryRun
-      - BybitDryRun
-      - CoinbaseDryRun
-      - MfaRequired
-    VoluntaryExit:
-      type: object
-      description: 'An exit voluntarily submitted a validator who wishes to withdraw.
-
-        The schema for this message is defined
-
-        [here](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#signedvoluntaryexit).'
-      required:
-      - epoch
-      - validator_index
-      properties:
-        epoch:
-          $ref: '#/components/schemas/Epoch'
-        validator_index:
-          type: string
-          description: Index of the exiting validator.
-          example: '256'
-    UnauthorizedErrorCode:
-      type: string
-      enum:
-      - AuthorizationHeaderMissing
-      - EndpointRequiresUserSession
-      - RefreshTokenMissing
-    PsbtSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - psbt
-        properties:
-          psbt:
-            type: string
-            description: 'A hex-serialized PSBT (version 0), with or without leading 0x prefix.
-
-              This PSBT must contain the transaction inputs and outputs, plus all
-
-              information needed to sign (e.g., taproot path and leaf information).'
-          sign_all_scripts:
-            type: boolean
-            description: 'When true, unconditionally sign every input to the PSBT controlled by a script
-
-              spend. Otherwise (false, the default), this endpoint uses a heuristic to decide
-
-              whether the script controlling a given UTXO requires a signature from this key.'
-      description: A request to sign a PSBT
-    AvaSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - tx
-        properties:
-          tx:
-            type: object
-            description: 'Transaction to sign.
-
-
-              Examples:
-
-              - {"P": { "AddPermissionlessValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_permissionless_validator.rs#L14) }}
-
-              - {"P": { "AddSubnetValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_subnet_validator.rs#L29) }}
-
-              - {"P": { "AddValidator": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/add_validator.rs#L12) }}
-
-              - {"P": { "CreateChain": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/create_chain.rs#L8) }}
-
-              - {"P": { "CreateSubnet": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/create_subnet.rs#L8) }}
-
-              - {"P": { "Export": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/export.rs#L12) }}
-
-              - {"P": { "Import": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/platformvm/txs/import.rs#L12) }}
-
-              - {"X": { "Base": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/mod.rs#L21) }}
-
-              - {"X": { "Export": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/export.rs#L16) }}
-
-              - {"X": { "Import": [TxJson](https://github.com/ava-labs/avalanche-rs/blob/avalanche-types-v0.1.3/crates/avalanche-types/src/avm/txs/import.rs#L14) }}'
-      description: Request to sign an Avalanche transaction
-    FeeType:
-      type: string
-      description: 'This type specifies the interpretation of the `fee` field in Babylon
-
-        staking requests. If `sats`, the field is intpreted as a fixed value
-
-        in sats. If `sats_pr_vb`, the field is interpreted as a rate and the
-
-        fee is computed by estimating the weight of the output transaction.'
-      enum:
-      - sats
-      - sats_per_kwu
-      - sats_per_vb
-    SignDryRunArgs:
-      type: object
-      required:
-      - mfa_requests
-      properties:
-        mfa_requests:
-          type: array
-          items:
-            $ref: '#/components/schemas/MfaRequestInfo'
-          description: Whether MFA is required
-        policy_eval_tree:
-          description: Optional policy evaluation tree, if requested
-    UnstakeRequest:
-      allOf:
-      - type: object
-        description: Unstake message request.
-        required:
-        - network
-        - fork
-        - validator_index
-        - genesis_data
-        properties:
-          epoch:
-            allOf:
-            - $ref: '#/components/schemas/Epoch'
-          fork:
-            $ref: '#/components/schemas/Fork'
-          genesis_data:
-            $ref: '#/components/schemas/GenesisData'
-          network:
-            $ref: '#/components/schemas/Network'
-          validator_index:
-            type: string
-            description: 'Validator index (`uint64`) to exit. You can get the validator index from the Beacon node''s
-
-              `/eth/v1/beacon/states/head/validators/{pubkey}` end-point. This end point returns an
-
-              object that contains information about the validator (whose public key is `{pubkey}`),
-
-              including the validator index. The schema of this end-point is defined
-
-              [here](https://ethereum.github.io/beacon-APIs/#/Beacon/getStateValidator).'
-            example: '31337'
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-    Fork:
-      type: object
-      description: 'Specifies a fork of the `BeaconChain`, to prevent replay attacks.
-
-        The schema of `Fork` is defined in the [Beacon chain
-
-        spec](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#fork).'
-      required:
-      - previous_version
-      - current_version
-      - epoch
-      properties:
-        current_version:
-          type: string
-          description: Current fork version.
-          example: '0x43434343'
-        epoch:
-          $ref: '#/components/schemas/Epoch'
-        previous_version:
-          type: string
-          description: Previous fork version.
-          example: '0x42424242'
-      example:
-        current_version: '0x00001020'
-        epoch: '0'
-        previous_version: '0x00001020'
-    AcceptedResponse:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      - type: object
-    BabylonCovStakeExpansionRequest:
-      type: object
-      description: Request to expand an active stake with additional funds.
-      required:
-      - previous_active_stake_tx
-      - previous_staking_output_idx
-      - previous_active_stake_unbonding_script
-      - other_funding_output
-      properties:
-        other_funding_output:
-          type: string
-          description: 'The transaction output that is being used to fund the stake expansion.
-
-            This is a Bitcoin consensus--encoded hex string.'
-        previous_active_stake_tx:
-          type: string
-          description: 'The active staking transaction that is being expanded with this request.
-
-            This is a Bitcoin consensus--encoded hex string.'
-          example: 954ba118e7133b4bb3a67acc4f40cb9529aabbc01007229f7bfd85706850175d77d5cbe5e4c0ca67238d14afa47c51cc
-        previous_active_stake_unbonding_script:
-          type: string
-          description: 'The unbonding script in the active staking transaction.
-
-            This is a Bitcoin consensus--encoded hex string.'
-          example: e133f5a923a07b9c7f6767cda171005b
-        previous_staking_output_idx:
-          type: integer
-          format: int32
-          description: The index of the active stake output in the active staking transaction.
-          example: 1
-          minimum: 0
-    DepositTxn:
-      type: object
-      description: Information produced by a successful deposit
-      required:
-      - new_validator_pk
-      - chain_id
-      - deposit_txn
-      properties:
-        chain_id:
-          type: integer
-          format: int64
-          description: Chain ID for which the deposit transaction was created
-          minimum: 1
-        deposit_txn:
-          type: object
-          description: The deposit transaction. Includes only `to`, `value`, and `data` fields.
-        new_validator_pk:
-          type: string
-          description: The hex-encoded compressed form of the new validator BLS public key
-      example:
-        chain_id: 5
-        deposit_txn:
-          data: 0x...
-          to: '0xff50ed3d0ec03ac01d4c79aad74928bff48a7b2b'
-          value: '0x1bc16d674ec800000'
-        new_validator_pk: 9700fbb8c906942442c2a5b3ad7498f27aedda253786a6fbaa8fef47fb7af234e50cf2cce815a553087992ae565d48da
-    BabylonNetworkId:
-      type: string
-      description: The network-id for Babylon staking
-      enum:
-      - bbt4
-      - bbn1
-      - bbt5
-    BtcTx:
-      type: object
-      example:
-        input:
-        - previous_output: 77541aeb3c4dac9260b68f74f44c973081a9d4cb2ebe8038b2d70faa201b6bdb:1
-          script_sig: ''
-          sequence: 4294967294
-          witness: []
-        lock_time: 1170
-        output:
-        - script_pubkey: 76a914a457b684d7f0d539a46a45bbc043f35b59d0d96388ac
-          value: 199996600
-        - script_pubkey: 76a914fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c88ac
-          value: 800000000
-        version: 1
-    BtcMessageSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - data
-        properties:
-          data:
-            type: string
-            description: Message to sign as a hex-encoded byte string.
-            example: '0xdeadbeef13c0ffee'
-          is_p2sh:
-            type: boolean
-            description: For segwit, sign the message as p2sh-p2wpkh instead of p2wpkh
-      description: Data to sign
-    BadGatewayErrorCode:
-      type: string
-      enum:
-      - Generic
-      - CustomChainRpcError
-      - EsploraApiError
-      - SentryApiError
-      - CallWebhookError
-      - OAuthProviderError
-      - OidcDisoveryFailed
-      - OidcIssuerJwkEndpointUnavailable
-      - SmtpServerUnavailable
-    HttpRequest:
-      type: object
-      description: 'Information about the request.
-
-
-        Captures all the relevant info (including the request body) about requests that require MFA.
-
-        We use this to verify that when a request is resumed (after obtaining necessary MFA approvals)
-
-        it is exactly the same as it originally was.'
-      required:
-      - method
-      - path
-      properties:
-        body:
-          type:
-          - object
-          - 'null'
-          description: HTTP request body
-        method:
-          type: string
-          description: HTTP method of the request
-        path:
-          type: string
-          description: HTTP path of the request, excluding the host
-    BtcSignatureKind:
-      oneOf:
-      - type: object
-        required:
-        - Segwit
-        properties:
-          Segwit:
-            type: object
-            description: Segregated Witness
-            required:
-            - input_index
-            - script_code
-            - value
-            - sighash_type
-            properties:
-              input_index:
-                type: integer
-                description: Transaction input index
-                example: 0
-                minimum: 0
-              script_code:
-                type: string
-                description: Script
-                example: '0x76a91479091972186c449eb1ded22b78e40d009bdf008988ac'
-              sighash_type:
-                $ref: '#/components/schemas/BtcSighashType'
-              tweak:
-                type:
-                - string
-                - 'null'
-                description: 'Optional tweak to apply to the key before signing.
-
-
-                  When supplied, this field must contain a base-64 string encoding a vector of
-
-                  exactly 32 bytes, which are used to compute the tweaked public key. See the
-
-                  CubeSigner documentation for more information on the Segwit tweaking procedure.'
-                example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
-              value:
-                type: integer
-                format: int64
-                description: The total amount of the input (in satoshis).
-                example: 1000000
-                minimum: 0
-    MfaRequiredArgs:
-      type: object
-      required:
-      - id
-      - ids
-      - org_id
-      properties:
-        id:
-          type: string
-          description: Always set to first MFA id from `Self::ids`
-        ids:
-          type: array
-          items:
-            type: string
-            minLength: 1
-          description: Non-empty MFA request IDs
-        org_id:
-          type: string
-          description: Organization id
-        policy_eval_tree:
-          description: Optional policy evaluation tree (included in signer responses, when requested)
-        session:
-          allOf:
-          - $ref: '#/components/schemas/NewSessionResponse'
-    NewSessionResponse:
-      type: object
-      description: Information about a new session, returned from multiple endpoints (e.g., login, refresh, etc.).
-      required:
-      - org_id
-      - token
-      - refresh_token
-      - session_info
-      properties:
-        expiration:
-          type: integer
-          format: int64
-          description: Session expiration (in seconds since UNIX epoch), beyond which it cannot be refreshed.
-          example: 1701879640
-          minimum: 0
-        org_id:
-          $ref: '#/components/schemas/Id'
-        refresh_token:
-          type: string
-          description: Token that can be used to refresh this session.
-        session_info:
-          $ref: '#/components/schemas/ClientSessionInfo'
-        token:
-          type: string
-          description: 'New token to be used for authentication. Requests to signing endpoints
-
-            should include this value in the `Authorization` header.'
-    DepositType:
-      type: string
-      description: The type of deposit to perform
-      enum:
-      - Canonical
-      - Wrapper
-    BabylonStakingEarlyUnbond:
-      allOf:
-      - type: object
-        description: Data needed to create the Babylon deposit scripts
-        required:
-        - network
-        - staker_pk
-        - finality_provider_pks
-        - lock_time
-        properties:
-          explicit_params:
-            allOf:
-            - $ref: '#/components/schemas/BabylonStakingParams'
-          finality_provider_pks:
-            type: array
-            items:
-              type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
-
-              provider to which the stake is delegated.'
-          lock_time:
-            type: integer
-            format: int32
-            description: The lock time used for the withdrawal output in the staking deposit transaction
-            minimum: 0
-          network:
-            $ref: '#/components/schemas/BabylonNetworkId'
-          staker_pk:
-            type: string
-            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
-
-              is the key that signs the slashing, withdrawal, and unbonding scripts.'
-          version:
-            type:
-            - integer
-            - 'null'
-            format: int32
-            description: The parameter version to use. If `None`, uses the latest version.
-            minimum: 0
-      - type: object
-        required:
-        - txid
-        - vout
-        - value
-        properties:
-          as_base64:
-            type: boolean
-            description: 'If `true`, the resulting PSBT is encoded as a base64 string.
-
-              Otherwise, it is encoded as a hex string.'
-          txid:
-            type: string
-            description: Transaction-id of the deposit transaction to unbond or slash.
-          value:
-            type: integer
-            format: int64
-            description: The value in sats that was staked in the transaction to unbond or slash.
-            minimum: 0
-          vout:
-            type: integer
-            format: int32
-            description: 'Transaction output index of the staking transaction to unbond or slash.
-
-              For staking transactions generated by CubeSigner, this will always be zero.'
-            minimum: 0
-      description: Data needed to create a Babylon early-unbonding or slashing transaction
-    BabylonCovSignRequest:
-      allOf:
-      - type: object
-        properties:
-          dry_run:
-            type: boolean
-            description: Do not produce a valid signature, just evaluate attached policies.
-          explain:
-            type: boolean
-            description: 'Request additional information to be included in the response, explaining
-
-              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
-
-              Defaults to false.'
-          fail_on_mfa:
-            type: boolean
-            description: 'If MFA is required, fail the request instead of returning 202 and creating
-
-              pending MFA request. Defaults to false.'
-          metadata:
-            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
-
-              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
-      - type: object
-        required:
-        - staking_tx
-        - slashing_tx
-        - unbonding_tx
-        - slash_unbonding_tx
-        - staking_output_idx
-        - slashing_script
-        - unbonding_script
-        - unbonding_slashing_script
-        - fp_enc_keys
-        properties:
-          fp_enc_keys:
-            type: array
-            items:
-              type: string
-            description: 'The keys for the finality providers to which this transaction is being staked.
-
-              Each key is a hex string containing a SEC1-encoded secp256k1 public key.'
-            example:
-            - 03b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
-          slash_unbonding_tx:
-            type: string
-            description: 'The slash-unbonding transaction being approved by the covenant signer.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: 6899b5baf713a2c60e6abf05e8909440d41dc4125b98891c332f7087daf017fb2436286e2aa097464d9c927d644fa6de
-          slashing_script:
-            type: string
-            description: 'The slashing script in the staking transaction.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: 877f05cc626dedcf53b50eeba0821ca0
-          slashing_tx:
-            type: string
-            description: 'The slashing transaction being approved by the covenant signer.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: f37e7ca2b24a5f7b8b6c9ba054f9932efb047ce80cf50a118e3f72751429fb13a355fa093bd358cdc30efacf5a62cabe
-          stake_expansion:
-            allOf:
-            - $ref: '#/components/schemas/BabylonCovStakeExpansionRequest'
-          staking_output_idx:
-            type: integer
-            format: int32
-            description: The output index of the Babylon staking scripts in the staking transaction.
-            example: 1
-            minimum: 0
-          staking_tx:
-            type: string
-            description: 'The staking transaction being approved by the covenant signer.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: 954ba118e7133b4bb3a67acc4f40cb9529aabbc01007229f7bfd85706850175d77d5cbe5e4c0ca67238d14afa47c51cc
-          unbonding_script:
-            type: string
-            description: 'The unbonding script in the staking transaction.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: 55f6638c0c0c0b0e51ca922e0e9e6abd
-          unbonding_slashing_script:
-            type: string
-            description: 'The slashing script in the unbonding transaction.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: e133f5a923a07b9c7f6767cda171005b
-          unbonding_tx:
-            type: string
-            description: 'The unbonding transaction being approved by the covenant signer.
-
-              This is a Bitcoin consensus--encoded hex string.'
-            example: 969cb95129a55a96d51919f5f67f3adc597ecdee6eda21e7777f370c3b1809336ee7d08ec574c8bbb361ff63d032a976
-    AcceptedValue:
-      oneOf:
-      - type: object
-        required:
-        - SignDryRun
-        properties:
-          SignDryRun:
-            $ref: '#/components/schemas/SignDryRunArgs'
-      - type: object
-        required:
-        - BinanceDryRun
-        properties:
-          BinanceDryRun:
-            $ref: '#/components/schemas/BinanceDryRunArgs'
-      - type: object
-        required:
-        - BybitDryRun
-        properties:
-          BybitDryRun:
-            $ref: '#/components/schemas/BybitDryRunArgs'
-      - type: object
-        required:
-        - CoinbaseDryRun
-        properties:
-          CoinbaseDryRun:
-            $ref: '#/components/schemas/CoinbaseDryRunArgs'
-      - type: object
-        required:
-        - MfaRequired
-        properties:
-          MfaRequired:
-            $ref: '#/components/schemas/MfaRequiredArgs'
-      description: Different responses we return for success status codes.
-    ClientSessionInfo:
-      type: object
-      description: 'Session information sent to the client.
-
-        This struct works in tandem with its server-side counterpart [`SessionData`].'
-      required:
-      - session_id
-      - auth_token
-      - refresh_token
-      - epoch
-      - epoch_token
-      - auth_token_exp
-      - refresh_token_exp
-      properties:
-        auth_token:
-          type: string
-          description: Token to use for authorization.
-        auth_token_exp:
-          $ref: '#/components/schemas/EpochDateTime'
-        epoch:
-          type: integer
-          format: int32
-          description: Epoch at which the token was last refreshed
-          minimum: 0
-        epoch_token:
-          $ref: '#/components/schemas/B32'
-        refresh_token:
-          type: string
-          description: Token to use for refreshing the `(auth, refresh)` token pair
-        refresh_token_exp:
-          $ref: '#/components/schemas/EpochDateTime'
-        session_id:
-          type: string
-          description: Session ID
-    Transaction:
-      $ref: '#/components/schemas/TypedTransaction'
-    BinanceDryRunArgs:
-      type: object
-      required:
-      - method
-      - url
-      properties:
-        method:
-          type: string
-          description: The Binance API method that would have been used
-        url:
-          type: string
-          description: The Binance API url method that would have been called
-    MfaRequestInfo:
-      type: object
-      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
-      required:
-      - id
-      - expires_at
-      - request
-      - status
-      - created_by
-      - provenance
-      properties:
-        created_at:
-          $ref: '#/components/schemas/EpochDateTime'
-        created_by:
-          type: string
-          description: The session identity (user or role) that created this request.
-        expires_at:
-          $ref: '#/components/schemas/EpochDateTime'
-        id:
-          type: string
-          description: Approval request ID.
-        not_valid_until:
-          $ref: '#/components/schemas/EpochDateTime'
-        provenance:
-          type: string
-          description: MFA policy provenance
-          enum:
-          - Org
-          - Key
-          - KeyInRole
-          - Role
-          - User
-          - EditPolicy
-        receipt:
-          allOf:
-          - $ref: '#/components/schemas/Receipt'
-        region:
-          type: string
-          description: The region this MFA request was created in.  It can only be redeemed from the same region.
-        related_ids:
-          type: array
-          items:
-            type: string
-          description: 'If set, contains the IDs of all MFA requests (including this one!) that
-
-            were generated at once for the same CubeSigner operation.
-
-
-            If not set, it means that this was the lone MFA request generated for `request`.
-
-
-            This is useful so that a client can discover all the MFAs whose receipts must
-
-            be submitted together to carry out the original CubeSigner operation.'
-        request:
-          $ref: '#/components/schemas/HttpRequest'
-        status:
-          $ref: '#/components/schemas/Status'
     BadRequestErrorCode:
       type: string
       enum:
@@ -4012,32 +2983,155 @@ components:
       - InvalidTweakLength
       - InvalidCustomChains
       - InvalidRpcRequest
-    GenesisData:
-      type: object
-      description: 'Genesis data as defined in the [Beacon API
+    TypedTransaction:
+      oneOf:
+      - type: object
+        description: Legacy (pre EIP-2718) Ethereum transaction type
+        required:
+        - type
+        properties:
+          data:
+            type: string
+            example: '0x01'
+          from:
+            type: string
+            example: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
+          gas:
+            type: string
+            example: '0x1'
+          gasPrice:
+            type: string
+            example: '0x1'
+          nonce:
+            type: string
+            example: '0x1'
+          to:
+            type: string
+            example: '0x068bd529426f4f27e248baf36e4558e440738fbb'
+          type:
+            type: string
+            example: '0x00'
+          value:
+            type: string
+            example: '0x1'
+        example:
+          data: '0x01'
+          from: '0x4cf18a8a6a1ffe77fec600da2b90ec35ba050b07'
+          gas: '0x1'
+          gasPrice: '0x1'
+          nonce: '0x1'
+          to: '0x068bd529426f4f27e248baf36e4558e440738fbb'
+          type: '0x00'
+          value: '0x1'
+      - type: object
+        description: EIP-1559 Ethereum transaction type
+        required:
+        - type
+        properties:
+          accessList:
+            type: array
+            items:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: '0x0000000000000000000000000000000000000000'
+                storageKeys:
+                  type: array
+                  items:
+                    type: string
+                    example: '0x0000000000000000000000000000000000000000000000000000000000000000'
+                  example:
+                  - '0x0000000000000000000000000000000000000000000000000000000000000000'
+              example:
+                address: '0x0000000000000000000000000000000000000000'
+                storageKeys:
+                - '0x0000000000000000000000000000000000000000000000000000000000000000'
+            example:
+            - address: '0x0000000000000000000000000000000000000000'
+              storageKeys:
+              - '0x0000000000000000000000000000000000000000000000000000000000000000'
+          data:
+            type: string
+            example: '0x01'
+          from:
+            type: string
+            example: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
+          gas:
+            type: string
+            example: '0x61a80'
+          maxFeePerGas:
+            type: string
+            example: '0x9502f900'
+          maxPriorityFeePerGas:
+            type: string
+            example: '0x9502f900'
+          nonce:
+            type: string
+            example: '0xb'
+          to:
+            type: string
+            example: '0x068bd539426f4f27e248baf36e4558e440738fbb'
+          type:
+            type: string
+            example: '0x02'
+          value:
+            type: string
+            example: '0x1'
+        example:
+          accessList:
+          - address: '0x0000000000000000000000000000000000000000'
+            storageKeys:
+            - '0x0000000000000000000000000000000000000000000000000000000000000000'
+          data: '0x01'
+          from: '0x4cf18a8a7a1ffe77fec600da2b90ec35ba050b07'
+          gas: '0x61a80'
+          maxFeePerGas: '0x9502f900'
+          maxPriorityFeePerGas: '0x9502f900'
+          nonce: '0xb'
+          to: '0x068bd539426f4f27e248baf36e4558e440738fbb'
+          type: '0x02'
+          value: '0x1'
+      description: 'EIP-2718 typed transaction, including EIP-1559 transactions (`{ "type": "0x02" ... }`), and legacy transactions (`{ "type": "0x00" ... }`). All values in the transaction are expected to be (0x-prefixed or not) hex strings or byte arrays.'
+    Transaction:
+      $ref: '#/components/schemas/TypedTransaction'
+    TaprootSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
 
-        spec](https://ethereum.github.io/beacon-APIs/#/Beacon/getGenesis).
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
 
-        You can get the genesis data from the Beacon node''s `/eth/v1/beacon/genesis` end-point.
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
 
-        This struct definition is originally from lighthouse''s eth2.'
-      required:
-      - genesis_time
-      - genesis_validators_root
-      - genesis_fork_version
-      properties:
-        genesis_fork_version:
-          type: string
-          description: Genesis fork version.
-          example: '0x42424242'
-        genesis_time:
-          type: string
-          description: Genesis time
-          example: '1679326449'
-        genesis_validators_root:
-          type: string
-          description: Genesis validators root.
-          example: '0x270d43e74ce340de4bca2b1936beca0f4f5408d9e78aec4850920baf659d5b69'
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - sig_kind
+        - tx
+        properties:
+          sig_kind:
+            $ref: '#/components/schemas/TaprootSignatureKind'
+          tx:
+            $ref: '#/components/schemas/BtcTx'
+    ConflictErrorCode:
+      type: string
+      enum:
+      - ConcurrentRequestDisallowed
+      - ConcurrentLockCreation
     HttpRequestCmp:
       oneOf:
       - type: string
@@ -4057,86 +3151,186 @@ components:
           SolanaTx:
             $ref: '#/components/schemas/SolanaTxCmp'
       description: How to compare HTTP requests when verifying MFA receipt (see [MfaRequest::verify_request])
-    PolicyErrorOwnCodes:
-      type: string
-      enum:
-      - Inapplicable
-      - SuiTxReceiversDisallowedTransactionKind
-      - SuiTxReceiversDisallowedTransferAddress
-      - SuiTxReceiversDisallowedCommand
-      - BtcTxDisallowedOutputs
-      - BtcSignatureExceededValue
-      - BtcValueOverflow
-      - BtcSighashTypeDisallowed
-      - Eip7702AddressMismatch
-      - EvmTxReceiverMismatch
-      - EvmTxChainIdMismatch
-      - EvmTxSenderMismatch
-      - EvmTxExceededValue
-      - EvmTxExceededGasCost
-      - EvmTxGasCostUndefined
-      - EvmDataDisallowed
-      - Erc20DataInvalid
-      - EvmContractAddressUndefined
-      - EvmContractChainIdUndefined
-      - EvmDataNotDefined
-      - EvmDataInvalid
-      - EvmContractNotInAllowlist
-      - Erc20ExceededTransferLimit
-      - Erc20ReceiverMismatch
-      - Erc20ExceededApproveLimit
-      - Erc20SpenderMismatch
-      - EvmFunctionNotInAllowlist
-      - EvmFunctionCallInvalid
-      - EvmFunctionCallDisallowedArg
-      - PolicyDisjunctionError
-      - PolicyNegationError
-      - Eth2ExceededMaxUnstake
-      - Eth2ConcurrentUnstaking
-      - NotInIpv4Allowlist
-      - NotInOriginAllowlist
-      - NotInOperationAllowlist
-      - InvalidSourceIp
-      - RawSigningNotAllowed
-      - DiffieHellmanExchangeNotAllowed
-      - Eip712SigningNotAllowed
-      - OidcSourceNotAllowed
-      - NoOidcAuthSourcesDefined
-      - AddKeyToRoleDisallowed
-      - KeysAlreadyInRole
-      - KeyInMultipleRoles
-      - KeyAccessError
-      - RequireRoleSessionKeyAccessError
-      - BtcMessageSigningNotAllowed
-      - Eip191SigningNotAllowed
-      - Eip7702SigningNotAllowed
-      - TaprootSigningDisallowed
-      - SegwitSigningDisallowed
-      - PsbtSigningDisallowed
-      - BabylonStakingDisallowed
-      - TimeLocked
-      - CelPolicyDenied
-      - BabylonStakingNetwork
-      - BabylonStakingParamsVersion
-      - BabylonStakingExplicitParams
-      - BabylonStakingStakerPk
-      - BabylonStakingFinalityProviderPk
-      - BabylonStakingLockTime
-      - BabylonStakingValue
-      - BabylonStakingChangeAddress
-      - BabylonStakingFee
-      - BabylonStakingWithdrawalAddress
-      - BabylonStakingBbnAddress
-      - SolanaInstructionCountLow
-      - SolanaInstructionCountHigh
-      - SolanaNotInInstructionAllowlist
-      - SolanaInstructionMismatch
-      - WasmPoliciesDisabled
-      - WasmPolicyDenied
-      - WasmPolicyFailed
-      - WebhookPoliciesDisabled
-      - DeniedByWebhook
-      - ExplicitlyDenied
+    AvaSerializedTxSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - tx
+        properties:
+          tx:
+            type: string
+            description: Serialized transaction to sign
+      description: Request to sign a serialized Avalanche transaction
+    Eth2SignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - network
+        - eth2_sign_request
+        properties:
+          eth2_sign_request:
+            type: object
+            description: 'Subset of the Web3Signer Eth2 BLS signing request whose schema is defined
+
+              [here](https://consensys.github.io/web3signer/web3signer-eth2.html#tag/Signing/operation/ETH2_SIGN).
+
+              We handle deposits and voluntary exits separately.'
+          network:
+            $ref: '#/components/schemas/Network'
+      example:
+        eth2_sign_request:
+          aggregation_slot:
+            slot: '36'
+          fork_info:
+            fork:
+              current_version: '0x42424242'
+              epoch: '0'
+              previous_version: '0x42424242'
+            genesis_validators_root: '0x9d13d61212c067e02ce8e608a7007e2c3b02571e9e6f27ff45dfa91bf27c870b'
+          signingRoot: '0x9c57e77c4965727542b9337df6756f948464bca3859bea6ed3c0ec6600d8982a'
+          type: AGGREGATION_SLOT
+        network: mainnet
+    TaprootSignatureKind:
+      type: object
+      required:
+      - input_index
+      - prevouts
+      - sighash_type
+      properties:
+        annex:
+          type:
+          - string
+          - 'null'
+          description: Optional annex, as per BIP341
+        input_index:
+          type: integer
+          description: Transaction input index
+          example: 0
+          minimum: 0
+        leaf_hash_code_separator:
+          allOf:
+          - $ref: '#/components/schemas/BtcLeafHashCodeSeparator'
+        merkle_root:
+          type:
+          - string
+          - 'null'
+          description: 'If this field is not present or null, no tweak is applied. If the field is an
+
+            empty string, the key is tweaked with an unspendable script path per BIP0341.
+
+            Otherwise, this field must contain a base-64 string encoding 32 bytes that
+
+            represent the Merkle root with which to tweak the key before signing.'
+          example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+        prevouts:
+          $ref: '#/components/schemas/PrevOutputs'
+        sighash_type:
+          type: string
+          description: 'Hash type of an input''s signature, encoded in the last byte of the signature.
+
+            Possible values:
+
+            - SIGHASH_ALL
+
+            - SIGHASH_ALL|SIGHASH_ANYONECANPAY
+
+            - SIGHASH_DEFAULT
+
+            - SIGHASH_NONE
+
+            - SIGHASH_NONE|SIGHASH_ANYONECANPAY
+
+            - SIGHASH_SINGLE
+
+            - SIGHASH_SINGLE|SIGHASH_ANYONECANPAY'
+          example: SIGHASH_ALL
+    BtcSignatureKind:
+      oneOf:
+      - type: object
+        required:
+        - Segwit
+        properties:
+          Segwit:
+            type: object
+            description: Segregated Witness
+            required:
+            - input_index
+            - script_code
+            - value
+            - sighash_type
+            properties:
+              input_index:
+                type: integer
+                description: Transaction input index
+                example: 0
+                minimum: 0
+              script_code:
+                type: string
+                description: Script
+                example: '0x76a91479091972186c449eb1ded22b78e40d009bdf008988ac'
+              sighash_type:
+                $ref: '#/components/schemas/BtcSighashType'
+              tweak:
+                type:
+                - string
+                - 'null'
+                description: 'Optional tweak to apply to the key before signing.
+
+
+                  When supplied, this field must contain a base-64 string encoding a vector of
+
+                  exactly 32 bytes, which are used to compute the tweaked public key. See the
+
+                  CubeSigner documentation for more information on the Segwit tweaking procedure.'
+                example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+              value:
+                type: integer
+                format: int64
+                description: The total amount of the input (in satoshis).
+                example: 1000000
+                minimum: 0
     BabylonRegistrationRequest:
       allOf:
       - allOf:
@@ -4264,114 +3458,158 @@ components:
               specify the material-id of a SecpCosmos CubeSigner key.'
             example: bbn1n5anmc0kkrh70yjy7f6f399c74yd09xl5teffm
       description: Babylon staking registration specification
-    BabylonStakingParams:
-      type: object
-      description: 'Parameter set for Babylon staking. The latest parameter sets are
+    BabylonStakingDeposit:
+      allOf:
+      - type: object
+        description: Data needed to create the Babylon deposit scripts
+        required:
+        - network
+        - staker_pk
+        - finality_provider_pks
+        - lock_time
+        properties:
+          explicit_params:
+            allOf:
+            - $ref: '#/components/schemas/BabylonStakingParams'
+          finality_provider_pks:
+            type: array
+            items:
+              type: string
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
 
-        available from <https://github.com/babylonchain/networks>'
-      required:
-      - version
-      - activation_height
-      - covenant_pks
-      - covenant_quorum
-      - unbonding_time
-      - unbonding_fee
-      - max_staking_amount
-      - min_staking_amount
-      - max_staking_time
-      - min_staking_time
-      properties:
-        activation_height:
-          type: integer
-          format: int64
-          description: Block height at which these params will enter use
-          minimum: 0
-        covenant_pks:
-          type: array
-          items:
+              provider to which the stake is delegated.'
+          lock_time:
+            type: integer
+            format: int32
+            description: The lock time used for the withdrawal output in the staking deposit transaction
+            minimum: 0
+          network:
+            $ref: '#/components/schemas/BabylonNetworkId'
+          staker_pk:
             type: string
-          description: Public keys of the covenant signers
-        covenant_quorum:
-          type: integer
-          description: Quorum for covenant signer
-          minimum: 0
-        max_staking_amount:
-          type: integer
-          format: int64
-          description: Max amount that can be staked in a single txn
-          minimum: 0
-        max_staking_time:
-          type: integer
-          format: int32
-          description: Max timelock for staking
-          minimum: 0
-        min_staking_amount:
-          type: integer
-          format: int64
-          description: Min amount that must be staked
-          minimum: 0
-        min_staking_time:
-          type: integer
-          format: int32
-          description: Min timelock for staking
-          minimum: 0
-        slashing_fee:
-          type: integer
-          format: int64
-          description: Minimum fee (in sats) that must be paid as part of the slashing txn
-          minimum: 0
-        slashing_margin:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: 'An extra number of sats to slash in the slashing txn. This can be used
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
 
-            to ensure that the transaction meets the minimum slashing requirement
+              is the key that signs the slashing, withdrawal, and unbonding scripts.'
+          version:
+            type:
+            - integer
+            - 'null'
+            format: int32
+            description: The parameter version to use. If `None`, uses the latest version.
+            minimum: 0
+      - type: object
+        required:
+        - psbt
+        - value
+        - change
+        - fee
+        - fee_type
+        properties:
+          change:
+            type: string
+            description: The change address, specified as a Bitcoin spend script
+          fee:
+            type: integer
+            format: int64
+            description: 'The transaction fee value. The `fee_type` field determines whether this
 
-            even if the covenant committee members use floats to compute the amount
+              is a fixed fee in sats or a rate in sats per (estimated) virtual byte of
 
-            that should be slashed. The default is 2; it should not be necessary to
+              transaction weight (i.e., sats per vb).'
+            minimum: 0
+          fee_type:
+            $ref: '#/components/schemas/FeeType'
+          ignore_psbt_outputs:
+            type: boolean
+            description: 'By default, the PSBT in this request can only specify transaction inputs:
 
-            go higher than this.'
-          minimum: 0
-        slashing_pk_script:
-          type:
-          - string
-          - 'null'
-          description: 'The pk_script value for the 0th output index of a slashing transaction,
+              PSBTs that specify outputs will result in an error. When this flag is set,
 
-            serialized as a hex byte string. This value must be present to create
+              existing outputs in the PSBT will instead be ignored (i.e., deleted from
 
-            slashing signatures.'
-        slashing_rate:
-          type:
-          - string
-          - 'null'
-          description: The fraction of stake slashed if a double-sign is detected
-        tag:
-          type:
-          - string
-          - 'null'
-          description: 'Bitcoin transaction tag for staking metadata. If present, an identifiable
+              the PSBT) when creating the deposit transaction.'
+          psbt:
+            type: string
+            description: 'A hex-serialized PSBT (version 0) containing the transaction inputs and
 
-            staking output (i.e., one with an OP_RETURN) will be created.'
-        unbonding_fee:
-          type: integer
-          format: int64
-          description: Fee (in sats) that must be spent as part of the unbonding txn
-          minimum: 0
-        unbonding_time:
-          type: integer
-          format: int32
-          description: Min timelock for an unbonding script
-          minimum: 0
-        version:
-          type: integer
-          format: int32
-          description: Parameter version
-          minimum: 0
-    Eth2SignRequest:
+              all necessary information for signing (e.g., taproot path and leaf
+
+              information). This PSBT must not have any transaction outputs; they
+
+              will be added to the returned PSBT.'
+          value:
+            type: integer
+            format: int64
+            description: The value to be staked in sats
+            minimum: 0
+      description: Data needed to create a Babylon deposit transaction
+    BabylonStakingEarlyUnbond:
+      allOf:
+      - type: object
+        description: Data needed to create the Babylon deposit scripts
+        required:
+        - network
+        - staker_pk
+        - finality_provider_pks
+        - lock_time
+        properties:
+          explicit_params:
+            allOf:
+            - $ref: '#/components/schemas/BabylonStakingParams'
+          finality_provider_pks:
+            type: array
+            items:
+              type: string
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the finality
+
+              provider to which the stake is delegated.'
+          lock_time:
+            type: integer
+            format: int32
+            description: The lock time used for the withdrawal output in the staking deposit transaction
+            minimum: 0
+          network:
+            $ref: '#/components/schemas/BabylonNetworkId'
+          staker_pk:
+            type: string
+            description: 'The Schnorr public key (i.e., 32-byte X-coordinate) of the staker. This
+
+              is the key that signs the slashing, withdrawal, and unbonding scripts.'
+          version:
+            type:
+            - integer
+            - 'null'
+            format: int32
+            description: The parameter version to use. If `None`, uses the latest version.
+            minimum: 0
+      - type: object
+        required:
+        - txid
+        - vout
+        - value
+        properties:
+          as_base64:
+            type: boolean
+            description: 'If `true`, the resulting PSBT is encoded as a base64 string.
+
+              Otherwise, it is encoded as a hex string.'
+          txid:
+            type: string
+            description: Transaction-id of the deposit transaction to unbond or slash.
+          value:
+            type: integer
+            format: int64
+            description: The value in sats that was staked in the transaction to unbond or slash.
+            minimum: 0
+          vout:
+            type: integer
+            format: int32
+            description: 'Transaction output index of the staking transaction to unbond or slash.
+
+              For staking transactions generated by CubeSigner, this will always be zero.'
+            minimum: 0
+      description: Data needed to create a Babylon early-unbonding or slashing transaction
+    BabylonCovSignRequest:
       allOf:
       - type: object
         properties:
@@ -4396,70 +3634,902 @@ components:
               of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
       - type: object
         required:
-        - network
-        - eth2_sign_request
+        - staking_tx
+        - slashing_tx
+        - unbonding_tx
+        - slash_unbonding_tx
+        - staking_output_idx
+        - slashing_script
+        - unbonding_script
+        - unbonding_slashing_script
+        - fp_enc_keys
         properties:
-          eth2_sign_request:
-            type: object
-            description: 'Subset of the Web3Signer Eth2 BLS signing request whose schema is defined
+          fp_enc_keys:
+            type: array
+            items:
+              type: string
+            description: 'The keys for the finality providers to which this transaction is being staked.
 
-              [here](https://consensys.github.io/web3signer/web3signer-eth2.html#tag/Signing/operation/ETH2_SIGN).
+              Each key is a hex string containing a SEC1-encoded secp256k1 public key.'
+            example:
+            - 03b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
+          slash_unbonding_tx:
+            type: string
+            description: 'The slash-unbonding transaction being approved by the covenant signer.
 
-              We handle deposits and voluntary exits separately.'
-          network:
-            $ref: '#/components/schemas/Network'
+              This is a Bitcoin consensus--encoded hex string.'
+            example: 6899b5baf713a2c60e6abf05e8909440d41dc4125b98891c332f7087daf017fb2436286e2aa097464d9c927d644fa6de
+          slashing_script:
+            type: string
+            description: 'The slashing script in the staking transaction.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: 877f05cc626dedcf53b50eeba0821ca0
+          slashing_tx:
+            type: string
+            description: 'The slashing transaction being approved by the covenant signer.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: f37e7ca2b24a5f7b8b6c9ba054f9932efb047ce80cf50a118e3f72751429fb13a355fa093bd358cdc30efacf5a62cabe
+          stake_expansion:
+            allOf:
+            - $ref: '#/components/schemas/BabylonCovStakeExpansionRequest'
+          staking_output_idx:
+            type: integer
+            format: int32
+            description: The output index of the Babylon staking scripts in the staking transaction.
+            example: 1
+            minimum: 0
+          staking_tx:
+            type: string
+            description: 'The staking transaction being approved by the covenant signer.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: 954ba118e7133b4bb3a67acc4f40cb9529aabbc01007229f7bfd85706850175d77d5cbe5e4c0ca67238d14afa47c51cc
+          unbonding_script:
+            type: string
+            description: 'The unbonding script in the staking transaction.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: 55f6638c0c0c0b0e51ca922e0e9e6abd
+          unbonding_slashing_script:
+            type: string
+            description: 'The slashing script in the unbonding transaction.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: e133f5a923a07b9c7f6767cda171005b
+          unbonding_tx:
+            type: string
+            description: 'The unbonding transaction being approved by the covenant signer.
+
+              This is a Bitcoin consensus--encoded hex string.'
+            example: 969cb95129a55a96d51919f5f67f3adc597ecdee6eda21e7777f370c3b1809336ee7d08ec574c8bbb361ff63d032a976
+    Eip7702SignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - address
+        - chain_id
+        - nonce
+        properties:
+          address:
+            type: string
+            description: 'The address to delegate to (the target of the authorization), as
+
+              hex-encoded bytes. Must be exactly 20 bytes.'
+            example: '0x1100000000000000000000000000000000000011'
+          chain_id:
+            type: integer
+            format: int64
+            description: 'The chain id for which this authorization is valid. A value of `0` means
+
+              the authorization is valid on any chain that supports EIP-7702.'
+            minimum: 0
+          nonce:
+            type: integer
+            format: int64
+            description: The nonce of the authorizing account.
+            minimum: 0
+          tweak:
+            type:
+            - string
+            - 'null'
+            description: 'An optional tweak value that will be applied to the secret key before signing.
+
+              This field must contain a base-64 string encoding a vector of exactly 32 bytes.
+
+              See the CubeSigner documentation for more information on the tweaking procedure.'
+            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+    MfaType:
+      type: string
+      format: '''CubeSigner'' | ''Fido'' | `FidoKey#${string}` | ''Totp'' | ''EmailOtp'' | `EmailOtp#${number}`'
+      description: Different types that can be used to approve an MFA request
+      pattern: ^(CubeSigner|Totp|EmailOtp|EmailOtp#\d+|Fido|FidoKey#[^#\s]+)$
+    Fork:
+      type: object
+      description: 'Specifies a fork of the `BeaconChain`, to prevent replay attacks.
+
+        The schema of `Fork` is defined in the [Beacon chain
+
+        spec](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#fork).'
+      required:
+      - previous_version
+      - current_version
+      - epoch
+      properties:
+        current_version:
+          type: string
+          description: Current fork version.
+          example: '0x43434343'
+        epoch:
+          $ref: '#/components/schemas/Epoch'
+        previous_version:
+          type: string
+          description: Previous fork version.
+          example: '0x42424242'
       example:
-        eth2_sign_request:
-          aggregation_slot:
-            slot: '36'
-          fork_info:
-            fork:
-              current_version: '0x42424242'
-              epoch: '0'
-              previous_version: '0x42424242'
-            genesis_validators_root: '0x9d13d61212c067e02ce8e608a7007e2c3b02571e9e6f27ff45dfa91bf27c870b'
-          signingRoot: '0x9c57e77c4965727542b9337df6756f948464bca3859bea6ed3c0ec6600d8982a'
-          type: AGGREGATION_SLOT
-        network: mainnet
-    SignerErrorOwnCodes:
+        current_version: '0x00001020'
+        epoch: '0'
+        previous_version: '0x00001020'
+    BtcTx:
+      type: object
+      example:
+        input:
+        - previous_output: 77541aeb3c4dac9260b68f74f44c973081a9d4cb2ebe8038b2d70faa201b6bdb:1
+          script_sig: ''
+          sequence: 4294967294
+          witness: []
+        lock_time: 1170
+        output:
+        - script_pubkey: 76a914a457b684d7f0d539a46a45bbc043f35b59d0d96388ac
+          value: 199996600
+        - script_pubkey: 76a914fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c88ac
+          value: 800000000
+        version: 1
+    Epoch:
+      type: string
+      description: Epoch is a quoted `uint64`.
+      example: '256'
+    BtcLeafHashCodeSeparator:
+      type: object
+      description: Leaf hash and code, as per BIP341 and https://github.com/rust-bitcoin/rust-bitcoin/blob/464202109d2b2c96e9b4867461bffe420dbd8177/bitcoin/src/crypto/sighash.rs#L691
+      required:
+      - leaf_hash
+      - code_separator
+      properties:
+        code_separator:
+          type: integer
+          format: int32
+          description: Code separator
+          minimum: 0
+        leaf_hash:
+          type: string
+          description: Taproot-tagged hash with tag "TapLeaf".
+    BtcSighashType:
       type: string
       enum:
-      - PreComputed
-      - StatusCodeWithMessage
-      - JrpcError
-      - UnhandledError
-      - ProxyStartError
-      - EnclaveError
-      - PolicyErrorWithEvalTree
-      - RpcApi
+      - All
+      - None
+      - Single
+      - AllPlusAnyoneCanPay
+      - NonePlusAnyoneCanPay
+      - SinglePlusAnyoneCanPay
+    BlobSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - message_base64
+        properties:
+          adaptor_pk:
+            type:
+            - string
+            - 'null'
+            description: 'An optional base64 string comprising a SEC1-encoded secp256k1 public key.
+
+              This field can be used *only* with Schnorr keys.
+
+
+              If this field is present, the response will be a Schnorr adaptor signature
+
+              in the format specified by Blockstream for use in libsecp256k1-zkp. See
+
+              <https://github.com/ZhePang/Python_Specification_for_Schnorr_Adaptor/>
+
+              for more information.'
+            example: Arny4WoHDNBVXYcynhNl9/y7JttJ2rk0CCRfLR7t3aDg
+          bls_dst:
+            type:
+            - string
+            - 'null'
+            description: 'An optional domain separation tag for use *only* with BLS signing requests.
+
+              This field must not be supplied for requests involving non-BLS key types.
+
+
+              If this field is not present or null, the domain separation tag specified in
+
+              the IETF BLS Signatures draft versions 4 and 5, section 4.2.3 (minimal pubkey
+
+              size variant) is used.
+
+
+              Otherwise, this field must contain a base-64 string encoding a non-empty byte
+
+              vector. When using a custom tag, RFC9380 (Section 3.1) recommends a length of
+
+              at least 16 bytes.'
+            example: EbbLvCxI7gan71iISDsfr46etOv606QkGGDP5PpVl5Q=
+          message_base64:
+            type: string
+            description: 'The blob to sign, encoded as a base64 string.
+
+
+              Note that certain signing keys impose additional requirements on the contents of
+
+              the message. For example, Secp256k1 keys require that the message is 32 bytes long.'
+          segwit_tweak:
+            type:
+            - string
+            - 'null'
+            description: 'An optional tweak value for use only with (some) secp256k1 key types.
+
+              This field must not be supplied for requests involving any other key type.
+
+
+              If this field is not present or null, no tweak is applied. Otherwise, this field
+
+              must contain a base-64 string encoding a vector of exactly 32 bytes. See the
+
+              CubeSigner documentation for more information on the Segwit tweaking procedure.'
+            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+          taproot_tweak:
+            type:
+            - string
+            - 'null'
+            description: 'An optional tweak value for use *only* with Taproot keys. This field must not
+
+              be supplied for requests involving any other key type.
+
+
+              If this field is not present or null, no tweak is applied. If the field is an
+
+              empty string, the key is tweaked with an unspendable script path per BIP0341.
+
+              Otherwise, this field must contain a 32-byte, base-64 string representing the
+
+              Merkle root with which to tweak the key before signing.'
+            example: F41HAy2q5Gn8laF2CuMsZbRAQTmD+4Ob3VUMZ7TBGK4=
+      example:
+        message_base64: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTYK
+    FeeType:
+      type: string
+      description: 'This type specifies the interpretation of the `fee` field in Babylon
+
+        staking requests. If `sats`, the field is intpreted as a fixed value
+
+        in sats. If `sats_pr_vb`, the field is interpreted as a rate and the
+
+        fee is computed by estimating the weight of the output transaction.'
+      enum:
+      - sats
+      - sats_per_kwu
+      - sats_per_vb
+    BabylonStakingRequest:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingDeposit'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - deposit
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - early_unbond
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - withdraw_timelock
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - withdraw_early_unbond
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingWithdrawal'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - withdraw_slashing
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - slash_deposit
+      - allOf:
+        - $ref: '#/components/schemas/BabylonStakingEarlyUnbond'
+        - type: object
+          required:
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - slash_early_unbond
+      description: The actions possible via the Babylon Staking endpoint
+      discriminator:
+        propertyName: action
+    ApprovalInfo:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/EpochDateTime'
+    TendermintSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - message_base64
+        properties:
+          message_base64:
+            type: string
+            description: The bytes of the protobuf-encoded message to sign as a BASE64 string.
+      description: The request for using the Tendermint sign endpoint.
+    EvmTxDepositErrorCode:
+      type: string
+      enum:
+      - EvmTxDepositReceiverMismatch
+      - EvmTxDepositEmptyData
+      - EvmTxDepositEmptyChainId
+      - EvmTxDepositEmptyReceiver
+      - EvmTxDepositUnexpectedValue
+      - EvmTxDepositUnexpectedDataLength
+      - EvmTxDepositNoAbi
+      - EvmTxDepositNoDepositFunction
+      - EvmTxDepositUnexpectedFunctionName
+      - EvmTxDepositUnexpectedValidatorKey
+      - EvmTxDepositInvalidValidatorKey
+      - EvmTxDepositMissingDepositArg
+      - EvmTxDepositWrongDepositArgType
+      - EvmTxDepositValidatorKeyNotInRole
+      - EvmTxDepositUnexpectedWithdrawalCredentials
+      - EvmTxDepositUnresolvedRole
+      - EvmTxDepositInvalidDepositEncoding
+    Status:
+      type: object
+      required:
+      - count
+      - num_auth_factors
+      - allowed_approvers
+      - approved_by
+      properties:
+        allowed_approvers:
+          type: array
+          items:
+            type: string
+          description: Users who are allowed to approve. Must be non-empty.
+        allowed_mfa_types:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MfaType'
+          description: Allowed approval types. When omitted, defaults to any.
+        approved_by:
+          type: object
+          description: Users who have already approved
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ApprovalInfo'
+        count:
+          type: integer
+          format: int32
+          description: How many users must approve
+          minimum: 0
+        num_auth_factors:
+          type: integer
+          format: int32
+          description: How many auth factors to require per user
+          minimum: 0
+        request_comparer:
+          $ref: '#/components/schemas/HttpRequestCmp'
+    TypedData:
+      type: object
+      description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data object.
+
+
+        Typed data is a JSON object containing type information, domain separator parameters and the
+
+        message object.'
+      required:
+      - domain
+      - primaryType
+      - message
+      - types
+      properties:
+        domain:
+          type: object
+          description: 'Represents the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) EIP712Domain object.
+
+
+            EIP712Domain is a JSON object with one or more of the below fields. Protocol designers only need to include the fields that make sense for their signing domain.'
+          properties:
+            chainId:
+              type:
+              - string
+              - 'null'
+              description: 'The EIP-155 chain id. The user-agent should refuse signing if it does not match the
+
+                currently active chain.'
+              example: '0x1'
+            name:
+              type:
+              - string
+              - 'null'
+              description: The user readable name of signing domain, i.e., the name of the DApp or the protocol.
+              example: Ether Mail
+            salt:
+              oneOf:
+              - type: string
+                description: Hex-encoded byte array of length 32
+                example: '0xa5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5'
+              - type: array
+                items:
+                  type: number
+                  example: 165
+                description: Byte array of length 32
+                example:
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+                - 165
+              description: A disambiguating salt for the protocol. This can be used as a domain separator of last resort. Can be either a hex-encoded string or byte array
+            verifyingContract:
+              type:
+              - string
+              - 'null'
+              description: The address of the contract that will verify the signature.
+              example: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+            version:
+              type:
+              - string
+              - 'null'
+              description: 'The current major version of the signing domain. Signatures from different versions are not
+
+                compatible.'
+              example: '1'
+        message:
+          type: object
+          description: The message to be signed.
+          additionalProperties: {}
+        primaryType:
+          type: string
+          description: The type of the message.
+        types:
+          type: object
+          description: The custom types used by this message.
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              description: Represents the name and type pair
+              required:
+              - name
+              - type
+              properties:
+                name:
+                  type: string
+                  example: name
+                type:
+                  type: string
+                  example: type
+              example:
+                name: name
+                type: type
+    PsbtSignRequest:
+      allOf:
+      - type: object
+        properties:
+          dry_run:
+            type: boolean
+            description: Do not produce a valid signature, just evaluate attached policies.
+          explain:
+            type: boolean
+            description: 'Request additional information to be included in the response, explaining
+
+              the outcome (i.e., permitted vs. denied vs. MFA required) of the sign request.
+
+              Defaults to false.'
+          fail_on_mfa:
+            type: boolean
+            description: 'If MFA is required, fail the request instead of returning 202 and creating
+
+              pending MFA request. Defaults to false.'
+          metadata:
+            description: 'Optional metadata. Passing additional information as metadata can be used to make reviewing
+
+              of pending MFA requests and/or historical key transactions more transparent. It can also be used e.g., to carry additional data to WebHook policies.'
+      - type: object
+        required:
+        - psbt
+        properties:
+          psbt:
+            type: string
+            description: 'A hex-serialized PSBT (version 0), with or without leading 0x prefix.
+
+              This PSBT must contain the transaction inputs and outputs, plus all
+
+              information needed to sign (e.g., taproot path and leaf information).'
+          sign_all_scripts:
+            type: boolean
+            description: 'When true, unconditionally sign every input to the PSBT controlled by a script
+
+              spend. Otherwise (false, the default), this endpoint uses a heuristic to decide
+
+              whether the script controlling a given UTXO requires a signature from this key.'
+      description: A request to sign a PSBT
+    NotFoundErrorCode:
+      type: string
+      enum:
+      - UriSegmentMissing
+      - UriSegmentInvalid
+      - TotpNotConfigured
+      - FidoKeyNotFound
+      - FidoChallengeNotFound
+      - TotpChallengeNotFound
+      - UserExportRequestNotFound
+      - UserExportCiphertextNotFound
+      - OrgExportCiphertextNotFound
+      - UploadObjectNotFound
+      - PolicySecretNotFound
+      - BucketMetaNotFound
+      - TimestreamDisabled
+      - CustomChainNotFound
+      - InvitationNotFound
+      - TransactionNotFound
+      - EmailConfigNotFound
+    ClientSessionInfo:
+      type: object
+      description: 'Session information sent to the client.
+
+        This struct works in tandem with its server-side counterpart [`SessionData`].'
+      required:
+      - session_id
+      - auth_token
+      - refresh_token
+      - epoch
+      - epoch_token
+      - auth_token_exp
+      - refresh_token_exp
+      properties:
+        auth_token:
+          type: string
+          description: Token to use for authorization.
+        auth_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        epoch:
+          type: integer
+          format: int32
+          description: Epoch at which the token was last refreshed
+          minimum: 0
+        epoch_token:
+          $ref: '#/components/schemas/B32'
+        refresh_token:
+          type: string
+          description: Token to use for refreshing the `(auth, refresh)` token pair
+        refresh_token_exp:
+          $ref: '#/components/schemas/EpochDateTime'
+        session_id:
+          type: string
+          description: Session ID
+    TimeoutErrorCode:
+      type: string
+      enum:
+      - PolicyEngineTimeout
+      - WasmPolicyExecutionTimeout
+    PreconditionErrorCode:
+      oneOf:
+      - $ref: '#/components/schemas/PreconditionErrorOwnCodes'
+      - $ref: '#/components/schemas/PolicyErrorCode'
+    MfaRequestInfo:
+      type: object
+      description: Returned as a response from multiple routes (e.g., 'get mfa', 'approve mfa', 'approve totp').
+      required:
+      - id
+      - expires_at
+      - request
+      - status
+      - created_by
+      - provenance
+      properties:
+        created_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        created_by:
+          type: string
+          description: The session identity (user or role) that created this request.
+        expires_at:
+          $ref: '#/components/schemas/EpochDateTime'
+        id:
+          type: string
+          description: Approval request ID.
+        not_valid_until:
+          $ref: '#/components/schemas/EpochDateTime'
+        provenance:
+          type: string
+          description: MFA policy provenance
+          enum:
+          - Org
+          - Key
+          - KeyInRole
+          - Role
+          - User
+          - EditPolicy
+        receipt:
+          allOf:
+          - $ref: '#/components/schemas/Receipt'
+        region:
+          type: string
+          description: The region this MFA request was created in.  It can only be redeemed from the same region.
+        related_ids:
+          type: array
+          items:
+            type: string
+          description: 'If set, contains the IDs of all MFA requests (including this one!) that
+
+            were generated at once for the same CubeSigner operation.
+
+
+            If not set, it means that this was the lone MFA request generated for `request`.
+
+
+            This is useful so that a client can discover all the MFAs whose receipts must
+
+            be submitted together to carry out the original CubeSigner operation.'
+        request:
+          $ref: '#/components/schemas/HttpRequest'
+        status:
+          $ref: '#/components/schemas/Status'
+    BinanceDryRunArgs:
+      type: object
+      required:
+      - method
+      - url
+      properties:
+        method:
+          type: string
+          description: The Binance API method that would have been used
+        url:
+          type: string
+          description: The Binance API url method that would have been called
+    Network:
+      type: string
+      description: Network name ('mainnet', 'holesky')
+      enum:
+      - mainnet
+      - holesky
+      - hoodi
+      example: holesky
   responses:
-    StakeResponse:
+    UnstakeResponse:
+      description: A response to sign an eth2 unstake request.
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              description: 'Unstake responses are signed voluntary exit messages.
+
+                The schema for this message is defined
+
+                [here](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#signedvoluntaryexit).
+
+                This message can be directly POSTed to the Beacon node''s
+
+                `/eth/v1/beacon/pool/voluntary_exits` end-point (see expected schema
+
+                [here](https://ethereum.github.io/beacon-APIs/#/Beacon/submitPoolVoluntaryExit)).'
+              required:
+              - message
+              - signature
+              properties:
+                message:
+                  $ref: '#/components/schemas/VoluntaryExit'
+                signature:
+                  type: string
+                  description: BLS signature.
+                  example: '0x910c7cd537ed91cc8c4a82f3cbd832e9be8c24a22e9c86df479f7ce42025ea6a09619b418b666a060e260d2aae31b8e50e9d05ca3442c7eed3b507e5207e14674275f68c2ba84c4bf6b8dd364a304acac8cfab3681e2514b4400f9242bc61164'
+              example:
+                message:
+                  epoch: '558'
+                  validator_index: '1'
+                signature: '0x910c7cd537ed91cc8c4a82f3cbd832e9be8c24a22e9c86df479f7ce42025ea6a09619b418b666a060e260d2aae31b8e50e9d05ca3442c7eed3b507e5207e14674275f68c2ba84c4bf6b8dd364a304acac8cfab3681e2514b4400f9242bc61164'
+            - type: object
+              description: Common fields that are optionally included in every response
+              properties:
+                policy_eval_tree:
+                  description: Optional policy evaluation tree.
+            - type: object
+            description: A response to sign an eth2 unstake request.
+    SignResponse:
       description: ''
       content:
         application/json:
           schema:
             allOf:
-            - allOf:
-              - type: object
-                description: Common fields that are optionally included in every response
-                properties:
-                  policy_eval_tree:
-                    description: Optional policy evaluation tree.
-              - type: object
-                required:
-                - deposit_tx
-                properties:
-                  deposit_tx:
-                    $ref: '#/components/schemas/DepositTxn'
-              description: A response to sign an eth2 stake request.
+            - type: object
+              description: Common fields that are optionally included in every response
+              properties:
+                policy_eval_tree:
+                  description: Optional policy evaluation tree.
             - type: object
               required:
-              - created_validator_key_id
+              - signature
               properties:
-                created_validator_key_id:
+                signature:
                   type: string
-                  description: The validator key id ("Key#...")
-                  example: Key#db1731f8-3659-45c0-885b-e11e1f5b7be2
+                  description: The hex-encoded resulting signature.
+    PsbtSignResponse:
+      description: Response to a PSBT signing request
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              description: Common fields that are optionally included in every response
+              properties:
+                policy_eval_tree:
+                  description: Optional policy evaluation tree.
+            - type: object
+              required:
+              - psbt
+              properties:
+                psbt:
+                  type: string
+                  description: The PSBT in standard hex serialization, without leading "0x".
+                  example: 70736274ff01005e...
+            description: Response to a PSBT signing request
+    Eth1SignResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - type: object
+              description: Common fields that are optionally included in every response
+              properties:
+                policy_eval_tree:
+                  description: Optional policy evaluation tree.
+            - type: object
+              required:
+              - rlp_signed_tx
+              properties:
+                rlp_signed_tx:
+                  type: string
+                  description: Hex-encoded RLP encoding of the transaction and its signature
+                  example: '0x22895118000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000001201d58656b0e22aaa68fdc692db41979098c3886ed33015d7467de9211609cdac000000000000000000000000000000000000000000000000000000000000000308b0c2900324d3ff9adfba7fdfe5af3f9b2cdbeef7b280437bbf1b1c59a093d615afe3e5dfed9622b540cdd9b49b3c5ad00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002001000000000000000000000049011adbcc3bc9c0307bb07f37dda1a1a9c69d2e0000000000000000000000000000000000000000000000000000000000000060903db8525674b8e7904f9b7d7d9ec55a0a42d33cf58be25469b0c21bbb6d06172bc5bb5fd1aed8e4f35936968958116b0619553c2cb1c52e7323074c6f8eb3d5a7074fc6580148df907837fa3b164ad7fbc2288dad1e8a5b021095b57c8a36d4'
     DiffieHellmanResponse:
       description: The result of a Diffie Hellman key exchange
       content:
@@ -4511,78 +4581,6 @@ components:
                   description: Optional policy evaluation tree.
             - type: object
             description: The result of a Diffie Hellman key exchange
-    BabylonStakingResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              description: Common fields that are optionally included in every response
-              properties:
-                policy_eval_tree:
-                  description: Optional policy evaluation tree.
-            - type: object
-              required:
-              - psbt
-              - fee
-              properties:
-                fee:
-                  type: integer
-                  format: int64
-                  description: The transaction fee in sats
-                  example: '1337'
-                  minimum: 0
-                psbt:
-                  type: string
-                  description: The PSBT in either hex or base64 serialization
-                  example: 70736274ff01005e...
-    BabylonCovSignResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              description: Common fields that are optionally included in every response
-              properties:
-                policy_eval_tree:
-                  description: Optional policy evaluation tree.
-            - type: object
-              required:
-              - slashing_transactions_signatures
-              - unbonding_transaction_signature
-              - slash_unbonding_transactions_signatures
-              properties:
-                slash_unbonding_transactions_signatures:
-                  type: array
-                  items:
-                    type: string
-                  description: The slash-unbonding transaction signatures as an array of hex strings with no 0x prefix
-                  example:
-                  - 02e21a7b0519539ef670f79d1c25a54f90b0c6d9fdb56a7de813fb207033032fffad8aaafeb1b77dd9ea8f17dadcf297696bbf5a4133292f3515b86bb9c2d78d9c
-                slashing_transactions_signatures:
-                  type: array
-                  items:
-                    type: string
-                  description: The slashing transaction signatures as an array of hex strings with no 0x prefix
-                  example:
-                  - 03075eca9d176d1605d6c096c111e9a4f8d8739ac9708c1df3ed516106e7ab1387a3924a6652acf2e3524359731ca1fbb338a3afb1a67f6ea19c207b6ff466a5ad
-                  - 022224493f4cffad5b84076db32dd8c49a28ff48af4e19e2bcc9953ff80347ba6e8343cf7a44e74a96ff71ea59a03b40166e85b0d1355954e04a4427dc8d637ff0
-                stake_expansion_transaction_signature:
-                  type:
-                  - string
-                  - 'null'
-                  description: 'The signature that allows expanding a stake by spending the current active
-
-                    stake transaction into a new staking transaction. A value is present iff the
-
-                    corresponding request included a `stake_expansion` value.'
-                  example: b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
-                unbonding_transaction_signature:
-                  type: string
-                  description: The unbonding transaction signature as hex string with no 0x prefix
-                  example: b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
     BabylonRegistrationResponse:
       description: ''
       content:
@@ -4652,46 +4650,6 @@ components:
                 unbond:
                   type: string
                   description: The (unsigned) unbonding transaction in Bitcoin consensus hex encoding.
-    UnstakeResponse:
-      description: A response to sign an eth2 unstake request.
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              description: 'Unstake responses are signed voluntary exit messages.
-
-                The schema for this message is defined
-
-                [here](https://github.com/ethereum/consensus-specs/blob/v1.0.1/specs/phase0/beacon-chain.md#signedvoluntaryexit).
-
-                This message can be directly POSTed to the Beacon node''s
-
-                `/eth/v1/beacon/pool/voluntary_exits` end-point (see expected schema
-
-                [here](https://ethereum.github.io/beacon-APIs/#/Beacon/submitPoolVoluntaryExit)).'
-              required:
-              - message
-              - signature
-              properties:
-                message:
-                  $ref: '#/components/schemas/VoluntaryExit'
-                signature:
-                  type: string
-                  description: BLS signature.
-                  example: '0x910c7cd537ed91cc8c4a82f3cbd832e9be8c24a22e9c86df479f7ce42025ea6a09619b418b666a060e260d2aae31b8e50e9d05ca3442c7eed3b507e5207e14674275f68c2ba84c4bf6b8dd364a304acac8cfab3681e2514b4400f9242bc61164'
-              example:
-                message:
-                  epoch: '558'
-                  validator_index: '1'
-                signature: '0x910c7cd537ed91cc8c4a82f3cbd832e9be8c24a22e9c86df479f7ce42025ea6a09619b418b666a060e260d2aae31b8e50e9d05ca3442c7eed3b507e5207e14674275f68c2ba84c4bf6b8dd364a304acac8cfab3681e2514b4400f9242bc61164'
-            - type: object
-              description: Common fields that are optionally included in every response
-              properties:
-                policy_eval_tree:
-                  description: Optional policy evaluation tree.
-            - type: object
-            description: A response to sign an eth2 unstake request.
     BtcMessageSignResponse:
       description: BTC message signing response
       content:
@@ -4711,7 +4669,7 @@ components:
                   type: string
                   description: The base64-encoded signature in BIP137 format.
             description: BTC message signing response
-    SignResponse:
+    BabylonCovSignResponse:
       description: ''
       content:
         application/json:
@@ -4724,32 +4682,41 @@ components:
                   description: Optional policy evaluation tree.
             - type: object
               required:
-              - signature
+              - slashing_transactions_signatures
+              - unbonding_transaction_signature
+              - slash_unbonding_transactions_signatures
               properties:
-                signature:
+                slash_unbonding_transactions_signatures:
+                  type: array
+                  items:
+                    type: string
+                  description: The slash-unbonding transaction signatures as an array of hex strings with no 0x prefix
+                  example:
+                  - 02e21a7b0519539ef670f79d1c25a54f90b0c6d9fdb56a7de813fb207033032fffad8aaafeb1b77dd9ea8f17dadcf297696bbf5a4133292f3515b86bb9c2d78d9c
+                slashing_transactions_signatures:
+                  type: array
+                  items:
+                    type: string
+                  description: The slashing transaction signatures as an array of hex strings with no 0x prefix
+                  example:
+                  - 03075eca9d176d1605d6c096c111e9a4f8d8739ac9708c1df3ed516106e7ab1387a3924a6652acf2e3524359731ca1fbb338a3afb1a67f6ea19c207b6ff466a5ad
+                  - 022224493f4cffad5b84076db32dd8c49a28ff48af4e19e2bcc9953ff80347ba6e8343cf7a44e74a96ff71ea59a03b40166e85b0d1355954e04a4427dc8d637ff0
+                stake_expansion_transaction_signature:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'The signature that allows expanding a stake by spending the current active
+
+                    stake transaction into a new staking transaction. A value is present iff the
+
+                    corresponding request included a `stake_expansion` value.'
+                  example: b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
+                unbonding_transaction_signature:
                   type: string
-                  description: The hex-encoded resulting signature.
-    Eth1SignResponse:
+                  description: The unbonding transaction signature as hex string with no 0x prefix
+                  example: b573e318803fd7aee1be5b6b18d496cc60ecc52429dbd477a879217c3ed26a795cb4f4e880aaff3a6ad66335e5404fa51caeb4964f0c9f7562737864e3bde5bc
+    BabylonStakingResponse:
       description: ''
-      content:
-        application/json:
-          schema:
-            allOf:
-            - type: object
-              description: Common fields that are optionally included in every response
-              properties:
-                policy_eval_tree:
-                  description: Optional policy evaluation tree.
-            - type: object
-              required:
-              - rlp_signed_tx
-              properties:
-                rlp_signed_tx:
-                  type: string
-                  description: Hex-encoded RLP encoding of the transaction and its signature
-                  example: '0x22895118000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000001201d58656b0e22aaa68fdc692db41979098c3886ed33015d7467de9211609cdac000000000000000000000000000000000000000000000000000000000000000308b0c2900324d3ff9adfba7fdfe5af3f9b2cdbeef7b280437bbf1b1c59a093d615afe3e5dfed9622b540cdd9b49b3c5ad00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002001000000000000000000000049011adbcc3bc9c0307bb07f37dda1a1a9c69d2e0000000000000000000000000000000000000000000000000000000000000060903db8525674b8e7904f9b7d7d9ec55a0a42d33cf58be25469b0c21bbb6d06172bc5bb5fd1aed8e4f35936968958116b0619553c2cb1c52e7323074c6f8eb3d5a7074fc6580148df907837fa3b164ad7fbc2288dad1e8a5b021095b57c8a36d4'
-    PsbtSignResponse:
-      description: Response to a PSBT signing request
       content:
         application/json:
           schema:
@@ -4762,12 +4729,45 @@ components:
             - type: object
               required:
               - psbt
+              - fee
               properties:
+                fee:
+                  type: integer
+                  format: int64
+                  description: The transaction fee in sats
+                  example: '1337'
+                  minimum: 0
                 psbt:
                   type: string
-                  description: The PSBT in standard hex serialization, without leading "0x".
+                  description: The PSBT in either hex or base64 serialization
                   example: 70736274ff01005e...
-            description: Response to a PSBT signing request
+    StakeResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            allOf:
+            - allOf:
+              - type: object
+                description: Common fields that are optionally included in every response
+                properties:
+                  policy_eval_tree:
+                    description: Optional policy evaluation tree.
+              - type: object
+                required:
+                - deposit_tx
+                properties:
+                  deposit_tx:
+                    $ref: '#/components/schemas/DepositTxn'
+              description: A response to sign an eth2 stake request.
+            - type: object
+              required:
+              - created_validator_key_id
+              properties:
+                created_validator_key_id:
+                  type: string
+                  description: The validator key id ("Key#...")
+                  example: Key#db1731f8-3659-45c0-885b-e11e1f5b7be2
   securitySchemes:
     Oidc:
       type: apiKey
