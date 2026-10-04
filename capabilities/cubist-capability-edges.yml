@@ -1,0 +1,128 @@
+slug: cubist
+provider: Cubist
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 11
+edges:
+- tag: Identity
+  spec_file: cubist-identity-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: listOidcIdentities  List associated OIDC identities with the current user; createProofOidc  Create
+    [IdentityProof] from OIDC token; verifyProof  Verify identity proof
+  reason: Operations manage federated OIDC identities bound to users and issue/verify identity proofs
+    — federation and identity verification, i.e. Identity & Access Management.
+- tag: Login
+  spec_file: cubist-login-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: POST /v0/org/{org_id}/idp/authenticate  idpAuthenticate  Authenticate; passkeyAuthInit  Initiate
+    Login with Passkey
+  reason: Authentication against an identity provider and passkey/WebAuthn login flows — core Identity
+    & Access Management for the platform's users.
+- tag: MFA
+  spec_file: cubist-mfa-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: PATCH /v0/org/{org_id}/mfa/{mfa_id}  mfaVoteCs  Approve or Reject MFA Request; mfaVoteFidoComplete  Finalize
+    a FIDO MFA Approval/Rejection
+  reason: Multi-factor authentication challenge issuance and approval across email OTP, FIDO and TOTP
+    — authentication strength controls, part of Identity & Access Management.
+- tag: Users In Role
+  spec_file: cubist-users-in-role-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: PUT /v0/org/{org_id}/roles/{role_id}/add_user/{user_id} addUserToRole 'Add User'; DELETE .../roles/{role_id}/users/{user_id}
+    removeUserFromRole 'Remove User'
+  reason: Assignment and removal of users to/from roles is role-based access control administration, i.e.
+    Identity & Access Management.
+- tag: Users In Org
+  spec_file: cubist-users-in-org-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.82
+  evidence: POST /v0/org/{org_id}/invite invite 'Invite User'; 'List users in organization'; 'Add a third-party
+    user to the org'; 'Remove a user from the org'; 'Initialize MFA reset for user'; schema MemberRole
+  reason: Administrative user lifecycle within an organisation — invitation, OIDC federated user add/remove,
+    membership removal, MFA reset — classic joiner-mover-leaver and federation administration under Identity
+    & Access Management, not HR employee records.
+- tag: Account
+  spec_file: cubist-account-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: idpPasswordResetRequest "Request Password Reset"; idpPasswordResetConfirm "Confirm Password
+    Reset"; schemas MfaType, MfaRequiredArgs
+  reason: Operations are identity-provider password reset and MFA flows — identity and access management,
+    not financial account management despite the 'Account' tag.
+- tag: AuthMigration
+  spec_file: cubist-authmigration-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: authMigrationIdentityAdd  Associate an OIDC identity with an arbitrary user in org; authMigrationUserUpdate  Update
+    existing users' profiles
+  reason: Operations associate/dissociate federated OIDC identities with org users and update user profiles
+    — identity federation and user lifecycle administration, squarely Identity & Access Management.
+- tag: User
+  spec_file: cubist-user-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: POST /v0/org/{org_id}/user/me/fido userRegisterFidoInit 'Initiate registration of a FIDO key';
+    'Initialize TOTP Reset'; 'Verify TOTP'; schema MfaPolicy
+  reason: Self-service identity credential management — FIDO key registration, TOTP enrolment/verification,
+    verified-email reset — which is multi-factor authentication and credential lifecycle, i.e. Identity
+    & Access Management.
+- tag: Keys In Role
+  spec_file: cubist-keys-in-role-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: PUT /v0/org/{org_id}/roles/{role_id}/add_keys  addKeysToRole  Add Keys; DELETE /v0/org/{org_id}/roles/{role_id}/keys/{key_id}  removeKeyFromRole  Remove
+    Key
+  reason: Operations bind and unbind keys to roles — role-based authorisation administration over protected
+    resources, which falls under Identity & Access Management.
+- tag: Orgs
+  spec_file: cubist-orgs-api-openapi.yml
+  capability_id: BC-4230.10
+  capability_id_l1: BC-4230
+  capability_name: Tenant Provisioning & Lifecycle
+  confidence: 0.75
+  evidence: Create Org; Get Org; Update Org; List accessible organizations
+  reason: Organisations are the tenant construct of this multi-tenant signing service; creating, retrieving
+    and updating orgs is tenant provisioning and lifecycle management rather than any corporate-entity
+    capability.
+- tag: Keys
+  spec_file: cubist-keys-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.7
+  evidence: POST /v0/org/{org_id}/keys  createKey  Create Key; PUT /v0/org/{org_id}/import_key  importKey  Import
+    Key; GET /v0/org/{org_id}/keys/{key_id}/attest  attestKey  Attest to Key Properties
+  reason: Full lifecycle of cryptographic keys — create, import, derive, export ciphertext, attest, delete
+    — which is cryptographic key management under Cybersecurity Management. No L2 in the candidate list
+    names key/cryptographic management precisely, so only the L1 is asserted.
