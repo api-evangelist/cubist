@@ -1,0 +1,106 @@
+edges:
+- partner_name: Go module proxy
+  partner: null
+  partner_match: null
+  type: register
+  direction: provider-built
+  category: official SDK (Go)
+  evidence: https://pkg.go.dev/github.com/cubist-labs/CubeSigner-Go-SDK
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Go module proxy (public registry JSON)
+    spec_file: null
+    language: Go
+    packages:
+    - name: github.com/cubist-labs/CubeSigner-Go-SDK
+      version: v0.0.19
+      released: '2025-12-29'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/cubist-labs/CubeSigner-Go-SDK
+      repo_leg: github-org:cubist-labs
+      publisher_leg: org:cubist-labs
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@cubist-labs/cubesigner-sdk'
+      version: 0.4.284
+      released: '2026-09-09'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk
+      repo_leg: github-org:cubist-labs
+      publisher_leg: email:cubist.dev
+      matched_by: domain
+    - name: '@cubist-labs/cubesigner-sdk-ethers-v6'
+      version: 0.4.284
+      released: '2026-09-09'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk-ethers-v6
+      repo_leg: github-org:cubist-labs
+      publisher_leg: email:cubist.dev
+      matched_by: domain
+    - name: '@cubist-labs/cubesigner-sdk-fs-storage'
+      version: 0.4.284
+      released: '2026-09-09'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@cubist-labs/cubesigner-sdk-fs-storage
+      repo_leg: github-org:cubist-labs
+      publisher_leg: email:cubist.dev
+      matched_by: domain
+    - name: '@cubist-labs/cubesigner-snap'
+      version: 0.2.13
+      released: '2025-04-11'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@cubist-labs/cubesigner-snap
+      repo_leg: github-org:cubist-labs
+      publisher_leg: email:cubist.dev
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+generated: '2026-10-18'
+method: searched
+source:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
+checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
