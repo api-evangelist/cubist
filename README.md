@@ -64,6 +64,180 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Cubist is a company surfaced as a portfolio company of amplify-partners, polychain and added to the API Evangelist network as a stub for enrichment. Sector: developer-tools. This profile is a lead awaiting the enrichment pipeline.
+Cubist builds hardware-backed key management and embedded wallet infrastructure for Web3. Its flagship product, CubeSigner, generates and seals cryptographic keys inside FIPS 140 HSMs running in AWS Nitro Enclaves and enforces transaction approvals with a programmable Policy-as-Code engine. The CubeSigner REST API spans organizations, users, roles, keys, policies, contacts, sessions, and multi-factor approvals, plus multi-chain signing for EVM (Ethereum, Avalanche), Bitcoin/Taproot, Solana, Sui, Tendermint, Ethereum validators (eth2), and Babylon Bitcoin staking. Authentication is a two-stage OIDC-to-session-token exchange with least-privilege scopes and step-up MFA. Cubist is backed by Amplify Partners and Polychain and is SOC 2 compliant.
 
-Backed by: amplify-partners, polychain — https://cubist.dev
+**Areas:** Company · Developer Tools · Key Management · Wallets · Digital Signature · Security · Blockchain · Web3 · Custody
+
+## Cubist on APIs.io
+
+Everything profiled for Cubist is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cubist/](https://apis.io/providers/cubist/)** — or go straight to one of the APIs or properties below.
+
+### APIs (30)
+
+- [Cubist Account API](https://apis.io/apis/cubist/cubist-account-api/) — The Account API from Cubist — 1 operation(s) for account.
+- [Cubist Accounts API](https://apis.io/apis/cubist/cubist-accounts-api/) — The Accounts API from Cubist — 1 operation(s) for accounts.
+- [Cubist Audit API](https://apis.io/apis/cubist/cubist-audit-api/) — The Audit API from Cubist — 1 operation(s) for audit.
+- [Cubist AuthMigration API](https://apis.io/apis/cubist/cubist-authmigration-api/) — The AuthMigration API from Cubist — 3 operation(s) for authmigration.
+- [Cubist Babylon API](https://apis.io/apis/cubist/cubist-babylon-api/) — The Babylon API from Cubist — 2 operation(s) for babylon.
+- [Cubist Contact API](https://apis.io/apis/cubist/cubist-contact-api/) — The Contact API from Cubist — 3 operation(s) for contact.
+- [Cubist Cube3Signer API](https://apis.io/apis/cubist/cubist-cube3signer-api/) — The Cube3Signer API from Cubist — 1 operation(s) for cube3signer.
+- [Cubist Identity API](https://apis.io/apis/cubist/cubist-identity-api/) — The Identity API from Cubist — 4 operation(s) for identity.
+- [Cubist Internal API](https://apis.io/apis/cubist/cubist-internal-api/) — The Internal API from Cubist — 4 operation(s) for internal.
+- [Cubist Keys API](https://apis.io/apis/cubist/cubist-keys-api/) — The Keys API from Cubist — 10 operation(s) for keys.
+- [Cubist Keys In Role API](https://apis.io/apis/cubist/cubist-keys-in-role-api/) — The Keys In Role API from Cubist — 2 operation(s) for keys in role.
+- [Cubist Login API](https://apis.io/apis/cubist/cubist-login-api/) — The Login API from Cubist — 2 operation(s) for login.
+- [Cubist Metrics API](https://apis.io/apis/cubist/cubist-metrics-api/) — The Metrics API from Cubist — 2 operation(s) for metrics.
+- [Cubist MFA API](https://apis.io/apis/cubist/cubist-mfa-api/) — The MFA API from Cubist — 5 operation(s) for mfa.
+- [Cubist Misc API](https://apis.io/apis/cubist/cubist-misc-api/) — The Misc API from Cubist — 1 operation(s) for misc.
+- [Cubist MMI API](https://apis.io/apis/cubist/cubist-mmi-api/) — The MMI API from Cubist — 6 operation(s) for mmi.
+- [Cubist Org API](https://apis.io/apis/cubist/cubist-org-api/) — The Org API from Cubist — 1 operation(s) for org.
+- [Cubist Orgs API](https://apis.io/apis/cubist/cubist-orgs-api/) — The Orgs API from Cubist — 4 operation(s) for orgs.
+- [Cubist Policies API](https://apis.io/apis/cubist/cubist-policies-api/) — The Policies API from Cubist — 11 operation(s) for policies.
+- [Cubist Role Access Tokens API](https://apis.io/apis/cubist/cubist-role-access-tokens-api/) — The Role Access Tokens API from Cubist — 2 operation(s) for role access tokens.
+- [Cubist Roles API](https://apis.io/apis/cubist/cubist-roles-api/) — The Roles API from Cubist — 7 operation(s) for roles.
+- [Cubist RPC API](https://apis.io/apis/cubist/cubist-rpc-api/) — The RPC API from Cubist — 1 operation(s) for rpc.
+- [Cubist Sessions API](https://apis.io/apis/cubist/cubist-sessions-api/) — The Sessions API from Cubist — 3 operation(s) for sessions.
+- [Cubist SignerSession API](https://apis.io/apis/cubist/cubist-signersession-api/) — The SignerSession API from Cubist — 1 operation(s) for signersession.
+- [Cubist Signing API](https://apis.io/apis/cubist/cubist-signing-api/) — The Signing API from Cubist — 21 operation(s) for signing.
+- [Cubist User API](https://apis.io/apis/cubist/cubist-user-api/) — The User API from Cubist — 11 operation(s) for user.
+- [Cubist User Export API](https://apis.io/apis/cubist/cubist-user-export-api/) — The User Export API from Cubist — 1 operation(s) for user export.
+- [Cubist Users In Org API](https://apis.io/apis/cubist/cubist-users-in-org-api/) — The Users In Org API from Cubist — 9 operation(s) for users in org.
+- [Cubist Users In Role API](https://apis.io/apis/cubist/cubist-users-in-role-api/) — The Users In Role API from Cubist — 2 operation(s) for users in role.
+- [Cubist O Auth2 API](https://apis.io/apis/cubist/cubist-oauth2-api/) — The OAuth2 API from Cubist — 7 operation(s) for oauth2.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [cubist-cubesigner](https://apis.io/servers/cubist/cubist-cubesigner/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Cubist Agentic Access](https://apis.io/agentic-access/cubist/cubist-agentic-access/)
+
+#### Collections (30)
+
+Postman and Open Collection request collections.
+
+- [CubeSigner Account API](https://apis.io/collections/cubist/open-cubist-account-api/)
+- [CubeSigner Account Accounts API](https://apis.io/collections/cubist/open-cubist-accounts-api/)
+- [CubeSigner Account Audit API](https://apis.io/collections/cubist/open-cubist-audit-api/)
+- [CubeSigner Account AuthMigration API](https://apis.io/collections/cubist/open-cubist-authmigration-api/)
+- [CubeSigner Account Babylon API](https://apis.io/collections/cubist/open-cubist-babylon-api/)
+- [CubeSigner Account Contact API](https://apis.io/collections/cubist/open-cubist-contact-api/)
+- [CubeSigner Account Cube3Signer API](https://apis.io/collections/cubist/open-cubist-cube3signer-api/)
+- [CubeSigner Account Identity API](https://apis.io/collections/cubist/open-cubist-identity-api/)
+- [CubeSigner Account Internal API](https://apis.io/collections/cubist/open-cubist-internal-api/)
+- [CubeSigner Account Keys API](https://apis.io/collections/cubist/open-cubist-keys-api/)
+- [CubeSigner Account Keys In Role API](https://apis.io/collections/cubist/open-cubist-keys-in-role-api/)
+- [CubeSigner Account Login API](https://apis.io/collections/cubist/open-cubist-login-api/)
+- [CubeSigner Account Metrics API](https://apis.io/collections/cubist/open-cubist-metrics-api/)
+- [CubeSigner Account MFA API](https://apis.io/collections/cubist/open-cubist-mfa-api/)
+- [CubeSigner Account Misc API](https://apis.io/collections/cubist/open-cubist-misc-api/)
+- [CubeSigner Account MMI API](https://apis.io/collections/cubist/open-cubist-mmi-api/)
+- [CubeSigner Account OAuth2 API](https://apis.io/collections/cubist/open-cubist-oauth2-api/)
+- [CubeSigner Account Org API](https://apis.io/collections/cubist/open-cubist-org-api/)
+- [CubeSigner Account Orgs API](https://apis.io/collections/cubist/open-cubist-orgs-api/)
+- [CubeSigner Account Policies API](https://apis.io/collections/cubist/open-cubist-policies-api/)
+- [CubeSigner Account Role Access Tokens API](https://apis.io/collections/cubist/open-cubist-role-access-tokens-api/)
+- [CubeSigner Account Roles API](https://apis.io/collections/cubist/open-cubist-roles-api/)
+- [CubeSigner Account RPC API](https://apis.io/collections/cubist/open-cubist-rpc-api/)
+- [CubeSigner Account Sessions API](https://apis.io/collections/cubist/open-cubist-sessions-api/)
+- [CubeSigner Account SignerSession API](https://apis.io/collections/cubist/open-cubist-signersession-api/)
+- …and 5 more published on APIs.io
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Cubist Cubesigner Overlay](https://apis.io/overlays/cubist/cubist-cubesigner-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Cubist Authentication](https://apis.io/security/cubist/cubist-authentication/)
+- [Cubist Domain Security](https://apis.io/security/cubist/cubist-domain-security/)
+- [Cubist Vulnerability Disclosure](https://apis.io/security/cubist/cubist-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Cubist Scopes](https://apis.io/scopes/cubist/cubist-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://cubist.dev)
+- [Documentation](https://cubist.dev/product-suite)
+- [Support](https://cubist.dev/contact)
+- [Blog](https://cubist.dev/blog)
+- [Security](https://cubist.dev/legal/responsible-disclosure)
+- [Compliance](https://cubist.dev/product-security)
+- [Trust centre](https://cubist.dev/information-security)
+- [Terms of service](https://cubist.dev/legal/terms-and-conditions)
+- [Privacy policy](https://cubist.dev/legal/privacy-policy)
+- [GitHub](https://github.com/cubist-labs)
+
+## API Evangelist rating
+
+**Kin Score 43.3** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 47.3 |
+| Contract governance | 18.2 |
+| Operational transparency | 13.2 |
+| Developer ergonomics | 51.8 |
+| Access clarity | 36.8 |
+
+**Agent readiness 32.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 41.1** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cubist/](https://apis.io/providers/cubist/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Cubist: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cubist/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
